@@ -13,7 +13,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Build Frontend
         working-directory: frontend
@@ -82,7 +82,7 @@ jobs:
     needs: push-to-docker-hub
     environment:
       name: online-shop # Capstone Project name
-      url: https://online-shop-wt4n.onrender.com # Link to deployment
+      url: https://online-shop-orb3.onrender.com # Link to deployment
     steps:
       - name: Trigger Render.com Deployment
         run: |

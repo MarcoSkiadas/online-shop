@@ -81,8 +81,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: push-to-docker-hub
     environment:
-      name: Capstone Project # Capstone Project name
-      url: https://neuefische.de/ # Link to deployment
+      name: online-shop # Capstone Project name
+      url: https://online-shop-wt4n.onrender.com # Link to deployment
     steps:
       - name: Trigger Render.com Deployment
         run: |

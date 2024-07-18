@@ -18,8 +18,7 @@ public class OrderService {
     public Order addOrder(OrderDTO order) {
 
         String id = idService.generateUUID();
-        ArrayList<String> productIds = order.productIds();
-        Order o = new Order(id,productIds, order.price());
+        Order o = new Order(id,order.productIds(), order.price());
         return orderRepo.save(o);
     };
 

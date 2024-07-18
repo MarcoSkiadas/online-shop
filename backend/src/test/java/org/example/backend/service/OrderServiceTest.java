@@ -1,0 +1,36 @@
+package org.example.backend.service;
+
+import org.example.backend.dto.OrderDTO;
+import org.example.backend.model.Order;
+import org.example.backend.repository.OrderRepo;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+
+class OrderServiceTest {
+
+    private final OrderRepo mockRepo = mock(OrderRepo.class);
+    private final IdService mockUtils = mock(IdService.class);
+
+    @Test
+    void addOrder_shouldAddOrder_whenCalledWithOrder() {
+        OrderService service = new OrderService(mockRepo, mockUtils);
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        Order expected = new Order("1",productIds,22);
+        when(mockUtils.generateUUID()).thenReturn("1");
+        when(mockRepo.save(expected)).thenReturn(expected);
+        //WHEN
+        Order actual = service.addOrder(new OrderDTO(productIds,22));
+        //THEN
+        assertEquals(expected, actual);
+    }
+
+}

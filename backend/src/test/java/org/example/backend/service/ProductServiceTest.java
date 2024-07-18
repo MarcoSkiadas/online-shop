@@ -16,11 +16,11 @@ class ProductServiceTest {
 
 private final ProductRepo mockRepo = mock(ProductRepo.class);
 private final IdService mockUtil = mock(IdService.class);
+private final ProductService service = new ProductService(mockRepo,mockUtil);
 
     @Test
     void GetAllProducts_shouldReturnEmptyList_whenCalledInitially() {
         //GIVEN
-        ProductService service = new ProductService(mockRepo,mockUtil);
         when(mockRepo.findAll()).thenReturn(Collections.emptyList());
         //WHEN
         List<Product> actual = service.getAllProducts();
@@ -32,7 +32,6 @@ private final IdService mockUtil = mock(IdService.class);
     @Test
     void GetProductById_shouldReturnProduct_whenCalledById() {
         //GIVEN
-        ProductService service = new ProductService(mockRepo,mockUtil);
         Product expected = new Product("1","Rasebnäher",22);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN

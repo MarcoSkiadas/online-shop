@@ -85,4 +85,26 @@ class OrderControllerTest {
 ]
 """));
     }
+    @Test
+    void getOrderById_shouldReturnOrder_whenCalledById() throws Exception {
+        //GIVEN
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        orderRepo.save(new Order("1",productIds,22));
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/order/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+    {
+        "id": "1",
+        "productIds": [
+            "1",
+            "2",
+            "3"
+        ],
+        "price": 22
+    }
+"""));}
 }

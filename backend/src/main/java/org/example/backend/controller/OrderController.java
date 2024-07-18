@@ -23,4 +23,7 @@ public class OrderController {
     @GetMapping()
     public List<Order> getAllOrders() { return orderService.getAllOrders(); }
 
+    @GetMapping("/{id}")
+    public Order getOrderById(@PathVariable String id){ return orderService.getOrderById(id);}
+
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -45,6 +46,20 @@ class OrderServiceTest {
         List<Order> actual = service.getAllOrders();
         //THEN
         assertEquals(Collections.EMPTY_LIST, actual);
+    }
+    @Test
+    void getOrderById_shouldReturnProduct_whenCalledById() {
+        //GIVEN
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        Order expected = new Order("1",productIds,22);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        //WHEN
+        Order actual = service.getOrderById("1");
+        //THEN
+        assertEquals(expected, actual);
     }
 
 }

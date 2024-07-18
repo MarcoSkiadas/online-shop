@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Homepage from "./pages/Homepage.tsx";
+import Navigation from "./components/Navigation.tsx";
+import {Route, Routes} from "react-router-dom";
+import axios from "axios";
+import {useEffect, useState} from "react";
+import {Product} from "./components/ShopSchema.ts";
+import ProductPage from "./pages/ProductPage.tsx";
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+    const [product, setProduct] = useState<Product[]>([]);
+
+    useEffect( () => {
+        getAllProducts()
+    },[])
+
+    function getAllProducts() {
+        axios.get("/api/product")
+            .then(response => setProduct(response.data))
+            .catch(error => console.log(error))
+    }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + Reac</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+        <header>
+            <Navigation/>
+        </header>
+        <Routes>
+            <Route path={"/"} element={<Homepage product={product}/>}/>
+            <Route path={"/:id"} element={<ProductPage/>}/>
+        </Routes>
     </>
   )
 }

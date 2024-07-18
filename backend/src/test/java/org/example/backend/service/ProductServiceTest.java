@@ -19,7 +19,7 @@ private final IdService mockUtil = mock(IdService.class);
 private final ProductService service = new ProductService(mockRepo,mockUtil);
 
     @Test
-    void GetAllProducts_shouldReturnEmptyList_whenCalledInitially() {
+    void getAllProducts_shouldReturnEmptyList_whenCalledInitially() {
         //GIVEN
         when(mockRepo.findAll()).thenReturn(Collections.emptyList());
         //WHEN
@@ -30,7 +30,7 @@ private final ProductService service = new ProductService(mockRepo,mockUtil);
 
     }
     @Test
-    void GetProductById_shouldReturnProduct_whenCalledById() {
+    void getProductById_shouldReturnProduct_whenCalledById() {
         //GIVEN
         Product expected = new Product("1","Rasebnäher",22);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));

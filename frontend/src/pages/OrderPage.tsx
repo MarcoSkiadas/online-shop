@@ -3,19 +3,19 @@ import {useEffect, useState} from "react";
 import {Order} from "../components/ShopSchema.ts";
 
 export default function OrderPage() {
-    const [order, setOrder] = useState<Order>();
+    const [orderList, setOrderList] = useState<Order[]>();
 
     useEffect(() => {
         axios.get(`/api/order`)
             .then(response => {
-                setOrder(response.data);
+                setOrderList(response.data);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
     }, []);
 
-    if (!order) {
+    if (!orderList) {
         return(
             <>
                 <p>Orders not found</p>
@@ -25,10 +25,18 @@ export default function OrderPage() {
 
     return (
         <>
-        <div>
-                <h2>{order.productIds}</h2>
-                <p>Price: {order.price} €</p>
-            </div>
+            <header>
+            <h2>Order Lists</h2>
+            </header>
+            {orderList.map(orderList => (
+                <div key={orderList.id}>
+                    <p>Id: {orderList.id}</p>
+                    <p>ProductIds: {orderList.productIds.map(productIds => (
+                        <li>{productIds}</li>
+                    ))}</p>
+                    <p>Price: {orderList.price} €</p>
+                </div>
+            ))}
         </>
     )
 }

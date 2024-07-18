@@ -23,10 +23,10 @@ class ProductControllerTest {
 
     @Test
     void getAllOrders_shouldReturnAllProducts_whenCalledInitially() throws Exception {
-
+        //GIVEN
         productRepo.save(new Product("1","Rasenmäher",22));
         productRepo.save(new Product("2","Tasse",22));
-
+        //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/product"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
@@ -44,5 +44,19 @@ class ProductControllerTest {
     ]
 """));
     }
+    @Test
+    void getProductById_shouldReturnProduct_whenCalledById() throws Exception {
+        //GIVEN
+        productRepo.save(new Product("2","Tasse",22));
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/2"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+    {
+        "id": "2",
+        "name": "Tasse",
+        "price": 22
+    }
+"""));}
 
 }

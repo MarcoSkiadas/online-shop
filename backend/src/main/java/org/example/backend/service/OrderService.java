@@ -7,6 +7,7 @@ import org.example.backend.repository.OrderRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,5 +22,9 @@ public class OrderService {
         Order o = new Order(id,order.productIds(), order.price());
         return orderRepo.save(o);
     };
+
+    public List<Order> getAllOrders() {
+        return orderRepo.findAll();
+    }
 
 }

@@ -2,10 +2,13 @@ package org.example.backend.service;
 
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.model.Order;
+import org.example.backend.model.Product;
 import org.example.backend.repository.OrderRepo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -16,6 +19,7 @@ class OrderServiceTest {
 
     private final OrderRepo mockRepo = mock(OrderRepo.class);
     private final IdService mockUtils = mock(IdService.class);
+    private final OrderService service = new OrderService(mockRepo,mockUtils);
 
     @Test
     void addOrder_shouldAddOrder_whenCalledWithOrder() {
@@ -31,6 +35,16 @@ class OrderServiceTest {
         Order actual = service.addOrder(new OrderDTO(productIds,22));
         //THEN
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void getAllOrders_shouldReturnEmptyList_whenCalledInitially() {
+        //GIVEN
+        when(mockRepo.findAll()).thenReturn(Collections.emptyList());
+        //WHEN
+        List<Order> actual = service.getAllOrders();
+        //THEN
+        assertEquals(Collections.EMPTY_LIST, actual);
     }
 
 }

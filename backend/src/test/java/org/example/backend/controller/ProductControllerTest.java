@@ -22,7 +22,7 @@ class ProductControllerTest {
    private MockMvc mockMvc;
 
     @Test
-    void getAllOrders_shouldReturnAllProducts_whenCalledInitially() throws Exception {
+    void getAllProducts_shouldReturnAllProducts_whenCalledInitially() throws Exception {
         //GIVEN
         productRepo.save(new Product("1","Rasenmäher",22));
         productRepo.save(new Product("2","Tasse",22));

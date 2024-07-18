@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.model.Order;
 import org.example.backend.service.OrderService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -20,4 +19,8 @@ public class OrderController {
     public Order addOrder(@RequestBody OrderDTO order) {
         return orderService.addOrder(order);
     }
+
+    @GetMapping()
+    public List<Order> getAllOrders() { return orderService.getAllOrders(); }
+
 }

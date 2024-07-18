@@ -4,12 +4,10 @@ import Navigation from "./components/Navigation.tsx";
 import {Route, Routes} from "react-router-dom";
 import axios from "axios";
 import {useEffect, useState} from "react";
+import {Product} from "./components/ShopSchema.ts";
+import ProductPage from "./pages/ProductPage.tsx";
 
-export type Product = {
-    id:string,
-    name:string,
-    price:number
-}
+
 
 function App() {
 
@@ -32,8 +30,8 @@ function App() {
         </header>
         <Routes>
             <Route path={"/"} element={<Homepage product={product}/>}/>
+            <Route path={"/:id"} element={<ProductPage/>}/>
         </Routes>
-        <button onClick={getAllProducts}>getAllProducts</button>
     </>
   )
 }

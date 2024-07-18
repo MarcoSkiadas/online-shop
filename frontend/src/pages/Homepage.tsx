@@ -1,5 +1,5 @@
-import {Product} from "../App.tsx";
 import ProductCard from "../components/ProductCard.tsx";
+import {Product} from "../components/ShopSchema.ts";
 
 type HomepageProps = {
     product:Product[]

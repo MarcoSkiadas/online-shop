@@ -6,6 +6,7 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {Product} from "./components/ShopSchema.ts";
 import ProductPage from "./pages/ProductPage.tsx";
+import OrderPage from "./pages/OrderPage.tsx";
 
 
 
@@ -31,6 +32,7 @@ function App() {
         <Routes>
             <Route path={"/"} element={<Homepage product={product}/>}/>
             <Route path={"/:id"} element={<ProductPage/>}/>
+            <Route path={"/order"} element={<OrderPage/>}/>
         </Routes>
     </>
   )

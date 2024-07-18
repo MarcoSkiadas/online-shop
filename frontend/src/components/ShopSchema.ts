@@ -3,3 +3,8 @@ export interface Product {
     name: string;
     price: number
 }
+export interface Order {
+    id: string,
+    productIds:string[] ,
+        price:number
+}

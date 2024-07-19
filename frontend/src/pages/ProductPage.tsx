@@ -1,11 +1,12 @@
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
 
 export default function ProductPage() {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`/api/product/${id}`)
@@ -16,6 +17,10 @@ export default function ProductPage() {
                 console.error('Error fetching data:', error);
             });
     }, [id]);
+
+    const handleClick = () => {
+        navigate(`/update/${id}`);
+    }
 
     if (!product) {
         return(
@@ -29,6 +34,7 @@ export default function ProductPage() {
             <div>
             <h2>{product?.name}</h2>
                 <p>Price: {product?.price} €</p>
+                <button onClick={handleClick}>Update Product</button>
             </div>
 
         </>

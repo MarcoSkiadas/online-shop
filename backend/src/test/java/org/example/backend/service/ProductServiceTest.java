@@ -32,7 +32,7 @@ private final ProductService service = new ProductService(mockRepo,mockUtil);
     @Test
     void getProductById_shouldReturnProduct_whenCalledById() {
         //GIVEN
-        Product expected = new Product("1","Rasebnäher",22);
+        Product expected = new Product("1","Rasenmäher",22);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         Product actual = service.getProductById("1");

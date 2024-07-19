@@ -2,7 +2,6 @@ import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
-import { Button, Modal } from 'react-bootstrap';
 
 
 export default function UpdateProductPage() {
@@ -92,40 +91,32 @@ export default function UpdateProductPage() {
                 {error && <p style={{color: 'red'}}>{error}</p>}
                 {success && <p style={{color: 'green'}}>{success}</p>}
             </form>
-            <Button variant="danger" onClick={() => setShowModal(true)}>
+            <button onClick={() => setShowModal(true)}>
                 Delete Product
-            </Button>
+            </button>
 
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Delete</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    Are you sure you want to delete this product?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Cancel
-                    </Button>
-                    <Button variant="danger" onClick={handleDelete}>
-                        Delete
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+                        <h2>Confirm Delete</h2>
+                        <p>Are you sure you want to delete this product?</p>
+                        <button onClick={() => setShowModal(false)}>Cancel</button>
+                        <button onClick={handleDelete}>Delete</button>
+                    </div>
+                </div>
+            )}
 
-            <Modal show={showSuccess} onHide={() => setShowSuccess(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Product Deleted</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    The product was successfully deleted.
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => setShowSuccess(false)}>
-                        OK
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {showSuccess && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowSuccess(false)}>&times;</span>
+                        <h2>Product Deleted</h2>
+                        <p>The product was successfully deleted.</p>
+                        <button onClick={() => setShowSuccess(false)}>OK</button>
+                    </div>
+                </div>
+            )}
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 

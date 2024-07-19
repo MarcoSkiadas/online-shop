@@ -6,6 +6,7 @@ import org.example.backend.model.Product;
 import org.example.backend.repository.ProductRepo;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 

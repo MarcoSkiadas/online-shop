@@ -35,7 +35,6 @@ class ProductControllerTest {
    }
     @Test
     void getAllProducts_shouldReturnAllProducts_whenCalledInitially() throws Exception {
-        //GIVEN
         //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/product"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -56,7 +55,6 @@ class ProductControllerTest {
     }
     @Test
     void getProductById_shouldReturnProduct_whenCalledById() throws Exception {
-        //GIVEN
         //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/product/2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

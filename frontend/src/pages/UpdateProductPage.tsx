@@ -30,6 +30,11 @@ export default function UpdateProductPage() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
+    const handleCloseSuccess = () => {
+        setShowSuccess(false);
+        navigate(`/`)
+    }
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -54,7 +59,7 @@ export default function UpdateProductPage() {
                 .then(r=>console.log(r.data))
             setShowModal(false);
             setShowSuccess(true);
-            navigate(`/`)
+
         } catch (error) {
             setError('Failed to delete product. Please try again.');
             setShowModal(false);
@@ -114,7 +119,7 @@ export default function UpdateProductPage() {
                         <span className="close" onClick={() => setShowSuccess(false)}>&times;</span>
                         <h2>Product Deleted</h2>
                         <p>The product was successfully deleted.</p>
-                        <button onClick={() => setShowSuccess(false)}>OK</button>
+                        <button onClick={handleCloseSuccess}>OK</button>
                     </div>
                 </div>
             )}

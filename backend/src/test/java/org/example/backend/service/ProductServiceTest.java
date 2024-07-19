@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ProductServiceTest {
 
@@ -52,6 +51,12 @@ private final ProductService service = new ProductService(mockRepo,mockUtil);
         actual = service.updateProduct("1",expectedDTO);
         //THEN
         assertEquals(expected, actual);
+    }
+    @Test
+    void deleteProduct_shouldDeleteProduct_whenCalledById() {
+        String productId = "123";
+        service.deleteProduct(productId);
+        verify(mockRepo).deleteById(productId);
     }
 
 }

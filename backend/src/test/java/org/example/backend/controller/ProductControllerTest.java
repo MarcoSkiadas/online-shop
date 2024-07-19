@@ -84,4 +84,10 @@ class ProductControllerTest {
     }
 """));
     }
+    @Test
+    void deleteProduct_shouldReturnIsOk_whenPerformed() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/product/2")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

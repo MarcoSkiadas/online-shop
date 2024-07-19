@@ -8,7 +8,7 @@ public record Product(
         @Id
         String id,
         String name,
-        int price
+        float price
 
 ) {
 }

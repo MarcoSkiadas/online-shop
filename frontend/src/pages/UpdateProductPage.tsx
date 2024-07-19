@@ -2,6 +2,7 @@ import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
+import '../components/styles.css';
 
 
 export default function UpdateProductPage() {

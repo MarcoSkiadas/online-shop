@@ -1,0 +1,36 @@
+.modal {
+    display: block; /* Standardmäßig blockieren, um es sichtbar zu machen */
+    position: fixed; /* Bleibt an der gleichen Position (fixiert) */
+    z-index: 1; /* Sitzt oben */
+    left: 0;
+    top: 0;
+    width: 100%; /* Volle Breite */
+    height: 100%; /* Volle Höhe */
+    overflow: auto; /* Ermöglicht Scrollen, wenn nötig */
+    background-color: rgb(0,0,0); /* Fallback-Farbe */
+    background-color: rgba(0,0,0,0.4); /* Schwarz mit Opazität */
+}
+
+/* Modal-Inhalt */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% von oben und zentriert */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Könnte je nach Bedarf angepasst werden */
+}
+
+/* Das Schließen-Symbol */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

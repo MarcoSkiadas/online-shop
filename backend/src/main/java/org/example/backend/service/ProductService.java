@@ -38,4 +38,8 @@ public class ProductService {
             return null;
         }
     }
+
+    public void deleteProduct(String id) {
+        productRepo.deleteById(id);
+    }
 }

@@ -1,7 +1,8 @@
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
+import '../components/styles.css';
 
 
 export default function UpdateProductPage() {
@@ -9,6 +10,9 @@ export default function UpdateProductPage() {
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getProduct()
@@ -26,7 +30,11 @@ export default function UpdateProductPage() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
-    // Funktion zum Umgang mit dem Formulartick
+    const handleCloseSuccess = () => {
+        setShowSuccess(false);
+        navigate(`/`)
+    }
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -44,6 +52,19 @@ export default function UpdateProductPage() {
             setSuccess(null);
         }
     };
+
+    function handleDelete() {
+        try {
+            axios.delete(`/api/product/${product?.id}`)
+                .then(r=>console.log(r.data))
+            setShowModal(false);
+            setShowSuccess(true);
+
+        } catch (error) {
+            setError('Failed to delete product. Please try again.');
+            setShowModal(false);
+        }
+    }
 
     return(
         <>
@@ -76,6 +97,34 @@ export default function UpdateProductPage() {
                 {error && <p style={{color: 'red'}}>{error}</p>}
                 {success && <p style={{color: 'green'}}>{success}</p>}
             </form>
+            <button onClick={() => setShowModal(true)}>
+                Delete Product
+            </button>
+
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+                        <h2>Confirm Delete</h2>
+                        <p>Are you sure you want to delete this product?</p>
+                        <button onClick={() => setShowModal(false)}>Cancel</button>
+                        <button onClick={handleDelete}>Delete</button>
+                    </div>
+                </div>
+            )}
+
+            {showSuccess && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowSuccess(false)}>&times;</span>
+                        <h2>Product Deleted</h2>
+                        <p>The product was successfully deleted.</p>
+                        <button onClick={handleCloseSuccess}>OK</button>
+                    </div>
+                </div>
+            )}
+
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
         </>
     )

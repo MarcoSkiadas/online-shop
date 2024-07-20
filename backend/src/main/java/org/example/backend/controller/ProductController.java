@@ -23,7 +23,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable String id, @RequestBody ProductDTO product) {
-        return productService.updateProduct(id,product);
-    }
+    public Product updateProduct(@PathVariable String id, @RequestBody ProductDTO product) {return productService.updateProduct(id,product);}
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable String id) {productService.deleteProduct(id);}
 }

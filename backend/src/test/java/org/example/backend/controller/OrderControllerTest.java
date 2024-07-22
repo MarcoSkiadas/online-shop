@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import org.example.backend.model.Order;
 import org.example.backend.repository.OrderRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +24,15 @@ class OrderControllerTest {
     @Autowired
     private OrderRepo orderRepo;
 
+    @BeforeEach
+    void setUp() {
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        orderRepo.save(new Order("1",productIds,22));
+        orderRepo.save(new Order("2",productIds,22));
+    }
     @Test
     void addOrder() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
@@ -51,13 +61,6 @@ class OrderControllerTest {
     }
     @Test
     void getAllOrders_shouldReturnAllOrders_whenCalledInitially() throws Exception {
-        //GIVEN
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        orderRepo.save(new Order("1",productIds,22));
-        orderRepo.save(new Order("2",productIds,22));
         //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/order"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -86,12 +89,6 @@ class OrderControllerTest {
     }
     @Test
     void getOrderById_shouldReturnOrder_whenCalledById() throws Exception {
-        //GIVEN
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        orderRepo.save(new Order("1",productIds,22));
         //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/order/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -106,4 +103,11 @@ class OrderControllerTest {
         "price": 22
     }
 """));}
+
+    @Test
+    void deleteOrderById_shouldDeleteOrder_whenCalledById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/order/1")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

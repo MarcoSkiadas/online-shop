@@ -30,8 +30,6 @@ class ProductControllerTest {
    private ProductRepo productRepo;
    @Autowired
    private MockMvc mockMvc;
-    @MockBean
-    private ProductService productService;
 
    @BeforeEach
    void setUp() {

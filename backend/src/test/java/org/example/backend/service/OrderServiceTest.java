@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 class OrderServiceTest {
@@ -23,7 +22,6 @@ class OrderServiceTest {
 
     @Test
     void addOrder_shouldAddOrder_whenCalledWithOrder() {
-        OrderService service = new OrderService(mockRepo, mockUtils);
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
         productIds.add("2");
@@ -59,6 +57,17 @@ class OrderServiceTest {
         Order actual = service.getOrderById("1");
         //THEN
         assertEquals(expected, actual);
+    }
+    @Test
+    void deleteOrderById_shouldDeleteOrder_whenCalledById() {
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        Order expected = new Order("1",productIds,22);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        service.deleteOrderById(expected.id());
+        verify(mockRepo).deleteById(expected.id());
     }
 
 }

@@ -18,6 +18,7 @@ public class OrderService {
     private final OrderRepo orderRepo;
     private final IdService idService;
 
+
     public Order addOrder(OrderDTO order) {
 
         String id = idService.generateUUID();
@@ -32,5 +33,9 @@ public class OrderService {
     public Order getOrderById(String id) {
         Optional<Order> order = orderRepo.findById(id);
         return order.orElseThrow();
+    }
+
+    public void deleteOrderById(String id) {
+        orderRepo.deleteById(id);
     }
 }

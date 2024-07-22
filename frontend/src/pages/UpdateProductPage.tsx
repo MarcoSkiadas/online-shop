@@ -4,8 +4,11 @@ import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
 import '../components/styles.css';
 
+type UpdateProductPageProps = {
+    handleCloseSuccess:()=> void
+}
 
-export default function UpdateProductPage() {
+export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>) {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
@@ -29,11 +32,6 @@ export default function UpdateProductPage() {
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-
-    const handleCloseSuccess = () => {
-        setShowSuccess(false);
-        navigate(`/`)
-    }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -119,7 +117,7 @@ export default function UpdateProductPage() {
                         <span className="close" onClick={() => setShowSuccess(false)}>&times;</span>
                         <h2>Product Deleted</h2>
                         <p>The product was successfully deleted.</p>
-                        <button onClick={handleCloseSuccess}>OK</button>
+                        <button onClick={props.handleCloseSuccess}>OK</button>
                     </div>
                 </div>
             )}

@@ -41,7 +41,7 @@ function App() {
             <Route path={"/"} element={<Homepage product={product}/>}/>
             <Route path={"/:id"} element={<ProductPage/>}/>
             <Route path={"/order"} element={<OrderPage/>}/>
-            <Route path={"/update/:id"} element={<UpdateProductPage handleCloseSuccess={handleCloseSuccess}/>}/>
+            <Route path={"/update/:id"} element={<UpdateProductPage handleCloseSuccess={handleCloseSuccess} showSuccess={showSuccess} setShowSuccess={setShowSuccess}/>}/>
         </Routes>
     </>
   )

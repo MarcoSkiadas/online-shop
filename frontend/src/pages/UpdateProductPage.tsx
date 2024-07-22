@@ -1,11 +1,13 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import '../components/styles.css';
 
 type UpdateProductPageProps = {
     handleCloseSuccess:()=> void
+    showSuccess:boolean
+    setShowSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>) {
@@ -14,7 +16,6 @@ export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
 
     useEffect(() => {
         getProduct()
@@ -55,7 +56,7 @@ export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>
             axios.delete(`/api/product/${product?.id}`)
                 .then(r=>console.log(r.data))
             setShowModal(false);
-            setShowSuccess(true);
+            props.setShowSuccess(true);
 
         } catch (error) {
             setError('Failed to delete product. Please try again.');
@@ -110,10 +111,10 @@ export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>
                 </div>
             )}
 
-            {showSuccess && (
+            {props.showSuccess && (
                 <div className="modal">
                     <div className="modal-content">
-                        <span className="close" onClick={() => setShowSuccess(false)}>&times;</span>
+                        <span className="close" onClick={() => props.setShowSuccess(false)}>&times;</span>
                         <h2>Product Deleted</h2>
                         <p>The product was successfully deleted.</p>
                         <button onClick={props.handleCloseSuccess}>OK</button>

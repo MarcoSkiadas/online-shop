@@ -10,7 +10,7 @@ type UpdateProductPageProps = {
     setShowSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>) {
+export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageProps>) {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');

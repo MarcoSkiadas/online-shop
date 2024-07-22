@@ -1,6 +1,8 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.OrderDTO;
 import org.example.backend.dto.ProductDTO;
+import org.example.backend.model.Order;
 import org.example.backend.model.Product;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.Test;
@@ -15,8 +17,8 @@ import static org.mockito.Mockito.*;
 class ProductServiceTest {
 
 private final ProductRepo mockRepo = mock(ProductRepo.class);
-private final IdService mockUtil = mock(IdService.class);
-private final ProductService service = new ProductService(mockRepo,mockUtil);
+private final IdService mockUtils = mock(IdService.class);
+private final ProductService service = new ProductService(mockRepo,mockUtils);
 
     @Test
     void getAllProducts_shouldReturnEmptyList_whenCalledInitially() {
@@ -57,6 +59,16 @@ private final ProductService service = new ProductService(mockRepo,mockUtil);
         String productId = "123";
         service.deleteProduct(productId);
         verify(mockRepo).deleteById(productId);
+    }
+    @Test
+    void addOrder_shouldAddOrder_whenCalledWithOrder() {
+        Product expected = new Product("1","Rasenmäher",22);
+        when(mockUtils.generateUUID()).thenReturn("1");
+        when(mockRepo.save(expected)).thenReturn(expected);
+        //WHEN
+        Product actual = service.addProduct(new ProductDTO("Rasenmäher",22));
+        //THEN
+        assertEquals(expected, actual);
     }
 
 }

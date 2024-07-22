@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
 import '../components/styles.css';
@@ -15,7 +15,6 @@ export default function UpdateProductPage(props:Readonly<UpdateProductPageProps>
     const [price, setPrice] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         getProduct()

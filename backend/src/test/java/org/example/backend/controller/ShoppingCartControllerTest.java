@@ -104,7 +104,7 @@ class ShoppingCartControllerTest {
     }
 """));}
     @Test
-    void updateShoppingCart_shouldUpdateShoppingCart_whenCalledByShoppingCart() throws Exception {
+    void updateShoppingCart_shouldAddProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

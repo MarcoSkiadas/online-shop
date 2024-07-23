@@ -1,12 +1,7 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.OrderDTO;
-import org.example.backend.dto.ProductDTO;
 import org.example.backend.dto.ShoppingCartDTO;
-import org.example.backend.model.Order;
-import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
-import org.example.backend.repository.OrderRepo;
 import org.example.backend.repository.ShoppingCartRepo;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +58,7 @@ class ShoppingCartServiceTest {
         assertEquals(expected, actual);
     }
     @Test
-    void updateShoppingCart_shouldUpdateShoppingCart_whenCalledById() {
+    void updateShoppingCart_shouldAddProductToShoppingCart_whenCalledById() {
         //GIVEN
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
@@ -78,7 +73,7 @@ class ShoppingCartServiceTest {
         productIdsA.add("2");
         ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(productIds);
         //WHEN
-        actual = service.updateShoppingCart("1",shoppingCartDTO);
+        actual = service.addProductToShoppingCart("1",shoppingCartDTO);
         //THEN
         assertEquals(expected, actual);
     }

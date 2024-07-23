@@ -17,20 +17,14 @@ export default function ProductPage() {
             });
     }, [id]);
 
-    if (!product) {
-        return(
-            <>
-                <p>Product not found</p>
-            </>)
-    }
-
     return(
         <>
+            {!product ? <p>Product not found</p>:
             <div>
             <h2>{product?.name}</h2>
                 <p>Price: {product?.price} €</p>
 
-            </div>
+            </div>}
 
         </>
     )

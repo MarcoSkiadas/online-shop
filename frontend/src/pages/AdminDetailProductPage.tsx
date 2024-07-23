@@ -22,20 +22,14 @@ export default function AdminDetailProductPage() {
             });
     }, [id]);
 
-    if (!product) {
-        return(
-            <>
-                <p>Product not found</p>
-            </>)
-    }
-
     return(
         <>
+            {!product ? <p>Product not found</p> :
             <div>
                 <h2>{product?.name}</h2>
                 <p>Price: {product?.price} €</p>
                 <button onClick={handleClick}>Update Product</button>
-            </div>
+            </div>}
 
         </>
     )

@@ -2,6 +2,7 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
+import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
 export default function ProductPage() {
     const { id } = useParams<{ id: string }>();
@@ -19,13 +20,7 @@ export default function ProductPage() {
 
     return(
         <>
-            {!product ? <p>Product not found</p>:
-            <div>
-            <h2>{product?.name}</h2>
-                <p>Price: {product?.price} €</p>
-
-            </div>}
-
+            <ShowDetailProduct product={product}/>
         </>
     )
 }

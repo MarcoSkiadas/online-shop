@@ -2,6 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Product} from "../components/ShopSchema.ts";
 import axios from "axios";
+import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
 export default function AdminDetailProductPage() {
     const { id } = useParams<{ id: string }>();
@@ -24,13 +25,9 @@ export default function AdminDetailProductPage() {
 
     return(
         <>
-            {!product ? <p>Product not found</p> :
-            <div>
-                <h2>{product?.name}</h2>
-                <p>Price: {product?.price} €</p>
-                <button onClick={handleClick}>Update Product</button>
-            </div>}
-
+        <ShowDetailProduct product={product}/>
+            {product &&
+        <button onClick={handleClick}>Update Product</button>}
         </>
     )
 }

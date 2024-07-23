@@ -8,3 +8,8 @@ export interface Order {
     productIds:string[] ,
         price:number
 }
+
+export interface ShoppingCart {
+    id: string,
+    productIds:string[]
+}

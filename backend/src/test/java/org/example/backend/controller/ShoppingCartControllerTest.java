@@ -35,6 +35,7 @@ class ShoppingCartControllerTest {
         productIds.add("2");
         productIds.add("3");
         shoppingCartRepo.save(new ShoppingCart("1",productIds));
+        shoppingCartRepo.save(new ShoppingCart("2",productIds));
     }
     @Test
     void addShoppingCart_shouldReturnShoppingCart_whenSendWitShoppingCart() throws Exception {
@@ -61,5 +62,45 @@ class ShoppingCartControllerTest {
 """))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
     }
-
+    @Test
+    void getAllShoppingCarts_shouldReturnAllShoppingCarts_whenCalledInitially() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/shoppingCart"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+[
+    {
+        "id": "1",
+        "productIds": [
+            "1",
+            "2",
+            "3"
+        ]
+    },
+    {
+        "id": "2",
+        "productIds": [
+            "1",
+            "2",
+            "3"
+        ]
+    }
+]
+"""));
+    }
+    @Test
+    void getShoppingCartById_shouldReturnShoppingCart_whenCalledById() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/shoppingCart/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+    {
+        "id": "1",
+        "productIds": [
+            "1",
+            "2",
+            "3"
+        ]
+    }
+"""));}
 }

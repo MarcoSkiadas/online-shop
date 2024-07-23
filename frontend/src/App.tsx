@@ -13,6 +13,7 @@ import AdminOrderPage from "./pages/AdminOrderPage.tsx";
 import AdminProductPage from "./pages/AdminProductPage.tsx";
 import AdminDetailProductPage from "./pages/AdminDetailProductPage.tsx";
 import AdminAddProductPage from "./pages/AdminAddProductPage.tsx";
+import ShoppingCartPage from "./pages/ShoppingCartPage.tsx";
 
 
 
@@ -69,6 +70,7 @@ function App() {
             <Route path={"/"} element={<Homepage product={product}/>}/>
             <Route path={"/:id"} element={<ProductPage/>}/>
             <Route path={"/order"} element={<OrderPage/>}/>
+            <Route path={"/shoppingCart"} element={<ShoppingCartPage/>}/>
             <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton} handleProductButton={handleProductButton}/>}/>
             <Route path={"/admin/product"} element={<AdminProductPage product={product}/>}/>
             <Route path={"/admin/order"} element={<AdminOrderPage orderList={orderList}/>}/>

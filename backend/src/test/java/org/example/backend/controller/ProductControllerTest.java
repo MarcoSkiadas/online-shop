@@ -93,4 +93,23 @@ class ProductControllerTest {
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+    @Test
+    void addProduct_shouldReturnProduct_whenSendWithProduct() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+        {
+        "name": "Rasenmäher",
+        "price": 19
+    }
+"""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+       {
+        "name": "Rasenmäher",
+        "price": 19
+    }
+"""))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+    }
 }

@@ -34,7 +34,7 @@ class OrderControllerTest {
         orderRepo.save(new Order("2",productIds,22));
     }
     @Test
-    void addOrder() throws Exception {
+    void addOrder_shouldReturnOrder_whenSendWithOrder() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

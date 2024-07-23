@@ -6,7 +6,6 @@ import org.example.backend.model.Product;
 import org.example.backend.repository.ProductRepo;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,5 +40,12 @@ public class ProductService {
 
     public void deleteProduct(String id) {
         productRepo.deleteById(id);
+    }
+
+    public Product addProduct(ProductDTO productDTO) {
+            String productId = idService.generateUUID();
+        Product product = new Product(productId,productDTO.name(),productDTO.price());
+            productRepo.save(product);
+            return product;
     }
 }

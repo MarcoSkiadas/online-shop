@@ -7,7 +7,9 @@ export default function Navigation() {
             <div>
                 <Link to={"/"}>Homepage</Link>
                 <Link to={"/order"}>Orders</Link>
+                <Link to={"/shoppingCart"}>Shopping Cart</Link>
                 <Link to={"/admin"}>Admin</Link>
+
             </div>
         </>
     )

@@ -1,8 +1,10 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.OrderDTO;
+import org.example.backend.dto.ProductDTO;
 import org.example.backend.dto.ShoppingCartDTO;
 import org.example.backend.model.Order;
+import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.repository.ShoppingCartRepo;
@@ -57,6 +59,26 @@ class ShoppingCartServiceTest {
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         ShoppingCart actual = service.getShoppingCartById("1");
+        //THEN
+        assertEquals(expected, actual);
+    }
+    @Test
+    void updateShoppingCart_shouldUpdateShoppingCart_whenCalledById() {
+        //GIVEN
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        ShoppingCart expected = new ShoppingCart("1",productIds);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        when(mockRepo.save(expected)).thenReturn(expected);
+        ArrayList<String> productIdsA = new ArrayList<>();
+        ShoppingCart actual = new ShoppingCart("1",productIdsA);
+        productIdsA.add("1");
+        productIdsA.add("2");
+        ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(productIds);
+        //WHEN
+        actual = service.updateShoppingCart("1",shoppingCartDTO);
         //THEN
         assertEquals(expected, actual);
     }

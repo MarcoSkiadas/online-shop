@@ -69,6 +69,8 @@ private final ProductService service = new ProductService(mockRepo,mockUtils);
         Product actual = service.addProduct(new ProductDTO("Rasenmäher",22));
         //THEN
         assertEquals(expected, actual);
+        verify(mockRepo).save(expected);
+        verify(mockUtils).generateUUID();
     }
 
 }

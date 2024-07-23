@@ -106,6 +106,7 @@ class ProductControllerTest {
         "name": "Rasenmäher",
         "price": 19
     }
-"""));
+"""))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
     }
 }

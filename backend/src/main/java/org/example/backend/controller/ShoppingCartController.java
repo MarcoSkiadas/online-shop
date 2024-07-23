@@ -23,10 +23,10 @@ public class ShoppingCartController {
     @GetMapping("/{id}")
     public ShoppingCart getShoppingCartById(@PathVariable String id){ return shoppingCartService.getShoppingCartById(id);}
 
-    @PutMapping("addProduct/{id}")
+    @PutMapping("/addProduct/{id}")
     public ShoppingCart addProductToShoppingCart(@PathVariable String id, @RequestBody ShoppingCartDTO shoppingCartDTO) {return shoppingCartService.addProductToShoppingCart(id,shoppingCartDTO);}
 
-    @PutMapping("removeProduct/{id}")
+    @PutMapping("/removeProduct/{id}")
     public ShoppingCart removeProductToShoppingCart(@PathVariable String id, @RequestBody ShoppingCartDTO shoppingCartDTO) {return shoppingCartService.removeProductToShoppingCart(id,shoppingCartDTO);}
 }
 

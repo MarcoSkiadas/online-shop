@@ -2,12 +2,12 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingCartDTO;
+import org.example.backend.model.Order;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.service.ShoppingCartService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/shoppingCart")
@@ -17,4 +17,10 @@ public class ShoppingCartController {
 
     @PostMapping()
     public ShoppingCart addShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) { return shoppingCartService.addShoppingCart(shoppingCartDTO);}
+
+    @GetMapping()
+    public List<ShoppingCart> getAllShoppingCarts() { return shoppingCartService.getAllShoppingCarts(); }
+
+    @GetMapping("/{id}")
+    public ShoppingCart getShoppingCartById(@PathVariable String id){ return shoppingCartService.getShoppingCartById(id);}
 }

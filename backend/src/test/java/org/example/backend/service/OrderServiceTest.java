@@ -45,7 +45,7 @@ class OrderServiceTest {
         assertEquals(Collections.EMPTY_LIST, actual);
     }
     @Test
-    void getOrderById_shouldReturnProduct_whenCalledById() {
+    void getOrderById_shouldReturnOrder_whenCalledById() {
         //GIVEN
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");

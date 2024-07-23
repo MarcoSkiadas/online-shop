@@ -9,6 +9,9 @@ import org.example.backend.repository.ShoppingCartRepo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -31,6 +34,29 @@ class ShoppingCartServiceTest {
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
         ShoppingCart actual = service.addShoppingCart(new ShoppingCartDTO(productIds));
+        //THEN
+        assertEquals(expected, actual);
+    }
+    @Test
+    void getAllShoppingCarts_shouldReturnEmptyList_whenCalledInitially() {
+        //GIVEN
+        when(mockRepo.findAll()).thenReturn(Collections.emptyList());
+        //WHEN
+        List<ShoppingCart> actual = service.getAllShoppingCarts();
+        //THEN
+        assertEquals(Collections.EMPTY_LIST, actual);
+    }
+    @Test
+    void getShoppingCartById_shouldReturnShoppingCart_whenCalledById() {
+        //GIVEN
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        ShoppingCart expected = new ShoppingCart("1",productIds);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        //WHEN
+        ShoppingCart actual = service.getShoppingCartById("1");
         //THEN
         assertEquals(expected, actual);
     }

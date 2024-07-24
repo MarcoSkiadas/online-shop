@@ -103,4 +103,50 @@ class ShoppingCartControllerTest {
         ]
     }
 """));}
+    @Test
+    void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/addProduct/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+    {
+        "productIds": [
+            "4"
+        ]
+    }
+"""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+    {
+        "id": "2",
+        "productIds": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ]
+    }
+"""));
+    }
+    @Test
+    void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/removeProduct/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+    {
+        "productIds": [
+            "3"
+        ]
+    }
+"""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+    {
+        "id": "2",
+        "productIds": [
+            "1",
+            "2"
+        ]
+    }
+"""));
+    }
 }

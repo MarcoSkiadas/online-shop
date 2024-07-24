@@ -1,10 +1,7 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.OrderDTO;
 import org.example.backend.dto.ShoppingCartDTO;
-import org.example.backend.model.Order;
 import org.example.backend.model.ShoppingCart;
-import org.example.backend.repository.OrderRepo;
 import org.example.backend.repository.ShoppingCartRepo;
 import org.junit.jupiter.api.Test;
 
@@ -60,4 +57,47 @@ class ShoppingCartServiceTest {
         //THEN
         assertEquals(expected, actual);
     }
+    @Test
+    void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledById() {
+        //GIVEN
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        ShoppingCart expected = new ShoppingCart("1",productIds);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        when(mockRepo.save(expected)).thenReturn(expected);
+        ArrayList<String> productIdsA = new ArrayList<>();
+        ShoppingCart actual = new ShoppingCart("1",productIdsA);
+        productIdsA.add("1");
+        productIdsA.add("2");
+        ArrayList<String> productIdsB = new ArrayList<>();
+        productIdsB.add("3");
+        ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(productIdsB);
+        //WHEN
+        actual = service.addProductToShoppingCart("1",shoppingCartDTO);
+        //THEN
+        assertEquals(expected, actual);
+    }
+    @Test
+    void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledById() {
+        //GIVEN
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        ShoppingCart expected = new ShoppingCart("1",productIds);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        when(mockRepo.save(expected)).thenReturn(expected);
+        ArrayList<String> productIdsA = new ArrayList<>();
+        ShoppingCart actual = new ShoppingCart("1",productIdsA);
+        productIdsA.add("1");
+        productIdsA.add("2");
+        ArrayList<String> productIdsB = new ArrayList<>();
+        productIdsB.add("2");
+        ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(productIdsB);
+        //WHEN
+        actual = service.removeProductToShoppingCart("1",shoppingCartDTO);
+        //THEN
+        assertEquals(expected, actual);
+    }
+
 }

@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import org.example.backend.dto.ShoppingCartDTO;
 import org.example.backend.model.ShoppingCart;
+import org.example.backend.repository.ProductRepo;
 import org.example.backend.repository.ShoppingCartRepo;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,8 @@ class ShoppingCartServiceTest {
 
     private final ShoppingCartRepo mockRepo = mock(ShoppingCartRepo.class);
     private final IdService mockUtils = mock(IdService.class);
-    private final ShoppingCartService service = new ShoppingCartService(mockRepo,mockUtils);
+    private final ProductRepo mockProductRepo = mock(ProductRepo.class);
+    private final ShoppingCartService service = new ShoppingCartService(mockRepo, mockUtils, mockProductRepo);
 
     @Test
     void addShoppingCart_shouldShoppingCart_whenCalledWithShoppingCart() {
@@ -26,7 +28,7 @@ class ShoppingCartServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        ShoppingCart expected = new ShoppingCart("1",productIds);
+        ShoppingCart expected = new ShoppingCart("1", productIds);
         when(mockUtils.generateUUID()).thenReturn("1");
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
@@ -34,6 +36,7 @@ class ShoppingCartServiceTest {
         //THEN
         assertEquals(expected, actual);
     }
+
     @Test
     void getAllShoppingCarts_shouldReturnEmptyList_whenCalledInitially() {
         //GIVEN
@@ -43,6 +46,7 @@ class ShoppingCartServiceTest {
         //THEN
         assertEquals(Collections.EMPTY_LIST, actual);
     }
+
     @Test
     void getShoppingCartById_shouldReturnShoppingCart_whenCalledById() {
         //GIVEN
@@ -50,13 +54,14 @@ class ShoppingCartServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        ShoppingCart expected = new ShoppingCart("1",productIds);
+        ShoppingCart expected = new ShoppingCart("1", productIds);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         ShoppingCart actual = service.getShoppingCartById("1");
         //THEN
         assertEquals(expected, actual);
     }
+
     @Test
     void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledById() {
         //GIVEN
@@ -64,38 +69,39 @@ class ShoppingCartServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        ShoppingCart expected = new ShoppingCart("1",productIds);
+        ShoppingCart expected = new ShoppingCart("1", productIds);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         when(mockRepo.save(expected)).thenReturn(expected);
         ArrayList<String> productIdsA = new ArrayList<>();
-        ShoppingCart actual = new ShoppingCart("1",productIdsA);
+        ShoppingCart actual = new ShoppingCart("1", productIdsA);
         productIdsA.add("1");
         productIdsA.add("2");
         ArrayList<String> productIdsB = new ArrayList<>();
         productIdsB.add("3");
         ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(productIdsB);
         //WHEN
-        actual = service.addProductToShoppingCart("1",shoppingCartDTO);
+        actual = service.addProductToShoppingCart("1", shoppingCartDTO);
         //THEN
         assertEquals(expected, actual);
     }
+
     @Test
     void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledById() {
         //GIVEN
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
-        ShoppingCart expected = new ShoppingCart("1",productIds);
+        ShoppingCart expected = new ShoppingCart("1", productIds);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         when(mockRepo.save(expected)).thenReturn(expected);
         ArrayList<String> productIdsA = new ArrayList<>();
-        ShoppingCart actual = new ShoppingCart("1",productIdsA);
+        ShoppingCart actual = new ShoppingCart("1", productIdsA);
         productIdsA.add("1");
         productIdsA.add("2");
         ArrayList<String> productIdsB = new ArrayList<>();
         productIdsB.add("2");
         ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(productIdsB);
         //WHEN
-        actual = service.removeProductToShoppingCart("1",shoppingCartDTO);
+        actual = service.removeProductToShoppingCart("1", shoppingCartDTO);
         //THEN
         assertEquals(expected, actual);
     }

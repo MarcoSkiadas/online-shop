@@ -3,6 +3,7 @@ package org.example.backend.service;
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.model.Order;
 import org.example.backend.repository.OrderRepo;
+import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ class OrderServiceTest {
 
     private final OrderRepo mockRepo = mock(OrderRepo.class);
     private final IdService mockUtils = mock(IdService.class);
-    private final OrderService service = new OrderService(mockRepo,mockUtils);
+    private final ProductRepo mockProductRepo = mock(ProductRepo.class);
+    private final OrderService service = new OrderService(mockRepo, mockUtils, mockProductRepo);
 
     @Test
     void addOrder_shouldAddOrder_whenCalledWithOrder() {
@@ -26,11 +28,11 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1",productIds,22);
+        Order expected = new Order("1", productIds, 22);
         when(mockUtils.generateUUID()).thenReturn("1");
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
-        Order actual = service.addOrder(new OrderDTO(productIds,22));
+        Order actual = service.addOrder(new OrderDTO(productIds, 22));
         //THEN
         assertEquals(expected, actual);
     }
@@ -44,6 +46,7 @@ class OrderServiceTest {
         //THEN
         assertEquals(Collections.EMPTY_LIST, actual);
     }
+
     @Test
     void getOrderById_shouldReturnOrder_whenCalledById() {
         //GIVEN
@@ -51,20 +54,21 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1",productIds,22);
+        Order expected = new Order("1", productIds, 22);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         Order actual = service.getOrderById("1");
         //THEN
         assertEquals(expected, actual);
     }
+
     @Test
     void deleteOrderById_shouldDeleteOrder_whenCalledById() {
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1",productIds,22);
+        Order expected = new Order("1", productIds, 22);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         service.deleteOrderById(expected.id());
         verify(mockRepo).deleteById(expected.id());

@@ -45,6 +45,7 @@ export default function OrderPage() {
                 {orderList.map((order) => (
                     <div key={order.id}>
                         <h3>Order ID: {order.id}</h3>
+                        <p>Order Price: {order.price}</p>
                         <ul>
                             {order.productIds.map((productId) => {
                                 const product = productList.find((product) => product.id === productId)

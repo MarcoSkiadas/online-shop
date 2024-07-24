@@ -4,7 +4,7 @@ import {Order, Product} from "../components/ShopSchema.ts";
 
 export default function OrderPage() {
     const [orderList, setOrderList] = useState<Order[]>();
-    const [product, setProduct] = useState<Product[]>();
+    const [productList, setProductList] = useState<Product[]>([]);
 
     const fetchOrders = async (): Promise<Order[]> => {
         const response = await axios.get(`api/order`);
@@ -19,14 +19,10 @@ export default function OrderPage() {
         const loadOrders = async () => {
             try {
                 const fetchedOrders = await fetchOrders();
-                const ordersWithProducts = await Promise.all(
-                    fetchedOrders.map(async (order) => {
-                        const products = await fetchProductsByOrderId(order.id);
-                        setProduct(products);
-                        return {...order, products};
-                    })
-                );
-                setOrderList(ordersWithProducts);
+                fetchedOrders.forEach((order) => {
+                    fetchProductsByOrderId(order.id).then((products) => setProductList([...productList, ...products]))
+                });
+                setOrderList(fetchedOrders);
             } catch (err) {
                 console.log('Failed to load orders');
             }
@@ -50,12 +46,13 @@ export default function OrderPage() {
                     <div key={order.id}>
                         <h3>Order ID: {order.id}</h3>
                         <ul>
-                            {order.products.map((product) => (
-                                <li key={product.id}>
-                                    <h4>{product.name}</h4>
-                                    <p>Price: ${product.price}</p>
+                            {order.productIds.map((productId) => {
+                                const product = productList.find((product) => product.id === productId)
+                                return <li key={product?.id}>
+                                    <h4>{product?.name}</h4>
+                                    <p>Price: ${product?.price}</p>
                                 </li>
-                            ))}
+                            })}
                         </ul>
                     </div>
                 ))}

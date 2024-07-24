@@ -1,6 +1,8 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.ShoppingCartDTO;
+import org.example.backend.model.Order;
+import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.ProductRepo;
 import org.example.backend.repository.ShoppingCartRepo;
@@ -12,8 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 class ShoppingCartServiceTest {
 
@@ -104,6 +106,27 @@ class ShoppingCartServiceTest {
         actual = service.removeProductToShoppingCart("1", shoppingCartDTO);
         //THEN
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void getProductsFromShoppingCart_shouldReturnProducts_whenCalledByOrdersId() {
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        ShoppingCart expected = new ShoppingCart("1", productIds);
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
+        Product expectedProduct2 = new Product("2", "Tee", 22);
+        Product expectedProduct3 = new Product("3", "Tasse", 22);
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(expectedProduct1);
+        products.add(expectedProduct2);
+        products.add(expectedProduct3);
+        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
+        when(mockProductRepo.findAllById(expected.productIds())).thenReturn(products);
+        service.getProductsFromShoppingCart(expected.id());
+        verify(mockRepo).findById(expected.id());
+        verify(mockProductRepo).findAllById(expected.productIds());
     }
 
 }

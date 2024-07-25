@@ -58,7 +58,7 @@ class ShoppingCartControllerTest {
                                           ]
                                         }
                                 """))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                {
                                   "productIds": [
@@ -126,7 +126,7 @@ class ShoppingCartControllerTest {
                                         ]
                                     }
                                 """))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
                                 "id": "2",

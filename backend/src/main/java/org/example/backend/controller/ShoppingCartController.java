@@ -41,7 +41,7 @@ public class ShoppingCartController {
         return shoppingCartService.addProductToShoppingCart(id, shoppingCartDTO);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/removeProduct/{id}")
     public ShoppingCart removeProductToShoppingCart(@PathVariable String id, @RequestBody ShoppingCartDTO shoppingCartDTO) throws InvalidIdException {
         return shoppingCartService.removeProductToShoppingCart(id, shoppingCartDTO);

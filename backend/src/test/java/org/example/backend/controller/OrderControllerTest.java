@@ -55,7 +55,7 @@ class OrderControllerTest {
                                           "price": 55
                                         }
                                 """))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                {
                                   "productIds": [

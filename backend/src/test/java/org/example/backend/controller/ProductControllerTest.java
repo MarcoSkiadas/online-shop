@@ -73,6 +73,21 @@ class ProductControllerTest {
     }
 
     @Test
+    void getProductById_shouldReturnException_whenCalledByWrongId() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/3"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                              "apiPath": "uri=/api/product/3",
+                              "errorCode": "NOT_FOUND",
+                              "errorMsg": "Product with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
+    }
+
+    @Test
     void updateProduct_shouldUpdateProduct_whenCalledByProduct() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/product/2")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,6 +112,20 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/product/2")
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void deleteProduct_shouldReturnException_whenCalledByWrongId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/product/3"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                                "apiPath": "uri=/api/product/3",
+                                "errorCode": "NOT_FOUND",
+                                "errorMsg": "Product with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
     }
 
     @Test

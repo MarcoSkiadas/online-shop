@@ -116,6 +116,21 @@ class ShoppingCartControllerTest {
     }
 
     @Test
+    void getShoppingCartById_shouldReturnException_whenCalledByWrongId() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/shoppingCart/3"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                              "apiPath": "uri=/api/shoppingCart/3",
+                              "errorCode": "NOT_FOUND",
+                              "errorMsg": "Shopping Cart with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
+    }
+
+    @Test
     void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/addProduct/2")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -141,6 +156,29 @@ class ShoppingCartControllerTest {
     }
 
     @Test
+    void addProductToShoppingCart_shouldReturnException_whenCalledByWrongId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/addProduct/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                        "productIds": [
+                                            "4"
+                                        ]
+                                    }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                              "apiPath": "uri=/api/shoppingCart/addProduct/3",
+                              "errorCode": "NOT_FOUND",
+                              "errorMsg": "Shopping Cart with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
+    }
+
+
+    @Test
     void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/removeProduct/2")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -161,6 +199,28 @@ class ShoppingCartControllerTest {
                                 ]
                             }
                         """));
+    }
+
+    @Test
+    void removeProductToShoppingCart_shouldReturnException_whenCalledByWrongId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/shoppingCart/removeProduct/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                        "productIds": [
+                                            "3"
+                                        ]
+                                    }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                              "apiPath": "uri=/api/shoppingCart/removeProduct/3",
+                              "errorCode": "NOT_FOUND",
+                              "errorMsg": "Shopping Cart with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
     }
 
     @Test
@@ -187,5 +247,20 @@ class ShoppingCartControllerTest {
                                                     }
                                                 ]
                         """));
+    }
+
+    @Test
+    void getProductsFromShoppingCart_shouldReturnException_whenCalledByWrongOrderId() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/shoppingCart/3/products"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                              "apiPath": "uri=/api/shoppingCart/3/products",
+                              "errorCode": "NOT_FOUND",
+                              "errorMsg": "Shopping Cart with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
     }
 }

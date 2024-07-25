@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.model.Order;
+import org.example.backend.model.Product;
 import org.example.backend.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +22,23 @@ public class OrderController {
     }
 
     @GetMapping()
-    public List<Order> getAllOrders() { return orderService.getAllOrders(); }
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
+    }
 
     @GetMapping("/{id}")
-    public Order getOrderById(@PathVariable String id){ return orderService.getOrderById(id);}
+    public Order getOrderById(@PathVariable String id) {
+        return orderService.getOrderById(id);
+    }
 
     @DeleteMapping("/{id}")
-    public void deleteOrderById(@PathVariable String id) {orderService.deleteOrderById(id);}
+    public void deleteOrderById(@PathVariable String id) {
+        orderService.deleteOrderById(id);
+    }
+
+    @GetMapping("/{id}/products")
+    public List<Product> getProductsFromOrders(@PathVariable String id) {
+        return orderService.getProductsFromOrders(id);
+    }
 
 }

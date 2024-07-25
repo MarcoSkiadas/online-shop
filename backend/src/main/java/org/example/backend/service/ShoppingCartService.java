@@ -2,7 +2,9 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingCartDTO;
+import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
+import org.example.backend.repository.ProductRepo;
 import org.example.backend.repository.ShoppingCartRepo;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,11 @@ import java.util.Optional;
 public class ShoppingCartService {
     private final ShoppingCartRepo shoppingCartRepo;
     private final IdService idService;
+    private final ProductRepo productRepo;
 
-    public List<ShoppingCart> getAllShoppingCarts() { return shoppingCartRepo.findAll(); }
+    public List<ShoppingCart> getAllShoppingCarts() {
+        return shoppingCartRepo.findAll();
+    }
 
     public ShoppingCart getShoppingCartById(String id) {
         Optional<ShoppingCart> shoppingCart = shoppingCartRepo.findById(id);
@@ -25,7 +30,7 @@ public class ShoppingCartService {
 
     public ShoppingCart addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         String id = idService.generateUUID();
-        ShoppingCart s = new ShoppingCart(id,shoppingCartDTO.productIds());
+        ShoppingCart s = new ShoppingCart(id, shoppingCartDTO.productIds());
         return shoppingCartRepo.save(s);
     }
 
@@ -41,14 +46,14 @@ public class ShoppingCartService {
                 }
             }
             if (!exists) {
-            productIds.add(shoppingCartDTO.productIds().getFirst()); }
+                productIds.add(shoppingCartDTO.productIds().getFirst());
+            }
             ShoppingCart shoppingCart1 = shoppingCart.get()
                     .withId(id)
                     .withProductIds(productIds);
             shoppingCartRepo.save(shoppingCart1);
             return shoppingCart1;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -65,15 +70,20 @@ public class ShoppingCartService {
                 }
             }
             if (exists) {
-                productIds.remove(shoppingCartDTO.productIds().getFirst()); }
+                productIds.remove(shoppingCartDTO.productIds().getFirst());
+            }
             ShoppingCart shoppingCart1 = shoppingCart.get()
                     .withId(id)
                     .withProductIds(productIds);
             shoppingCartRepo.save(shoppingCart1);
             return shoppingCart1;
-        }
-        else {
+        } else {
             return null;
         }
+    }
+
+    public List<Product> getProductsFromShoppingCart(String id) {
+        ShoppingCart cart = shoppingCartRepo.findById(id).orElseThrow();
+        return productRepo.findAllById(cart.productIds());
     }
 }

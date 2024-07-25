@@ -45,6 +45,13 @@ class ProductServiceTest {
     }
 
     @Test
+    void getProductById_shouldReturnException_whenCalledByWrongId() throws InvalidIdException {
+        when(mockRepo.findById("1")).thenReturn(Optional.empty());
+        assertThrows(InvalidIdException.class, () -> service.getProductById("1"));
+        verify(mockRepo).findById("1");
+    }
+
+    @Test
     void updateProduct_shouldUpdateProduct_whenCalledById() throws InvalidIdException {
         //GIVEN
         Product expected = new Product("1", "Rasenmäher", 22);
@@ -59,11 +66,26 @@ class ProductServiceTest {
     }
 
     @Test
+    void updateProduct_shouldThrowException_whenCalledByWrongId() throws InvalidIdException {
+        when(mockRepo.findById("1")).thenReturn(Optional.empty());
+        assertThrows(InvalidIdException.class, () -> service.updateProduct("1", new ProductDTO("Rasenmäher", 22)));
+        verify(mockRepo).findById("1");
+    }
+
+    @Test
     void deleteProduct_shouldDeleteProduct_whenCalledById() throws InvalidIdException {
         String productId = "123";
         when(mockRepo.existsById(productId)).thenReturn(true);
         service.deleteProduct(productId);
         verify(mockRepo).deleteById(productId);
+    }
+
+    @Test
+    void deleteProduct_shouldThrowException_whenCalledByWrongId() throws InvalidIdException {
+        String productId = "123";
+        when(mockRepo.existsById(productId)).thenReturn(false);
+        assertThrows(InvalidIdException.class, () -> service.deleteProduct("1"));
+        verify(mockRepo).existsById("1");
     }
 
     @Test

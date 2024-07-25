@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.ShoppingCartDTO;
+import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Order;
 import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
@@ -50,7 +51,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void getShoppingCartById_shouldReturnShoppingCart_whenCalledById() {
+    void getShoppingCartById_shouldReturnShoppingCart_whenCalledById() throws InvalidIdException {
         //GIVEN
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
@@ -65,7 +66,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledById() {
+    void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledById() throws InvalidIdException {
         //GIVEN
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
@@ -88,7 +89,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledById() {
+    void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledById() throws InvalidIdException {
         //GIVEN
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
@@ -109,7 +110,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void getProductsFromShoppingCart_shouldReturnProducts_whenCalledByOrdersId() {
+    void getProductsFromShoppingCart_shouldReturnProducts_whenCalledByOrdersId() throws InvalidIdException {
         ArrayList<String> productIds = new ArrayList<>();
         productIds.add("1");
         productIds.add("2");

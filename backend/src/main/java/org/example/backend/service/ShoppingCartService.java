@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingCartDTO;
+import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.ProductRepo;
@@ -23,9 +24,9 @@ public class ShoppingCartService {
         return shoppingCartRepo.findAll();
     }
 
-    public ShoppingCart getShoppingCartById(String id) {
+    public ShoppingCart getShoppingCartById(String id) throws InvalidIdException {
         Optional<ShoppingCart> shoppingCart = shoppingCartRepo.findById(id);
-        return shoppingCart.orElseThrow();
+        return shoppingCart.orElseThrow(() -> new InvalidIdException("Shopping Cart with " + id + " not found"));
     }
 
     public ShoppingCart addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
@@ -34,7 +35,7 @@ public class ShoppingCartService {
         return shoppingCartRepo.save(s);
     }
 
-    public ShoppingCart addProductToShoppingCart(String id, ShoppingCartDTO shoppingCartDTO) {
+    public ShoppingCart addProductToShoppingCart(String id, ShoppingCartDTO shoppingCartDTO) throws InvalidIdException {
         Optional<ShoppingCart> shoppingCart = shoppingCartRepo.findById(id);
         if (shoppingCart.isPresent()) {
             ArrayList<String> productIds = shoppingCart.get().productIds();
@@ -54,11 +55,11 @@ public class ShoppingCartService {
             shoppingCartRepo.save(shoppingCart1);
             return shoppingCart1;
         } else {
-            return null;
+            throw new InvalidIdException("Shopping Cart with " + id + " not found");
         }
     }
 
-    public ShoppingCart removeProductToShoppingCart(String id, ShoppingCartDTO shoppingCartDTO) {
+    public ShoppingCart removeProductToShoppingCart(String id, ShoppingCartDTO shoppingCartDTO) throws InvalidIdException {
         Optional<ShoppingCart> shoppingCart = shoppingCartRepo.findById(id);
         if (shoppingCart.isPresent()) {
             ArrayList<String> productIds = shoppingCart.get().productIds();
@@ -78,12 +79,12 @@ public class ShoppingCartService {
             shoppingCartRepo.save(shoppingCart1);
             return shoppingCart1;
         } else {
-            return null;
+            throw new InvalidIdException("Shopping Cart with " + id + " not found");
         }
     }
 
-    public List<Product> getProductsFromShoppingCart(String id) {
-        ShoppingCart cart = shoppingCartRepo.findById(id).orElseThrow();
+    public List<Product> getProductsFromShoppingCart(String id) throws InvalidIdException {
+        ShoppingCart cart = shoppingCartRepo.findById(id).orElseThrow(() -> new InvalidIdException("Shopping Cart with " + id + " not found"));
         return productRepo.findAllById(cart.productIds());
     }
 }

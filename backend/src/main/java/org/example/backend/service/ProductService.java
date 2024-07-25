@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ProductDTO;
+import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Product;
 import org.example.backend.repository.ProductRepo;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,12 @@ public class ProductService {
         return productRepo.findAll();
     }
 
-    public Product getProductById(String id) {
+    public Product getProductById(String id) throws InvalidIdException {
         Optional<Product> product = productRepo.findById(id);
-        return product.orElseThrow();    }
+        return product.orElseThrow(() -> new InvalidIdException("Product with " + id + " not found"));
+    }
 
-    public Product updateProduct(String id, ProductDTO productDTO) {
+    public Product updateProduct(String id, ProductDTO productDTO) throws InvalidIdException {
         Optional<Product> product = productRepo.findById(id);
         if (product.isPresent()) {
             Product product1 = product.get()
@@ -32,20 +34,23 @@ public class ProductService {
                     .withPrice(productDTO.price());
             productRepo.save(product1);
             return product1;
-        }
-        else {
-            return null;
+        } else {
+            throw new InvalidIdException("Product with " + id + " not found");
         }
     }
 
-    public void deleteProduct(String id) {
-        productRepo.deleteById(id);
+    public void deleteProduct(String id) throws InvalidIdException {
+        if (productRepo.existsById(id)) {
+            productRepo.deleteById(id);
+        } else {
+            throw new InvalidIdException("Product with " + id + " not found");
+        }
     }
 
     public Product addProduct(ProductDTO productDTO) {
-            String productId = idService.generateUUID();
-        Product product = new Product(productId,productDTO.name(),productDTO.price());
-            productRepo.save(product);
-            return product;
+        String productId = idService.generateUUID();
+        Product product = new Product(productId, productDTO.name(), productDTO.price());
+        productRepo.save(product);
+        return product;
     }
 }

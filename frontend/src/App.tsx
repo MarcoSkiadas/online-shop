@@ -16,7 +16,6 @@ import AdminAddProductPage from "./pages/AdminAddProductPage.tsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.tsx";
 
 
-
 function App() {
 
     const [product, setProduct] = useState<Product[]>([]);
@@ -24,23 +23,24 @@ function App() {
     const navigate = useNavigate();
     const [orderList, setOrderList] = useState<Order[]>();
 
-    useEffect( () => {
+    useEffect(() => {
         getAllProducts()
-    },[])
+    }, [])
 
     function getAllProducts() {
         axios.get("/api/product")
             .then(response => setProduct(response.data))
-            .catch(error => console.log(error))
+            .catch(error => console.log(error.message))
     }
+
     function getAllOrders() {
-            axios.get(`/api/order`)
-                .then(response => {
-                    setOrderList(response.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+        axios.get(`/api/order`)
+            .then(response => {
+                setOrderList(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error.message);
+            });
     }
 
     const handleCloseSuccess = () => {
@@ -61,25 +61,29 @@ function App() {
         getAllProducts()
     }
 
-  return (
-    <>
-        <header>
-            <Navigation/>
-        </header>
-        <Routes>
-            <Route path={"/"} element={<Homepage product={product}/>}/>
-            <Route path={"/:id"} element={<ProductPage/>}/>
-            <Route path={"/order"} element={<OrderPage/>}/>
-            <Route path={"/shoppingCart"} element={<ShoppingCartPage/>}/>
-            <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton} handleProductButton={handleProductButton}/>}/>
-            <Route path={"/admin/product"} element={<AdminProductPage product={product}/>}/>
-            <Route path={"/admin/order"} element={<AdminOrderPage orderList={orderList}/>}/>
-            <Route path={"/admin/product/add"} element={<AdminAddProductPage handleClickProduct={handleClickProduct}/>}/>
-            <Route path={"/admin/product/:id"} element={<AdminDetailProductPage/>}/>
-            <Route path={"/admin/product/update/:id"} element={<AdminUpdateProductPage handleCloseSuccess={handleCloseSuccess} showSuccess={showSuccess} setShowSuccess={setShowSuccess}/>}/>
-        </Routes>
-    </>
-  )
+    return (
+        <>
+            <header>
+                <Navigation/>
+            </header>
+            <Routes>
+                <Route path={"/"} element={<Homepage product={product}/>}/>
+                <Route path={"/:id"} element={<ProductPage/>}/>
+                <Route path={"/order"} element={<OrderPage/>}/>
+                <Route path={"/shoppingCart"} element={<ShoppingCartPage/>}/>
+                <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton}
+                                                           handleProductButton={handleProductButton}/>}/>
+                <Route path={"/admin/product"} element={<AdminProductPage product={product}/>}/>
+                <Route path={"/admin/order"} element={<AdminOrderPage orderList={orderList}/>}/>
+                <Route path={"/admin/product/add"}
+                       element={<AdminAddProductPage handleClickProduct={handleClickProduct}/>}/>
+                <Route path={"/admin/product/:id"} element={<AdminDetailProductPage/>}/>
+                <Route path={"/admin/product/update/:id"}
+                       element={<AdminUpdateProductPage handleCloseSuccess={handleCloseSuccess}
+                                                        showSuccess={showSuccess} setShowSuccess={setShowSuccess}/>}/>
+            </Routes>
+        </>
+    )
 }
 
 export default App

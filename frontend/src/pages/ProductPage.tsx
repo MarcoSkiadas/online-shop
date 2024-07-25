@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
 export default function ProductPage() {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
 
     useEffect(() => {
@@ -14,11 +14,11 @@ export default function ProductPage() {
                 setProduct(response.data);
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error.message);
             });
     }, [id]);
 
-    return(
+    return (
         <>
             <ShowDetailProduct product={product}/>
         </>

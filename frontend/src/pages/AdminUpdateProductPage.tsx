@@ -5,13 +5,13 @@ import React, {useEffect, useState} from "react";
 import '../components/styles.css';
 
 type UpdateProductPageProps = {
-    handleCloseSuccess:()=> void
-    showSuccess:boolean
-    setShowSuccess:React.Dispatch<React.SetStateAction<boolean>>
+    handleCloseSuccess: () => void
+    showSuccess: boolean
+    setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageProps>) {
-    const { id } = useParams<{ id: string }>();
+export default function AdminUpdateProductPage(props: Readonly<UpdateProductPageProps>) {
+    const {id} = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -27,7 +27,7 @@ export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageP
                 setProduct(response.data);
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error.message);
             });
 
     const [error, setError] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageP
     function handleDelete() {
         try {
             axios.delete(`/api/product/${product?.id}`)
-                .then(r=>console.log(r.data))
+                .then(r => console.log(r.data))
             setShowModal(false);
             props.setShowSuccess(true);
 
@@ -64,7 +64,7 @@ export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageP
         }
     }
 
-    return(
+    return (
         <>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -79,7 +79,7 @@ export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageP
                     />
                 </div>
                 <div>
-                <p>{product?.price}</p>
+                    <p>{product?.price}</p>
                     <label htmlFor="price">Product Price:</label>
                     <input
                         type="number"
@@ -122,7 +122,7 @@ export default function AdminUpdateProductPage(props:Readonly<UpdateProductPageP
                 </div>
             )}
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{color: 'red'}}>{error}</p>}
 
         </>
     )

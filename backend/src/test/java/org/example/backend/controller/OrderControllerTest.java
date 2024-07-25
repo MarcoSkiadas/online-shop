@@ -55,7 +55,7 @@ class OrderControllerTest {
                                           "price": 55
                                         }
                                 """))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                {
                                   "productIds": [
@@ -116,10 +116,39 @@ class OrderControllerTest {
     }
 
     @Test
+    void getOrderById_shouldReturnException_whenCalledByWrongId() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/order/3"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                                "apiPath": "uri=/api/order/3",
+                                "errorCode": "NOT_FOUND",
+                                "errorMsg": "Order with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
+    }
+
+    @Test
     void deleteOrderById_shouldDeleteOrder_whenCalledById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/order/1")
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void deleteOrderById_shouldReturnException_whenCalledByWrongId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/order/3"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                                "apiPath": "uri=/api/order/3",
+                                "errorCode": "NOT_FOUND",
+                                "errorMsg": "Order with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
     }
 
     @Test
@@ -146,5 +175,20 @@ class OrderControllerTest {
                                                     }
                                                 ]
                         """));
+    }
+
+    @Test
+    void getProductsFromOrders_shouldReturnException_whenCalledByWrongOrderId() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/order/3/products"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                                "apiPath": "uri=/api/order/3/products",
+                                "errorCode": "NOT_FOUND",
+                                "errorMsg": "Order with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
     }
 }

@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.OrderDTO;
+import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Order;
 import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
@@ -33,17 +34,21 @@ public class OrderService {
         return orderRepo.findAll();
     }
 
-    public Order getOrderById(String id) {
+    public Order getOrderById(String id) throws InvalidIdException {
         Optional<Order> order = orderRepo.findById(id);
-        return order.orElseThrow();
+        return order.orElseThrow(() -> new InvalidIdException("Order with " + id + " not found"));
     }
 
-    public void deleteOrderById(String id) {
-        orderRepo.deleteById(id);
+    public void deleteOrderById(String id) throws InvalidIdException {
+        if (orderRepo.existsById(id)) {
+            orderRepo.deleteById(id);
+        } else {
+            throw new InvalidIdException("Order with " + id + " not found");
+        }
     }
 
-    public List<Product> getProductsFromOrders(String id) {
-        Order order = orderRepo.findById(id).orElseThrow();
+    public List<Product> getProductsFromOrders(String id) throws InvalidIdException {
+        Order order = orderRepo.findById(id).orElseThrow(() -> new InvalidIdException("Order with " + id + " not found"));
         return productRepo.findAllById(order.productIds());
     }
 }

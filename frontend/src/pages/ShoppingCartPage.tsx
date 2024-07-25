@@ -19,7 +19,7 @@ export default function ShoppingCartPage() {
                     .then(response => setProduct(response.data))
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error.message);
             });
     }
 
@@ -28,7 +28,7 @@ export default function ShoppingCartPage() {
         axios.put("/api/shoppingCart/removeProduct/233e77ed-1d3a-4ee5-ada0-5704129f34f6", {productIds: [productId]})
             .then(response => console.log(response.data))
             .then(getShoppingCart)
-            .catch(error => console.log(error))
+            .catch(error => console.log(error.message))
     }
 
     return (

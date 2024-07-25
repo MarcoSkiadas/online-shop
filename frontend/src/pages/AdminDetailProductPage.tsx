@@ -5,7 +5,7 @@ import axios from "axios";
 import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
 export default function AdminDetailProductPage() {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
     const navigate = useNavigate();
 
@@ -19,15 +19,15 @@ export default function AdminDetailProductPage() {
                 setProduct(response.data);
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error.message);
             });
     }, [id]);
 
-    return(
+    return (
         <>
-        <ShowDetailProduct product={product}/>
+            <ShowDetailProduct product={product}/>
             {product &&
-        <button onClick={handleClick}>Update Product</button>}
+                <button onClick={handleClick}>Update Product</button>}
         </>
     )
 }

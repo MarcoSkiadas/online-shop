@@ -11,12 +11,12 @@ export interface Order {
 }
 
 export interface ShoppingCart {
-    id: string,
     productIds: string[]
 }
 
 export interface User {
     id: string,
     username: string,
-    role: string
+    role: string,
+    shoppingCart: ShoppingCart
 }

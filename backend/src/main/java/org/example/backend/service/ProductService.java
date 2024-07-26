@@ -53,4 +53,8 @@ public class ProductService {
         productRepo.save(product);
         return product;
     }
+
+    public List<Product> getAllProductsByIds(List<String> productIds) {
+        return productRepo.findAllById(productIds);
+    }
 }

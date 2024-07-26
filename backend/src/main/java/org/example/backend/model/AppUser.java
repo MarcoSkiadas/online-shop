@@ -6,6 +6,8 @@ public record AppUser(
         @Id
         String id,
         String username,
-        String role
+        String role,
+        ShoppingCart shoppingCart
+
 ) {
 }

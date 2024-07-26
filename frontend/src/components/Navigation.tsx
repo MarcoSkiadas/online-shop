@@ -1,14 +1,19 @@
 import {Link} from "react-router-dom";
 
-export default function Navigation() {
+type NavigationProps = {
+    currentRole: string | undefined
+}
+export default function Navigation(props: Readonly<NavigationProps>) {
 
-    return(
+    return (
         <>
             <div>
+
                 <Link to={"/"}>Homepage</Link>
                 <Link to={"/order"}>Orders</Link>
                 <Link to={"/shoppingCart"}>Shopping Cart</Link>
-                <Link to={"/admin"}>Admin</Link>
+                {props.currentRole === `ADMIN` && (<Link to={"/admin"}>Admin</Link>)}
+
 
             </div>
         </>

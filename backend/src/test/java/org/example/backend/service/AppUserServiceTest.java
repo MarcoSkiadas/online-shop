@@ -1,9 +1,7 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.ProductDTO;
 import org.example.backend.dto.ShoppingCartDTO;
 import org.example.backend.exceptions.InvalidIdException;
-import org.example.backend.model.Order;
 import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.ProductRepo;
@@ -19,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
-class ShoppingCartServiceTest {
+class AppUserServiceTest {
 
     private final ShoppingCartRepo mockRepo = mock(ShoppingCartRepo.class);
     private final IdService mockUtils = mock(IdService.class);
     private final ProductRepo mockProductRepo = mock(ProductRepo.class);
-    private final ShoppingCartService service = new ShoppingCartService(mockRepo, mockUtils, mockProductRepo);
+    private final AppUserService service = new AppUserService(mockRepo, mockUtils, mockProductRepo);
 
     @Test
     void addShoppingCart_shouldShoppingCart_whenCalledWithShoppingCart() {

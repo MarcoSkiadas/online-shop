@@ -24,10 +24,13 @@ function App() {
     const [showSuccess, setShowSuccess] = useState(false);
     const navigate = useNavigate();
     const [orderList, setOrderList] = useState<Order[]>();
-    const [user, setUser] = useState<User | null>()
+    const [user, setUser] = useState<User | null | undefined>(undefined)
+    const currentRole = user?.role
+    const userid = user?.id
 
     useEffect(() => {
         getAllProducts()
+        me()
     }, [])
 
     function getAllProducts() {
@@ -66,6 +69,7 @@ function App() {
     const login = () => {
         const host = window.location.host === `localhost:5173` ? `http://localhost:8080` : window.location.origin
         window.open(host + `/oauth2/authorization/github`, `_self`)
+
     }
     const logout = () => {
         const host = window.location.host === `localhost:5173` ? `http://localhost:8080` : window.location.origin
@@ -73,27 +77,35 @@ function App() {
     }
     const me = () => {
         axios.get(`/api/auth/me`)
-            .then(response => {
-                setUser(response.data)
-            })
+            .then(response => setUser(response.data))
             .catch(() => {
                 setUser(null)
             })
+        console.log(userid);
+
     }
 
+    if (user === undefined) {
+        return <><p>Loading...</p></>
+    }
+    if (user === null) {
+        return <>
+            <button onClick={login}>Login</button>
+        </>
+    }
     return (
         <>
             <header>
-                <Navigation/>
+                <Navigation currentRole={currentRole}/>
             </header>
             <Routes>
                 <Route path={"/"}
                        element={<Homepage product={product} me={me} login={login} logout={logout}
                                           user={user?.username}/>}/>
-                <Route path={"/:id"} element={<ProductPage/>}/>
+                <Route path={"/:id"} element={<ProductPage user={user} fetchMe={me}/>}/>
                 <Route element={<ProtectedRoute user={user?.username}/>}>
                     <Route path={"/order"} element={<OrderPage/>}/>
-                    <Route path={"/shoppingCart"} element={<ShoppingCartPage/>}/>
+                    <Route path={"/shoppingCart"} element={<ShoppingCartPage user={user} fetchMe={me}/>}/>
                     <Route element={<ProtectedAdminRoute user={user}/>}>
                         <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton}
                                                                    handleProductButton={handleProductButton}/>}/>

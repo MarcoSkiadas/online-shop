@@ -2,6 +2,7 @@ package org.example.backend.security;
 
 
 import org.example.backend.model.AppUser;
+import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -54,7 +56,7 @@ public class SecurityConfig {
 
             AppUser appUser = appUserRepository.findById(oAuth2User.getName())
                     .orElseGet(() -> {
-                        AppUser newAppUser = new AppUser(oAuth2User.getName(), oAuth2User.getAttributes().get("login").toString(), "USER");
+                        AppUser newAppUser = new AppUser(oAuth2User.getName(), oAuth2User.getAttributes().get("login").toString(), "USER", new ShoppingCart(new ArrayList<>()));
 
                         return appUserRepository.save(newAppUser);
                     });

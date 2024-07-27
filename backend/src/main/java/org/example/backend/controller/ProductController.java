@@ -49,7 +49,7 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/shoppingCart")
-    public List<Product> getAllProductsByIds(@RequestParam List<String> productIds) {
+    public List<Product> getAllProductsByIds(@RequestParam List<String> productIds) throws InvalidIdException {
         return productService.getAllProductsByIds(productIds);
     }
 }

@@ -26,7 +26,7 @@ public class OrderService {
     public Order addOrder(OrderDTO order) {
 
         String id = idService.generateUUID();
-        Order o = new Order(id, order.productIds(), order.price());
+        Order o = new Order(id, order.productIds(), order.price(), order.userId());
         return orderRepo.save(o);
     }
 

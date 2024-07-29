@@ -3,13 +3,20 @@ export interface Product {
     name: string;
     price: number
 }
+
 export interface Order {
     id: string,
-    productIds:string[] ,
-        price:number
+    productIds: string[],
+    price: number
 }
 
 export interface ShoppingCart {
+    productIds: string[]
+}
+
+export interface User {
     id: string,
-    productIds:string[]
+    username: string,
+    role: string,
+    shoppingCart: ShoppingCart
 }

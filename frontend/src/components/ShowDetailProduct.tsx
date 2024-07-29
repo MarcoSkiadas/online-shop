@@ -1,15 +1,16 @@
-import {Product} from "./ShopSchema.ts";
+import {Product, User} from "./ShopSchema.ts";
 import axios from "axios";
 
 type ShowDetailProductProps = {
     product: Product | undefined
+    user: User
+    fetchMe: () => void
 }
 export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps>) {
 
     const putProductToShoppingCart = () => {
-        console.log(props.product?.id)
-        axios.put("/api/shoppingCart/addProduct/233e77ed-1d3a-4ee5-ada0-5704129f34f6", {productIds: [props.product?.id]})
-            .then(response => console.log(response.data))
+        axios.put(`api/appuser/shoppingCart/addProduct/${props.user.id}/${props.product?.id}`, {})
+            .then(() => props.fetchMe())
             .catch(error => console.log(error.message))
     }
 

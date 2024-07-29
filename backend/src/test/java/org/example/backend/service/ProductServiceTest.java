@@ -5,9 +5,11 @@ import org.example.backend.dto.ProductDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Order;
 import org.example.backend.model.Product;
+import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -99,6 +101,41 @@ class ProductServiceTest {
         assertEquals(expected, actual);
         verify(mockRepo).save(expected);
         verify(mockUtils).generateUUID();
+    }
+
+    @Test
+    void getAllProductsByIds_shouldReturnProducts_whenCalledByOrdersId() throws InvalidIdException {
+        List<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
+        Product expectedProduct2 = new Product("2", "Tee", 22);
+        Product expectedProduct3 = new Product("3", "Tasse", 22);
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(expectedProduct1);
+        products.add(expectedProduct2);
+        products.add(expectedProduct3);
+        when(mockRepo.findAllById(productIds)).thenReturn(products);
+        service.getAllProductsByIds(productIds);
+        verify(mockRepo).findAllById(productIds);
+    }
+
+    @Test
+    void getAllProductsByIds_shouldReturnExceptions_whenCalledByWrongOrdersId() throws InvalidIdException {
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
+        Product expectedProduct2 = new Product("2", "Tee", 22);
+        Product expectedProduct3 = new Product("3", "Tasse", 22);
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(expectedProduct1);
+        products.add(expectedProduct2);
+        products.add(expectedProduct3);
+        when(mockRepo.findAllById(productIds)).thenReturn(Collections.emptyList());
+        assertThrows(InvalidIdException.class, () -> service.getAllProductsByIds(Collections.emptyList()));
     }
 
 }

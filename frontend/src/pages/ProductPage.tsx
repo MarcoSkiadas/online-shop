@@ -1,10 +1,14 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
-import {Product} from "../components/ShopSchema.ts";
+import {Product, User} from "../components/ShopSchema.ts";
 import {useEffect, useState} from "react";
 import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
-export default function ProductPage() {
+type ProductPageProps = {
+    user: User
+    fetchMe: () => void
+}
+export default function ProductPage(props: Readonly<ProductPageProps>) {
     const {id} = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
 
@@ -20,7 +24,7 @@ export default function ProductPage() {
 
     return (
         <>
-            <ShowDetailProduct product={product}/>
+            <ShowDetailProduct product={product} user={props.user} fetchMe={props.fetchMe}/>
         </>
     )
 }

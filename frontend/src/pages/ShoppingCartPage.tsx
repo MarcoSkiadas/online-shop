@@ -5,7 +5,6 @@ import {Product, User} from "../components/ShopSchema.ts";
 type ShoppingCartPageProps = {
     user: User
     fetchMe: () => void
-    handlePurchase: () => void
 }
 export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>) {
     const [product, setProduct] = useState<Product[]>([]);

@@ -85,22 +85,6 @@ function App() {
 
     }
 
-    function handlePurchase() {
-        axios.post(`/api/order`, {
-            productIds: user?.shoppingCart.productIds,
-            price: parseFloat("22"),
-            userId: user?.id
-        })
-            .then(response => {
-                console.log("Order submitted successfully:", response.data);
-                if (user?.shoppingCart) {
-                    user.shoppingCart.productIds = [];
-                    console.log("Updated shoppingCart:", user.shoppingCart);
-                }
-            })
-            .catch(error => console.log(error.message))
-    }
-
     if (user === undefined) {
         return <><p>Loading...</p></>
     }
@@ -122,7 +106,7 @@ function App() {
                 <Route element={<ProtectedRoute user={user?.username}/>}>
                     <Route path={"/order"} element={<OrderPage user={user}/>}/>
                     <Route path={"/shoppingCart"}
-                           element={<ShoppingCartPage user={user} fetchMe={me} handlePurchase={handlePurchase}/>}/>
+                           element={<ShoppingCartPage user={user} fetchMe={me}/>}/>
                     <Route element={<ProtectedAdminRoute user={user}/>}>
                         <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton}
                                                                    handleProductButton={handleProductButton}/>}/>

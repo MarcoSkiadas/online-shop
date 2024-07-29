@@ -54,7 +54,7 @@ public class ProductService {
         return product;
     }
 
-    public List<Product> getAllProductsByIds(List<String> productIds) throws InvalidIdException {
+    public List<Product> getAllProductsByIds(List<String> productIds) {
         return productRepo.findAllById(productIds);
     }
 }

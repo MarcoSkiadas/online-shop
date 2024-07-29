@@ -7,7 +7,7 @@ type ShoppingCartPageProps = {
     fetchMe: () => void
 }
 export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>) {
-    const [product, setProduct] = useState<Product[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
 
     useEffect(() => {
         getProducts()
@@ -25,15 +25,20 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
 
     function getProducts() {
         axios.get(`/api/product/shoppingCart?productIds=${props.user.shoppingCart.productIds}`)
-            .then(response => setProduct(response.data))
+            .then(response => setProducts(response.data))
             .catch(error => console.log(error.message))
     }
+
+    const totalPrice = props.user.shoppingCart.productIds.reduce((sum, productId) => {
+        const product = products.find(p => p.id === productId);
+        return product ? sum + product.price : sum;
+    }, 0);
 
     async function handlePurchase() {
         if (props.user?.shoppingCart && props.user.shoppingCart.productIds.length > 0) {
             axios.post(`/api/order`, {
                 productIds: props.user?.shoppingCart.productIds,
-                price: parseFloat("22"),
+                price: totalPrice,
                 userId: props.user?.id
             })
                 .then(response => {
@@ -60,7 +65,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             <>
                 <p>Name: {props.user.username}</p>
                 <ul>
-                    {product?.map(product => (
+                    {products?.map(product => (
                         <li key={product.id}>
                             <h3>{product.name}</h3>
                             <p>Price: ${product.price}</p>

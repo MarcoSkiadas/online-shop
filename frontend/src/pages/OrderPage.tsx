@@ -1,8 +1,11 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {Order, Product} from "../components/ShopSchema.ts";
+import {Order, Product, User} from "../components/ShopSchema.ts";
 
-export default function OrderPage() {
+type OrderPageProps = {
+    user: User
+}
+export default function OrderPage(props: Readonly<OrderPageProps>) {
     const [orderList, setOrderList] = useState<Order[]>();
     const [productList, setProductList] = useState<Product[]>([]);
 
@@ -42,21 +45,24 @@ export default function OrderPage() {
         <>
             <div>
                 <h2>Order List</h2>
-                {orderList.map((order) => (
-                    <div key={order.id}>
-                        <h3>Order ID: {order.id}</h3>
-                        <p>Order Price: {order.price}</p>
-                        <ul>
-                            {order.productIds.map((productId) => {
-                                const product = productList.find((product) => product.id === productId)
-                                return <li key={product?.id}>
-                                    <h4>{product?.name}</h4>
-                                    <p>Price: ${product?.price}</p>
-                                </li>
-                            })}
-                        </ul>
-                    </div>
-                ))}
+
+                {orderList
+                    .filter((order) => order.userId === props.user.id)
+                    .map((order) => (
+                        <div key={order.id}>
+                            <h3>Order ID: {order.id}</h3>
+                            <p>Order Price: {order.price}</p>
+                            <ul>
+                                {order.productIds.map((productId) => {
+                                    const product = productList.find((product) => product.id === productId)
+                                    return <li key={product?.id}>
+                                        <h4>{product?.name}</h4>
+                                        <p>Price: ${product?.price}</p>
+                                    </li>
+                                })}
+                            </ul>
+                        </div>
+                    ))}
             </div>
         </>
 

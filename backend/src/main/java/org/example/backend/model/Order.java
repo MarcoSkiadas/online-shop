@@ -8,6 +8,7 @@ public record Order(
         @Id
         String id,
         ArrayList<String> productIds,
-        float price
+        float price,
+        String userId
 ) {
 }

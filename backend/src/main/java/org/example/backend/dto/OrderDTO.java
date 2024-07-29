@@ -4,5 +4,7 @@ import java.util.ArrayList;
 
 public record OrderDTO(
         ArrayList<String> productIds,
-        float price
-) {}
+        float price,
+        String userId
+) {
+}

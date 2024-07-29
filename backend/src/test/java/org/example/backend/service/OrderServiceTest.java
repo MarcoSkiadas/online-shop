@@ -30,11 +30,11 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1", productIds, 22);
+        Order expected = new Order("1", productIds, 22, "testuser");
         when(mockUtils.generateUUID()).thenReturn("1");
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
-        Order actual = service.addOrder(new OrderDTO(productIds, 22));
+        Order actual = service.addOrder(new OrderDTO(productIds, 22, "testuser"));
         //THEN
         assertEquals(expected, actual);
     }
@@ -56,7 +56,7 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1", productIds, 22);
+        Order expected = new Order("1", productIds, 22, "testuser");
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         Order actual = service.getOrderById("1");
@@ -77,7 +77,7 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1", productIds, 22);
+        Order expected = new Order("1", productIds, 22, "testuser");
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         when(mockRepo.existsById("1")).thenReturn(true);
         service.deleteOrderById(expected.id());
@@ -98,7 +98,7 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1", productIds, 22);
+        Order expected = new Order("1", productIds, 22, "testuser");
         Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
         Product expectedProduct2 = new Product("2", "Tee", 22);
         Product expectedProduct3 = new Product("3", "Tasse", 22);
@@ -119,7 +119,7 @@ class OrderServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Order expected = new Order("1", productIds, 22);
+        Order expected = new Order("1", productIds, 22, "testuser");
         Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
         Product expectedProduct2 = new Product("2", "Tee", 22);
         Product expectedProduct3 = new Product("3", "Tasse", 22);

@@ -47,7 +47,7 @@ public class AppUserService {
             appuser.shoppingCart().productIds().clear();
             return appUserRepository.save(appuser);
         }
-        throw new InvalidIdException("User with " + userId + " not found");
+        throw new InvalidIdException("Shopping Cart is already empty");
     }
 
 }

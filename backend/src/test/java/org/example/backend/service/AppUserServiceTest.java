@@ -95,5 +95,31 @@ class AppUserServiceTest {
         verify(mockRepo, never()).save(any(AppUser.class));
     }
 
+    @Test
+    void removeAllProductsFromShoppingCart_shouldReturnEmptyList_whenCalled() throws InvalidIdException {
+        String userId = "1";
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(productIds));
+        when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
+        when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        AppUser actualUser = service.removeAllProductsFromShoppingCart(userId);
+        ArrayList<String> expectedProductIds = new ArrayList<>();
+        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(expectedProductIds));
+        assertEquals(expectedUser, actualUser);
+        verify(mockRepo).findById(userId);
+        verify(mockRepo).save(any(AppUser.class));
+    }
+
+    @Test
+    void removeAllProductsFromShoppingCart_shouldThrowException_whenCalledByWrongId() throws InvalidIdException {
+        when(mockRepo.findById("1")).thenReturn(Optional.empty());
+        assertThrows(InvalidIdException.class, () -> service.removeAllProductsFromShoppingCart("1"));
+        verify(mockRepo).findById("1");
+        verify(mockRepo, never()).save(any(AppUser.class));
+    }
+
 
 }

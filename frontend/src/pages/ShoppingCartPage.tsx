@@ -5,6 +5,7 @@ import {Product, User} from "../components/ShopSchema.ts";
 type ShoppingCartPageProps = {
     user: User
     fetchMe: () => void
+    handlePurchase: () => void
 }
 export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>) {
     const [product, setProduct] = useState<Product[]>([]);
@@ -29,6 +30,29 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             .catch(error => console.log(error.message))
     }
 
+    async function handlePurchase() {
+        if (props.user?.shoppingCart && props.user.shoppingCart.productIds.length > 0) {
+            axios.post(`/api/order`, {
+                productIds: props.user?.shoppingCart.productIds,
+                price: parseFloat("22"),
+                userId: props.user?.id
+            })
+                .then(response => {
+                    console.log("Order submitted successfully:", response.data);
+                    axios.put(`api/appuser/shoppingCart/removeProduct/${props.user.id}`, {})
+                        .then(() => {
+                            props.fetchMe();
+                            getProducts()
+                        })
+                        .catch(error => console.log(error.message))
+                    console.log("Updated shoppingCart:", props.user.shoppingCart);
+                })
+                .catch(error => console.log(error.message))
+        } else {
+            console.log("Order cannot be created without Products")
+        }
+    }
+
     return (
         <>
             <header>
@@ -45,6 +69,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
                         </li>
                     ))}
                 </ul>
+                <button onClick={handlePurchase}>Create Order</button>
             </>
         </>
     )

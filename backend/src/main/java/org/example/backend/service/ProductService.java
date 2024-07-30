@@ -49,7 +49,7 @@ public class ProductService {
 
     public Product addProduct(ProductDTO productDTO) {
         String productId = idService.generateUUID();
-        Product product = new Product(productId, productDTO.name(), productDTO.price());
+        Product product = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity());
         productRepo.save(product);
         return product;
     }

@@ -2,9 +2,7 @@ package org.example.backend.service;
 
 import org.example.backend.dto.ShoppingCartDTO;
 import org.example.backend.exceptions.InvalidIdException;
-import org.example.backend.model.AppUser;
-import org.example.backend.model.Product;
-import org.example.backend.model.ShoppingCart;
+import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
 import org.example.backend.repository.ShoppingCartRepo;
@@ -28,7 +26,7 @@ class AppUserServiceTest {
 
     @BeforeEach
     void setUp() {
-        mockProductRepo.save(new Product("1", "Rasenmäher", 22));
+        mockProductRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
     }
 
     @Test

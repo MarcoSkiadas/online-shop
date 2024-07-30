@@ -8,7 +8,8 @@ public record Product(
         @Id
         String id,
         String name,
-        float price
+        float price,
+        Quantity quantity
 
 ) {
 }

@@ -21,6 +21,8 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
                     <h2>{props.product?.name}</h2>
                     <p>{props.product?.id}</p>
                     <p>Price: {props.product?.price} €</p>
+                    {props.product.quantity.amount < 10 &&
+                        <p>Only {props.product.quantity.amount} Products on stock!</p>}
                     <button onClick={putProductToShoppingCart}>add to Shopping Cart</button>
                 </div>}
         </>

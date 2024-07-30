@@ -3,9 +3,7 @@ package org.example.backend.service;
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.dto.ProductDTO;
 import org.example.backend.exceptions.InvalidIdException;
-import org.example.backend.model.Order;
-import org.example.backend.model.Product;
-import org.example.backend.model.ShoppingCart;
+import org.example.backend.model.*;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +36,7 @@ class ProductServiceTest {
     @Test
     void getProductById_shouldReturnProduct_whenCalledById() throws InvalidIdException {
         //GIVEN
-        Product expected = new Product("1", "Rasenmäher", 22);
+        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         Product actual = service.getProductById("1");
@@ -56,11 +54,11 @@ class ProductServiceTest {
     @Test
     void updateProduct_shouldUpdateProduct_whenCalledById() throws InvalidIdException {
         //GIVEN
-        Product expected = new Product("1", "Rasenmäher", 22);
-        Product actual = new Product("1", "Rasenmäher", 44);
+        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product actual = new Product("1", "Rasenmäher", 44, new Quantity(2, Unit.PIECE));
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         when(mockRepo.save(expected)).thenReturn(expected);
-        ProductDTO expectedDTO = new ProductDTO("Rasenmäher", 22);
+        ProductDTO expectedDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
         //WHEN
         actual = service.updateProduct("1", expectedDTO);
         //THEN
@@ -70,7 +68,7 @@ class ProductServiceTest {
     @Test
     void updateProduct_shouldThrowException_whenCalledByWrongId() throws InvalidIdException {
         when(mockRepo.findById("1")).thenReturn(Optional.empty());
-        assertThrows(InvalidIdException.class, () -> service.updateProduct("1", new ProductDTO("Rasenmäher", 22)));
+        assertThrows(InvalidIdException.class, () -> service.updateProduct("1", new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE))));
         verify(mockRepo).findById("1");
     }
 
@@ -92,11 +90,11 @@ class ProductServiceTest {
 
     @Test
     void addOrder_shouldAddOrder_whenCalledWithOrder() {
-        Product expected = new Product("1", "Rasenmäher", 22);
+        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
         when(mockUtils.generateUUID()).thenReturn("1");
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
-        Product actual = service.addProduct(new ProductDTO("Rasenmäher", 22));
+        Product actual = service.addProduct(new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
         //THEN
         assertEquals(expected, actual);
         verify(mockRepo).save(expected);
@@ -109,9 +107,9 @@ class ProductServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
-        Product expectedProduct2 = new Product("2", "Tee", 22);
-        Product expectedProduct3 = new Product("3", "Tasse", 22);
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE));
+        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE));
         ArrayList<Product> products = new ArrayList<>();
         products.add(expectedProduct1);
         products.add(expectedProduct2);
@@ -127,9 +125,9 @@ class ProductServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Product expectedProduct1 = new Product("1", "Rasenmäher", 22);
-        Product expectedProduct2 = new Product("2", "Tee", 22);
-        Product expectedProduct3 = new Product("3", "Tasse", 22);
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE));
+        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE));
         ArrayList<Product> products = new ArrayList<>();
         products.add(expectedProduct1);
         products.add(expectedProduct2);

@@ -1,8 +1,6 @@
 package org.example.backend.controller;
 
-import org.example.backend.model.AppUser;
-import org.example.backend.model.Product;
-import org.example.backend.model.ShoppingCart;
+import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
 import org.example.backend.repository.ShoppingCartRepo;
@@ -39,10 +37,10 @@ class AppUserControllerTest {
         productIds.add("3");
         appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(productIds)));
         appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(productIds)));
-        productRepo.save(new Product("1", "Rasenmäher", 22));
-        productRepo.save(new Product("2", "Tee", 22));
-        productRepo.save(new Product("3", "Tasse", 22));
-        productRepo.save(new Product("4", "Teekanne", 22));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("4", "Teekanne", 22, new Quantity(2, Unit.PIECE)));
     }
 
     @Test

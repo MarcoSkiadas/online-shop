@@ -8,6 +8,8 @@ type UpdateProductPageProps = {
     handleCloseSuccess: () => void
     showSuccess: boolean
     setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>
+    handleClickProduct: () => void
+    unitType: string[]
 }
 
 export default function AdminUpdateProductPage(props: Readonly<UpdateProductPageProps>) {
@@ -15,6 +17,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
+    const [unit, setUnit] = useState('');
+    const [amount, setAmount] = useState('');
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
@@ -40,6 +44,10 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
             await axios.put(`/api/product/${product?.id}`, {
                 name,
                 price: parseFloat(price),
+                quantity: {
+                    amount,
+                    unit
+                }
             });
             await getProduct();
 
@@ -73,7 +81,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="text"
                         id="name"
-                        value={name}
+                        value={product?.name}
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
@@ -84,11 +92,38 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="number"
                         id="price"
-                        value={price}
+                        value={product?.price}
                         onChange={(e) => setPrice(e.target.value)}
                         required
                         step="0.01" // Für Dezimalwerte
                     />
+                </div>
+                <div>
+                    <p>{product?.quantity.amount}</p>
+                    <label htmlFor="amount">Product Amount:</label>
+                    <input
+                        type="number"
+                        id="amount"
+                        value={product?.quantity.amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        required
+                        step="1"
+                    />
+                </div>
+                <div>
+                    <p>{product?.quantity.unit}</p>
+                    <label htmlFor="unit">Product Unit:</label>
+                    <select
+                        id="unit"
+                        name="unit"
+                        value={props.unitType}
+                        onChange={event => setUnit(event.target.value)}
+                        required
+                    >
+                        {props.unitType.map(unit => (
+                            <option key={unit} value={unit}>{unit}</option>
+                        ))}
+                    </select>
                 </div>
                 <button type="submit">Update Product</button>
 
@@ -123,6 +158,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
             )}
 
             {error && <p style={{color: 'red'}}>{error}</p>}
+            <button onClick={props.handleClickProduct}>Back to Product</button>
 
         </>
     )

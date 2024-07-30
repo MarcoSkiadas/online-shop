@@ -2,6 +2,8 @@ package org.example.backend.controller;
 
 import org.example.backend.model.Order;
 import org.example.backend.model.Product;
+import org.example.backend.model.Quantity;
+import org.example.backend.model.Unit;
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,9 +38,9 @@ class OrderControllerTest {
         productIds.add("3");
         orderRepo.save(new Order("1", productIds, 22, "testuser"));
         orderRepo.save(new Order("2", productIds, 22, "testuser"));
-        productRepo.save(new Product("1", "Rasenmäher", 22));
-        productRepo.save(new Product("2", "Tee", 22));
-        productRepo.save(new Product("3", "Tasse", 22));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE)));
     }
 
     @Test

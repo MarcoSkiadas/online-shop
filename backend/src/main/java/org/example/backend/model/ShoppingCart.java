@@ -19,4 +19,11 @@ public record ShoppingCart(
     public int hashCode() {
         return Arrays.hashCode(orderedProducts);
     }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "orderedProducts=" + Arrays.toString(orderedProducts) +
+                '}';
+    }
 }

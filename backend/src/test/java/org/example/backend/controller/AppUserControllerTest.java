@@ -31,12 +31,9 @@ class AppUserControllerTest {
 
     @BeforeEach
     void setUp() {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(productIds)));
-        appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(productIds)));
+        OrderedProduct orderedProduct = new OrderedProduct("1", 2);
+        appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)})));
+        appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)})));
         productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
         productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE)));
         productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE)));

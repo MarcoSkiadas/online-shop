@@ -2,18 +2,17 @@ package org.example.backend.service;
 
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.exceptions.InvalidIdException;
-import org.example.backend.model.Order;
-import org.example.backend.model.Product;
-import org.example.backend.model.Quantity;
-import org.example.backend.model.Unit;
+import org.example.backend.model.*;
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.repository.ProductRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,15 +27,13 @@ class OrderServiceTest {
 
     @Test
     void addOrder_shouldAddOrder_whenCalledWithOrder() {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        Order expected = new Order("1", productIds, 22, "testuser");
+        OrderedProduct orderedProduct = new OrderedProduct("1", 22);
+        OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
+        Order expected = new Order("1", orderedProducts, 22, "testuser");
         when(mockUtils.generateUUID()).thenReturn("1");
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
-        Order actual = service.addOrder(new OrderDTO(productIds, 22, "testuser"));
+        Order actual = service.addOrder(new OrderDTO(orderedProducts, 22, "testuser"));
         //THEN
         assertEquals(expected, actual);
     }
@@ -54,11 +51,9 @@ class OrderServiceTest {
     @Test
     void getOrderById_shouldReturnOrder_whenCalledById() throws InvalidIdException {
         //GIVEN
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        Order expected = new Order("1", productIds, 22, "testuser");
+        OrderedProduct orderedProduct = new OrderedProduct("1", 22);
+        OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
+        Order expected = new Order("1", orderedProducts, 22, "testuser");
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         Order actual = service.getOrderById("1");
@@ -75,11 +70,9 @@ class OrderServiceTest {
 
     @Test
     void deleteOrderById_shouldDeleteOrder_whenCalledById() throws InvalidIdException {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        Order expected = new Order("1", productIds, 22, "testuser");
+        OrderedProduct orderedProduct = new OrderedProduct("1", 22);
+        OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
+        Order expected = new Order("1", orderedProducts, 22, "testuser");
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         when(mockRepo.existsById("1")).thenReturn(true);
         service.deleteOrderById(expected.id());
@@ -96,11 +89,9 @@ class OrderServiceTest {
 
     @Test
     void getProductsFromOrders_shouldReturnProducts_whenCalledByOrdersId() throws InvalidIdException {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        Order expected = new Order("1", productIds, 22, "testuser");
+        OrderedProduct orderedProduct = new OrderedProduct("1", 22);
+        OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
+        Order expected = new Order("1", orderedProducts, 22, "testuser");
         Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
         Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE));
         Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE));
@@ -109,19 +100,20 @@ class OrderServiceTest {
         products.add(expectedProduct2);
         products.add(expectedProduct3);
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
-        when(mockProductRepo.findAllById(expected.productIds())).thenReturn(products);
+        List<OrderedProduct> orderedProducts1 = List.of(expected.orderedProducts());
+        List<String> productIds = orderedProducts1.stream()
+                .map(OrderedProduct::productId)
+                .collect(Collectors.toList());
         service.getProductsFromOrders(expected.id());
         verify(mockRepo).findById(expected.id());
-        verify(mockProductRepo).findAllById(expected.productIds());
+        verify(mockProductRepo).findAllById(productIds);
     }
 
     @Test
     void getProductsFromOrders_shouldThrowException_whenCalledByWrongOrdersId() throws InvalidIdException {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        Order expected = new Order("1", productIds, 22, "testuser");
+        OrderedProduct orderedProduct = new OrderedProduct("1", 22);
+        OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
+        Order expected = new Order("1", orderedProducts, 22, "testuser");
         Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
         Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE));
         Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE));
@@ -130,7 +122,6 @@ class OrderServiceTest {
         products.add(expectedProduct2);
         products.add(expectedProduct3);
         when(mockRepo.findById("1")).thenReturn(Optional.empty());
-        when(mockProductRepo.findAllById(expected.productIds())).thenReturn(products);
         assertThrows(InvalidIdException.class, () -> service.getProductsFromOrders("1"));
         verify(mockRepo).findById("1");
     }

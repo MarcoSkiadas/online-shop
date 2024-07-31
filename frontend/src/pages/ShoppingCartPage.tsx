@@ -8,12 +8,16 @@ type ShoppingCartPageProps = {
 }
 export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>) {
     const [products, setProducts] = useState<Product[]>([]);
-    const [quantities, setQuantities] = useState(
-        props.user.shoppingCart.orderedProducts.reduce((acc, orderedProduct) => {
-            acc[orderedProduct.productId] = orderedProduct.amount;
-            return acc;
-        }, {} as Record<string, number>)
-    );
+    const [quantities, setQuantities] = useState<Record<string, number>>(() => {
+        if (props.user && props.user.shoppingCart && Array.isArray(props.user.shoppingCart.orderedProducts)) {
+            const initialQuantities: Record<string, number> = {};
+            for (const orderedProduct of props.user.shoppingCart.orderedProducts) {
+                initialQuantities[orderedProduct.productId] = orderedProduct.amount;
+            }
+            return initialQuantities;
+        }
+        return {};
+    });
 
     const increaseQuantity = (productId: string) => {
         setQuantities(prevQuantities => ({
@@ -49,10 +53,22 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             .catch(error => console.log(error.message))
     }
 
-    const totalPrice = props.user.shoppingCart.orderedProducts.reduce((sum, orderedProduct) => {
-        const product = products.find(p => p.id === orderedProduct.productId);
-        return product ? sum + (product.price * orderedProduct.amount) : sum;
-    }, 0);
+
+    const calculateTotalPrice = () => {
+        if (props.user && props.user.shoppingCart && Array.isArray(props.user.shoppingCart.orderedProducts)) {
+            let total = 0;
+            for (const orderedProduct of props.user.shoppingCart.orderedProducts) {
+                const product = products.find(p => p.id === orderedProduct.productId);
+                if (product) {
+                    total += product.price * orderedProduct.amount;
+                }
+            }
+            return total;
+        }
+        return 0;
+    };
+
+    const totalPrice = calculateTotalPrice();
 
     async function handlePurchase() {
         if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {

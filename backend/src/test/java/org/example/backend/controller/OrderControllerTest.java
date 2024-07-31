@@ -41,26 +41,31 @@ class OrderControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                        {
-                                          "productIds": [
-                                            "1",
-                                            "2",
-                                            "3"
-                                          ],
-                                          "price": 55
-                                        }
-                                """))
+                                {
+                                  "orderedProducts": [
+                                    {
+                                      "productId": "1",
+                                      "amount": 2
+                                    }
+                                  ],
+                                  "price": 22,
+                                  "userId": "testuser"
+                                }
+                                                                """))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
-                               {
-                                  "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                  ],
-                                  "price": 55
+                        {
+                            "orderedProducts": [
+                                {
+                                    "productId": "1",
+                                    "amount": 2
                                 }
-                        """));
+                            ],
+                            "price": 22,
+                            "userId": "testuser"
+                        }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
     }
 
     @Test
@@ -72,22 +77,26 @@ class OrderControllerTest {
                         [
                             {
                                 "id": "1",
-                                "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                ],
-                                "price": 22
-                            },
+                                "orderedProducts": [
+                                          {
+                                              "productId": "1",
+                                              "amount": 2
+                                          }
+                                      ],
+                                      "price": 22,
+                                      "userId": "testuser"
+                                  },
                             {
                                 "id": "2",
-                                "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                ],
-                                "price": 22
-                            }
+                                "orderedProducts": [
+                                          {
+                                              "productId": "1",
+                                              "amount": 2
+                                          }
+                                      ],
+                                      "price": 22,
+                                      "userId": "testuser"
+                                  }
                         ]
                         """));
     }
@@ -100,13 +109,15 @@ class OrderControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
                                 "id": "1",
-                                "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                ],
-                                "price": 22
-                            }
+                                "orderedProducts": [
+                                          {
+                                              "productId": "1",
+                                              "amount": 2
+                                          }
+                                      ],
+                                      "price": 22,
+                                      "userId": "testuser"
+                                  }
                         """));
     }
 
@@ -156,17 +167,11 @@ class OrderControllerTest {
                                                     {
                                                         "id": "1",
                                                         "name": "Rasenmäher",
-                                                        "price": 22
-                                                    },
-                                                    {
-                                                        "id": "2",
-                                                        "name": "Tee",
-                                                        "price": 22
-                                                    },
-                                                    {
-                                                        "id": "3",
-                                                        "name": "Tasse",
-                                                        "price": 22
+                                                        "price": 22,
+                                                        "quantity": {
+                                                            "amount": 2,
+                                                            "unit": "PIECE"
+                                                                   }
                                                     }
                                                 ]
                         """));

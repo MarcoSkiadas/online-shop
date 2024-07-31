@@ -2,6 +2,7 @@ package org.example.backend.security;
 
 
 import org.example.backend.model.AppUser;
+import org.example.backend.model.OrderedProduct;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +57,7 @@ public class SecurityConfig {
 
             AppUser appUser = appUserRepository.findById(oAuth2User.getName())
                     .orElseGet(() -> {
-                        AppUser newAppUser = new AppUser(oAuth2User.getName(), oAuth2User.getAttributes().get("login").toString(), "USER", new ShoppingCart(new ArrayList<>()));
+                        AppUser newAppUser = new AppUser(oAuth2User.getName(), oAuth2User.getAttributes().get("login").toString(), "USER", new ShoppingCart(new OrderedProduct[]{}));
 
                         return appUserRepository.save(newAppUser);
                     });

@@ -1,8 +1,10 @@
 package org.example.backend.dto;
 
+import org.example.backend.model.OrderedProduct;
+
 import java.util.ArrayList;
 
 public record ShoppingCartDTO(
-        ArrayList<String> productIds
+        OrderedProduct[] orderedProducts
 ) {
 }

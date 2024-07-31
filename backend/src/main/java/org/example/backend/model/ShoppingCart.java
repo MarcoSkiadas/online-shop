@@ -4,6 +4,6 @@ import java.util.ArrayList;
 
 
 public record ShoppingCart(
-        ArrayList<String> productIds
+        OrderedProduct[] orderedProduct
 ) {
 }

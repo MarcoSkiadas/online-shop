@@ -7,13 +7,18 @@ export interface Product {
 
 export interface Order {
     id: string,
-    productIds: string[],
+    orderedProduct: OrderedProduct[],
     price: number,
     userId: string
 }
 
 export interface ShoppingCart {
-    productIds: string[]
+    orderedProduct: OrderedProduct[]
+}
+
+export interface OrderedProduct {
+    productId: string,
+    amount: number
 }
 
 export interface User {

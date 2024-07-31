@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public record Order(
         @Id
         String id,
-        ArrayList<String> productIds,
+        OrderedProduct[] orderedProducts,
         float price,
         String userId
 ) {

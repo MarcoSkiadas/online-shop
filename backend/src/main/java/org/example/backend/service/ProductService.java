@@ -54,10 +54,7 @@ public class ProductService {
         return product;
     }
 
-    public List<Product> getAllProductsByIds(List<String> productIds) throws InvalidIdException {
-        if (productIds.isEmpty()) {
-            throw new InvalidIdException("Product IDs cannot be empty");
-        }
+    public List<Product> getAllProductsByIds(List<String> productIds) {
         return productRepo.findAllById(productIds);
     }
 }

@@ -60,7 +60,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             for (const orderedProduct of props.user.shoppingCart.orderedProducts) {
                 const product = products.find(p => p.id === orderedProduct.productId);
                 if (product) {
-                    total += product.price * orderedProduct.amount;
+                    total += product.price * quantities[product.id];
                 }
             }
             return total;
@@ -74,7 +74,10 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
         if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
             console.log(props.user?.shoppingCart.orderedProducts)
             axios.post(`/api/order`, {
-                orderedProducts: props.user.shoppingCart.orderedProducts,
+                orderedProducts: props.user.shoppingCart.orderedProducts.map(product => ({
+                    productId: product.productId,
+                    amount: quantities[product.productId]
+                })),
                 price: totalPrice,
                 userId: props.user?.id
             })

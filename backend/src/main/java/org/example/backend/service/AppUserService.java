@@ -10,6 +10,7 @@ import org.example.backend.repository.ProductRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class AppUserService {
 
         if (productRepo.existsById(productId)) {
             ShoppingCart shoppingCart = appUser.shoppingCart();
-            List<OrderedProduct> orderedProducts = new ArrayList<>(List.of(shoppingCart.orderedProduct()));
+            List<OrderedProduct> orderedProducts = new ArrayList<>(List.of(shoppingCart.orderedProducts()));
 
             for (OrderedProduct orderedProduct : orderedProducts) {
                 if (orderedProduct.productId().equals(productId)) {
@@ -48,7 +49,7 @@ public class AppUserService {
 
         ShoppingCart shoppingCart = appUser.shoppingCart();
 
-        List<OrderedProduct> orderedProducts = new ArrayList<>(List.of(shoppingCart.orderedProduct()));
+        List<OrderedProduct> orderedProducts = new ArrayList<>(List.of(shoppingCart.orderedProducts()));
 
         boolean productRemoved = orderedProducts.removeIf(orderedProduct -> orderedProduct.productId().equals(productId));
 
@@ -65,8 +66,9 @@ public class AppUserService {
         AppUser appuser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new InvalidIdException("User with " + userId + " not found"));
 
-        List<OrderedProduct> orderedProducts = new ArrayList<>(List.of(appuser.shoppingCart().orderedProduct()));
-        if (!orderedProducts.isEmpty()) {
+        List<OrderedProduct> orderedProducts = List.of(appuser.shoppingCart().orderedProducts());
+
+        if (orderedProducts != null && !orderedProducts.isEmpty()) {
             orderedProducts.clear();
             appUserRepository.save(appuser);
             return appuser;

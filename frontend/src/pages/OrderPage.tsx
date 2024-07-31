@@ -53,8 +53,8 @@ export default function OrderPage(props: Readonly<OrderPageProps>) {
                             <h3>Order ID: {order.id}</h3>
                             <p>Order Price: {order.price}</p>
                             <ul>
-                                {order.productIds.map((productId) => {
-                                    const product = productList.find((product) => product.id === productId)
+                                {order.orderedProducts.map((orderedProduct) => {
+                                    const product = productList.find((product) => product.id === orderedProduct.productId)
                                     return <li key={product?.id}>
                                         <h4>{product?.name}</h4>
                                         <p>Price: ${product?.price}</p>

@@ -7,13 +7,13 @@ export interface Product {
 
 export interface Order {
     id: string,
-    orderedProduct: OrderedProduct[],
+    orderedProducts: OrderedProduct[],
     price: number,
     userId: string
 }
 
 export interface ShoppingCart {
-    orderedProduct: OrderedProduct[]
+    orderedProducts: OrderedProduct[]
 }
 
 export interface OrderedProduct {

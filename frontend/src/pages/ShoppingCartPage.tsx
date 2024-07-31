@@ -9,10 +9,10 @@ type ShoppingCartPageProps = {
 export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>) {
     const [products, setProducts] = useState<Product[]>([]);
     const [quantities, setQuantities] = useState(
-        props.user.shoppingCart.orderedProduct.reduce((acc, orderedProduct) => {
+        props.user.shoppingCart.orderedProducts.reduce((acc, orderedProduct) => {
             acc[orderedProduct.productId] = orderedProduct.amount;
             return acc;
-        }, {} as Record<string, number>) // Hinzufügen eines Typs
+        }, {} as Record<string, number>)
     );
 
     const increaseQuantity = (productId: string) => {
@@ -44,20 +44,21 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
     }
 
     function getProducts() {
-        axios.get(`/api/product/shoppingCart?productIds=${props.user.shoppingCart.orderedProduct.map(orderedProduct => orderedProduct.productId)}`)
+        axios.get(`/api/product/shoppingCart?productIds=${props.user.shoppingCart.orderedProducts.map(orderedProduct => orderedProduct.productId)}`)
             .then(response => setProducts(response.data))
             .catch(error => console.log(error.message))
     }
 
-    const totalPrice = props.user.shoppingCart.orderedProduct.reduce((sum, orderedProduct) => {
+    const totalPrice = props.user.shoppingCart.orderedProducts.reduce((sum, orderedProduct) => {
         const product = products.find(p => p.id === orderedProduct.productId);
         return product ? sum + (product.price * orderedProduct.amount) : sum;
     }, 0);
 
     async function handlePurchase() {
-        if (props.user?.shoppingCart && props.user.shoppingCart.orderedProduct.length > 0) {
+        if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
+            console.log(props.user?.shoppingCart.orderedProducts)
             axios.post(`/api/order`, {
-                orderedProduct: props.user?.shoppingCart.orderedProduct,
+                orderedProducts: props.user.shoppingCart.orderedProducts,
                 price: totalPrice,
                 userId: props.user?.id
             })

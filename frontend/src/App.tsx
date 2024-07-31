@@ -106,7 +106,8 @@ function App() {
                 <Route path={"/:id"} element={<ProductPage user={user} fetchMe={me}/>}/>
                 <Route element={<ProtectedRoute user={user?.username}/>}>
                     <Route path={"/order"} element={<OrderPage user={user}/>}/>
-                    <Route path={"/shoppingCart"} element={<ShoppingCartPage user={user} fetchMe={me}/>}/>
+                    <Route path={"/shoppingCart"}
+                           element={<ShoppingCartPage user={user} fetchMe={me}/>}/>
                     <Route element={<ProtectedAdminRoute user={user}/>}>
                         <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton}
                                                                    handleProductButton={handleProductButton}/>}/>

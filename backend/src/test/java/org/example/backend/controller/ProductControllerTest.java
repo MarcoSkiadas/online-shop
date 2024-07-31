@@ -169,18 +169,4 @@ class ProductControllerTest {
                         """));
     }
 
-    @Test
-    void getProductsFromShoppingCart_shouldReturnException_whenCalledByWrongOrderId() throws Exception {
-        //WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/shoppingCart?productIds="))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().json("""
-                            {
-                              "apiPath": "uri=/api/product/shoppingCart",
-                              "errorCode": "NOT_FOUND",
-                              "errorMsg": "Product IDs cannot be empty"
-                            }
-                        """))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
-    }
 }

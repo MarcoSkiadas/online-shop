@@ -41,4 +41,13 @@ public class AppUserService {
         throw new InvalidIdException("Product with " + productId + " not found in Shopping Cart");
     }
 
+    public AppUser removeAllProductsFromShoppingCart(String userId) throws InvalidIdException {
+        AppUser appuser = appUserRepository.findById(userId).orElseThrow(() -> new InvalidIdException("User with " + userId + " not found"));
+        if (!appuser.shoppingCart().productIds().isEmpty()) {
+            appuser.shoppingCart().productIds().clear();
+            return appUserRepository.save(appuser);
+        }
+        throw new InvalidIdException("Shopping Cart is already empty");
+    }
+
 }

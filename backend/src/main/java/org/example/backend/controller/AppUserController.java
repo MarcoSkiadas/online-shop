@@ -30,5 +30,11 @@ public class AppUserController {
         return appUserService.removeProductFromShoppingCart(userId, productId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/shoppingCart/removeProduct/{userId}")
+    public AppUser removeAllProductsFromShoppingCart(@PathVariable String userId) throws InvalidIdException {
+        return appUserService.removeAllProductsFromShoppingCart(userId);
+    }
+
 }
 

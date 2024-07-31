@@ -2,7 +2,6 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ProductDTO;
-import org.example.backend.dto.ShoppingCartDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Product;
 import org.example.backend.service.ProductService;
@@ -49,7 +48,7 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/shoppingCart")
-    public List<Product> getAllProductsByIds(@RequestParam List<String> productIds) throws InvalidIdException {
+    public List<Product> getAllProductsByIds(@RequestParam List<String> productIds) {
         return productService.getAllProductsByIds(productIds);
     }
 }

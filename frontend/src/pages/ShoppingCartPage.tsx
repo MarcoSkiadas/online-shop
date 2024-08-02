@@ -91,10 +91,18 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             })
             .catch(error => console.log(error.message))
     }
-    
+    const reduceProductOnStock = async () => {
+        props.user.shoppingCart.orderedProducts.map(orderedProduct =>
+            axios.put(`/api/product/shoppingCart/${orderedProduct.productId}/${quantities[orderedProduct.productId]}`)
+                .then(response => console.log(response.data))
+                .catch(error => console.log(error.message))
+        )
+    }
+
     async function handlePurchase() {
         if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
-            await addOrder()
+            await addOrder();
+            await reduceProductOnStock();
         } else {
             console.log("Order cannot be created without Products")
         }

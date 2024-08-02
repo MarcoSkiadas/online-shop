@@ -171,4 +171,38 @@ class ProductControllerTest {
                         """));
     }
 
+    @Test
+    void reduceProductOnStock_shouldReturnException_whenCalledByWrongId() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/3/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                            {
+                              "apiPath": "uri=/api/product/shoppingCart/3/1",
+                              "errorCode": "NOT_FOUND",
+                              "errorMsg": "Product with 3 not found"
+                            }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
+    }
+
+    @Test
+    void reduceProductOnStock_shouldReturnProduct_whenCalledByIdAndAmount() throws Exception {
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/1/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                                                    {
+                                                        "id": "1",
+                                                        "name": "Rasenmäher",
+                                                        "price": 22,
+                                                        "quantity": {
+                                                              "amount": 1,
+                                                              "unit": "PIECE"
+                                                                    }
+                                                    }
+                        """));
+    }
+
+
 }

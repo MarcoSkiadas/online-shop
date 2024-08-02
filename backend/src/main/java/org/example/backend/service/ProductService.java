@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ProductDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Product;
+import org.example.backend.model.Quantity;
 import org.example.backend.repository.ProductRepo;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +57,19 @@ public class ProductService {
 
     public List<Product> getAllProductsByIds(List<String> productIds) {
         return productRepo.findAllById(productIds);
+    }
+
+    public Product reduceProductOnStock(String productId, int productAmount) throws InvalidIdException {
+        Optional<Product> product = productRepo.findById(productId);
+        if (product.isPresent()) {
+            Quantity newQuantity = new Quantity(product.get().quantity().amount() + (productAmount * -1), product.get().quantity().unit());
+            Product product1 = product.get()
+                    .withId(productId)
+                    .withName(product.get().name())
+                    .withPrice(product.get().price())
+                    .withQuantity(newQuantity);
+            return productRepo.save(product1);
+        }
+        throw new InvalidIdException("Product with " + productId + " not found");
     }
 }

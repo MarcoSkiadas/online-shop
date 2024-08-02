@@ -51,4 +51,10 @@ public class ProductController {
     public List<Product> getAllProductsByIds(@RequestParam List<String> productIds) {
         return productService.getAllProductsByIds(productIds);
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/shoppingCart/{productId}/{productAmount}")
+    public Product reduceProductOnStock(@PathVariable String productId, @PathVariable int productAmount) throws InvalidIdException {
+        return productService.reduceProductOnStock(productId, productAmount);
+    }
 }

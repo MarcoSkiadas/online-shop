@@ -1,7 +1,6 @@
 package org.example.backend.controller;
 
-import org.example.backend.model.Order;
-import org.example.backend.model.Product;
+import org.example.backend.model.*;
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,15 +29,11 @@ class OrderControllerTest {
 
     @BeforeEach
     void setUp() {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        orderRepo.save(new Order("1", productIds, 22, "testuser"));
-        orderRepo.save(new Order("2", productIds, 22, "testuser"));
-        productRepo.save(new Product("1", "Rasenmäher", 22));
-        productRepo.save(new Product("2", "Tee", 22));
-        productRepo.save(new Product("3", "Tasse", 22));
+        orderRepo.save(new Order("1", new OrderedProduct[]{new OrderedProduct("1", 2)}, 22, "testuser"));
+        orderRepo.save(new Order("2", new OrderedProduct[]{new OrderedProduct("1", 2)}, 22, "testuser"));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE)));
     }
 
     @Test
@@ -46,26 +41,31 @@ class OrderControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                        {
-                                          "productIds": [
-                                            "1",
-                                            "2",
-                                            "3"
-                                          ],
-                                          "price": 55
-                                        }
-                                """))
+                                {
+                                  "orderedProducts": [
+                                    {
+                                      "productId": "1",
+                                      "amount": 2
+                                    }
+                                  ],
+                                  "price": 22,
+                                  "userId": "testuser"
+                                }
+                                                                """))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
-                               {
-                                  "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                  ],
-                                  "price": 55
+                        {
+                            "orderedProducts": [
+                                {
+                                    "productId": "1",
+                                    "amount": 2
                                 }
-                        """));
+                            ],
+                            "price": 22,
+                            "userId": "testuser"
+                        }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
     }
 
     @Test
@@ -77,22 +77,26 @@ class OrderControllerTest {
                         [
                             {
                                 "id": "1",
-                                "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                ],
-                                "price": 22
-                            },
+                                "orderedProducts": [
+                                          {
+                                              "productId": "1",
+                                              "amount": 2
+                                          }
+                                      ],
+                                      "price": 22,
+                                      "userId": "testuser"
+                                  },
                             {
                                 "id": "2",
-                                "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                ],
-                                "price": 22
-                            }
+                                "orderedProducts": [
+                                          {
+                                              "productId": "1",
+                                              "amount": 2
+                                          }
+                                      ],
+                                      "price": 22,
+                                      "userId": "testuser"
+                                  }
                         ]
                         """));
     }
@@ -105,13 +109,15 @@ class OrderControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
                                 "id": "1",
-                                "productIds": [
-                                    "1",
-                                    "2",
-                                    "3"
-                                ],
-                                "price": 22
-                            }
+                                "orderedProducts": [
+                                          {
+                                              "productId": "1",
+                                              "amount": 2
+                                          }
+                                      ],
+                                      "price": 22,
+                                      "userId": "testuser"
+                                  }
                         """));
     }
 
@@ -161,17 +167,11 @@ class OrderControllerTest {
                                                     {
                                                         "id": "1",
                                                         "name": "Rasenmäher",
-                                                        "price": 22
-                                                    },
-                                                    {
-                                                        "id": "2",
-                                                        "name": "Tee",
-                                                        "price": 22
-                                                    },
-                                                    {
-                                                        "id": "3",
-                                                        "name": "Tasse",
-                                                        "price": 22
+                                                        "price": 22,
+                                                        "quantity": {
+                                                            "amount": 2,
+                                                            "unit": "PIECE"
+                                                                   }
                                                     }
                                                 ]
                         """));

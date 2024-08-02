@@ -1,7 +1,10 @@
 package org.example.backend.dto;
 
+import org.example.backend.model.Quantity;
+
 public record ProductDTO(
         String name,
-        float price
+        float price,
+        Quantity quantity
 ) {
 }

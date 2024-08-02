@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.OrderDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Order;
+import org.example.backend.model.OrderedProduct;
 import org.example.backend.model.Product;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.OrderRepo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class OrderService {
     public Order addOrder(OrderDTO order) {
 
         String id = idService.generateUUID();
-        Order o = new Order(id, order.productIds(), order.price(), order.userId());
+        Order o = new Order(id, order.orderedProducts(), order.price(), order.userId());
         return orderRepo.save(o);
     }
 
@@ -49,6 +51,10 @@ public class OrderService {
 
     public List<Product> getProductsFromOrders(String id) throws InvalidIdException {
         Order order = orderRepo.findById(id).orElseThrow(() -> new InvalidIdException("Order with " + id + " not found"));
-        return productRepo.findAllById(order.productIds());
+        List<OrderedProduct> orderedProducts = List.of(order.orderedProducts());
+        List<String> productIds = orderedProducts.stream()
+                .map(OrderedProduct::productId)
+                .collect(Collectors.toList());
+        return productRepo.findAllById(productIds);
     }
 }

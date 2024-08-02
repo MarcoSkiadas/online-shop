@@ -27,6 +27,7 @@ function App() {
     const [user, setUser] = useState<User | null | undefined>(undefined)
     const currentRole = user?.role
     const userid = user?.id
+    const unitType = ["PIECE", "KILOGRAM", "LITER", "GRAM", "METER"]
 
     useEffect(() => {
         getAllProducts()
@@ -113,12 +114,16 @@ function App() {
                         <Route path={"/admin/product"} element={<AdminProductPage product={product}/>}/>
                         <Route path={"/admin/order"} element={<AdminOrderPage orderList={orderList}/>}/>
                         <Route path={"/admin/product/add"}
-                               element={<AdminAddProductPage handleClickProduct={handleClickProduct}/>}/>
-                        <Route path={"/admin/product/:id"} element={<AdminDetailProductPage/>}/>
+                               element={<AdminAddProductPage handleClickProduct={handleClickProduct}
+                                                             unitType={unitType}/>}/>
+                        <Route path={"/admin/product/:id"}
+                               element={<AdminDetailProductPage user={user} fetchMe={me}/>}/>
                         <Route path={"/admin/product/update/:id"}
                                element={<AdminUpdateProductPage handleCloseSuccess={handleCloseSuccess}
                                                                 showSuccess={showSuccess}
-                                                                setShowSuccess={setShowSuccess}/>}/>
+                                                                setShowSuccess={setShowSuccess}
+                                                                handleClickProduct={handleClickProduct}
+                                                                unitType={unitType}/>}/>
                     </Route>
                 </Route>
             </Routes>

@@ -1,8 +1,6 @@
 package org.example.backend.controller;
 
-import org.example.backend.model.AppUser;
-import org.example.backend.model.Product;
-import org.example.backend.model.ShoppingCart;
+import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
 import org.example.backend.repository.ShoppingCartRepo;
@@ -33,21 +31,18 @@ class AppUserControllerTest {
 
     @BeforeEach
     void setUp() {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
-        appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(productIds)));
-        appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(productIds)));
-        productRepo.save(new Product("1", "Rasenmäher", 22));
-        productRepo.save(new Product("2", "Tee", 22));
-        productRepo.save(new Product("3", "Tasse", 22));
-        productRepo.save(new Product("4", "Teekanne", 22));
+        OrderedProduct orderedProduct = new OrderedProduct("1", 2);
+        appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
+        appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("4", "Teekanne", 22, new Quantity(2, Unit.PIECE)));
     }
 
     @Test
     void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/addProduct/1/4")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/addProduct/1/4/3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
@@ -56,12 +51,16 @@ class AppUserControllerTest {
                                                     "username": "testuser",
                                                     "role": "USER",
                                                     "shoppingCart": {
-                                                        "productIds": [
-                                                            "1",
-                                                            "2",
-                                                            "3",
-                                                            "4"
-                                                        ]
+                                                                 "orderedProducts": [
+                                                                     {
+                                                                         "productId": "4",
+                                                                         "amount": 3
+                                                                     },
+                                                                     {
+                                                                         "productId": "1",
+                                                                         "amount": 2
+                                                                     }
+                                                                 ]
                                                     }
                                                 }
                         """));
@@ -69,12 +68,12 @@ class AppUserControllerTest {
 
     @Test
     void addProductToShoppingCart_shouldReturnException_whenCalledByWrongId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/addProduct/3/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/addProduct/3/4/3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
-                              "apiPath": "uri=/api/appuser/shoppingCart/addProduct/3/1",
+                              "apiPath": "uri=/api/appuser/shoppingCart/addProduct/3/4/3",
                               "errorCode": "NOT_FOUND",
                               "errorMsg": "User with 3 not found"
                             }
@@ -94,10 +93,7 @@ class AppUserControllerTest {
                                                     "username": "testuser",
                                                     "role": "USER",
                                                     "shoppingCart": {
-                                                        "productIds": [
-                                                        "2",
-                                                        "3"
-                                                        ]
+                                                        "orderedProducts": []
                                                     }
                                                 }
                         """));

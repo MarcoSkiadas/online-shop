@@ -19,9 +19,9 @@ public class AppUserController {
     private final AppUserService appUserService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping("/shoppingCart/addProduct/{userId}/{productId}")
-    public AppUser addProductToShoppingCart(@PathVariable String userId, @PathVariable String productId) throws InvalidIdException {
-        return appUserService.addProductToShoppingCart(userId, productId);
+    @PutMapping("/shoppingCart/addProduct/{userId}/{productId}/{amount}")
+    public AppUser addProductToShoppingCart(@PathVariable String userId, @PathVariable String productId, @PathVariable int amount) throws InvalidIdException {
+        return appUserService.addProductToShoppingCart(userId, productId, amount);
     }
 
     @ResponseStatus(HttpStatus.OK)

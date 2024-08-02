@@ -112,7 +112,8 @@ function App() {
                         <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton}
                                                                    handleProductButton={handleProductButton}/>}/>
                         <Route path={"/admin/product"} element={<AdminProductPage product={product}/>}/>
-                        <Route path={"/admin/order"} element={<AdminOrderPage orderList={orderList}/>}/>
+                        <Route path={"/admin/order"}
+                               element={<AdminOrderPage orderList={orderList} productList={product}/>}/>
                         <Route path={"/admin/product/add"}
                                element={<AdminAddProductPage handleClickProduct={handleClickProduct}
                                                              unitType={unitType}/>}/>

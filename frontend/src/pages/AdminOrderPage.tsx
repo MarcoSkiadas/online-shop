@@ -1,25 +1,42 @@
-import {Order} from "../components/ShopSchema.ts";
+import {Order, Product} from "../components/ShopSchema.ts";
 
 type AdminProductPageProps = {
-    orderList:Order[] | undefined
+    orderList: Order[] | undefined
+    productList: Product[]
 }
 
-export default function AdminOrderPage(props:Readonly<AdminProductPageProps>) {
+export default function AdminOrderPage(props: Readonly<AdminProductPageProps>) {
+
+    if (!props.orderList) {
+        return (
+            <>
+                <p>Orders not found</p>
+            </>)
+
+    }
 
     return (
         <>
-            <header>
-                <h2>Order Lists</h2>
-            </header>
-            {props.orderList?.map(orderList => (
-                <div key={orderList.id}>
-                    <p>Id: {orderList.id}</p>
-                    <p>ProductIds: {orderList.productIds.map(productIds => (
-                        <li>{productIds}</li>
-                    ))}</p>
-                    <p>Price: {orderList.price} €</p>
-                </div>
-            ))}
+            <div>
+                <h2>Order List</h2>
+
+                {props.orderList.map((order) => (
+                    <div key={order.id}>
+                        <h3>Order ID: {order.id}</h3>
+                        <p>Order Price: {order.price}€</p>
+                        <ul>
+                            {order.orderedProducts.map((orderedProduct) => {
+                                const product = props.productList.find((product) => product.id === orderedProduct.productId)
+                                return <li key={product?.id}>
+                                    <h4>{product?.name}</h4>
+                                    <p>Price: {product?.price}€</p>
+                                    <p>Amount: {orderedProduct.amount}</p>
+                                </li>
+                            })}
+                        </ul>
+                    </div>
+                ))}
+            </div>
         </>
     )
 }

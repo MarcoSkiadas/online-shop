@@ -119,4 +119,24 @@ class ProductServiceTest {
         verify(mockRepo).findAllById(productIds);
     }
 
+    @Test
+    void reduceProductOnStock_shouldReduceProductOnStock_whenCalledByIdAndAmount() throws InvalidIdException {
+        Product expectedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product actualProduct = new Product("1", "Rasenmäher", 22, new Quantity(4, Unit.PIECE));
+        when(mockRepo.findById("1")).thenReturn(Optional.of(actualProduct));
+        when(mockRepo.save(expectedProduct)).thenReturn(expectedProduct);
+        actualProduct = service.reduceProductOnStock("1", 2);
+        assertEquals(expectedProduct, actualProduct);
+        verify(mockRepo).findById("1");
+        verify(mockRepo).save(expectedProduct);
+    }
+
+    @Test
+    void reduceProductOnStock_shouldReturnException_whenCalledByWrongId() throws InvalidIdException {
+        when(mockRepo.findById("1")).thenReturn(Optional.empty());
+        assertThrows(InvalidIdException.class, () -> service.reduceProductOnStock("1", 2));
+        verify(mockRepo).findById("1");
+        verify(mockRepo, never()).save(any(Product.class));
+    }
+
 }

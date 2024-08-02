@@ -16,17 +16,20 @@ export default function AdminAddProductPage(props: Readonly<AdminAddProductPage>
     const [success, setSuccess] = useState<string | null>(null);
 
 
+    const addProduct = async () => {
+        await axios.post(`/api/product`, {
+            name,
+            price: parseFloat(price),
+            quantity: {
+                amount,
+                unit
+            }
+        })
+    }
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            await axios.post(`/api/product`, {
-                name,
-                price: parseFloat(price),
-                quantity: {
-                    amount,
-                    unit
-                }
-            });
+            await addProduct();
             setSuccess('Product added successfully!');
             setError(null);
             setPrice('')

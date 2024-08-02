@@ -70,32 +70,36 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
 
     const totalPrice = calculateTotalPrice();
 
+    const addOrder = async () => {
+        axios.post(`/api/order`, {
+            orderedProducts: props.user.shoppingCart.orderedProducts.map(product => ({
+                productId: product.productId,
+                amount: quantities[product.productId]
+            })),
+            price: totalPrice,
+            userId: props.user?.id
+        })
+            .then(response => {
+                console.log("Order submitted successfully:", response.data);
+                axios.put(`api/appuser/shoppingCart/removeProduct/${props.user.id}`, {})
+                    .then(() => {
+                        props.fetchMe();
+                        getProducts()
+                    })
+                    .catch(error => console.log(error.message))
+                console.log("Updated shoppingCart:", props.user.shoppingCart);
+            })
+            .catch(error => console.log(error.message))
+    }
+    
     async function handlePurchase() {
         if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
-            console.log(props.user?.shoppingCart.orderedProducts)
-            axios.post(`/api/order`, {
-                orderedProducts: props.user.shoppingCart.orderedProducts.map(product => ({
-                    productId: product.productId,
-                    amount: quantities[product.productId]
-                })),
-                price: totalPrice,
-                userId: props.user?.id
-            })
-                .then(response => {
-                    console.log("Order submitted successfully:", response.data);
-                    axios.put(`api/appuser/shoppingCart/removeProduct/${props.user.id}`, {})
-                        .then(() => {
-                            props.fetchMe();
-                            getProducts()
-                        })
-                        .catch(error => console.log(error.message))
-                    console.log("Updated shoppingCart:", props.user.shoppingCart);
-                })
-                .catch(error => console.log(error.message))
+            await addOrder()
         } else {
             console.log("Order cannot be created without Products")
         }
     }
+
 
     return (
         <>

@@ -91,6 +91,9 @@ function App() {
     }
     if (user === null) {
         return <>
+            <h2>OnlineShop created by Marco Skiadas</h2>
+            <p>This Page is still under construction</p>
+            <p>Please press "Login" to get access to the Shop</p>
             <button onClick={login}>Login</button>
         </>
     }

@@ -19,7 +19,6 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
     const [price, setPrice] = useState('');
     const [unit, setUnit] = useState<Unit>(Unit.PIECE);
     const [amount, setAmount] = useState('');
-    const [json, setJson] = useState<{ name: string }>({name: ""})
     const [image, setImage] = useState<File | null>(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -61,7 +60,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
             data.append("file", image)
         }
         data.append("product", new Blob([JSON.stringify(updatedProduct)], {'type': "application/json"}))
-        axios.post(`/api/upload/${product?.id}`, data, {headers: {"Content-Type": "multipart/form-data"}})
+        axios.post(`/api/product/upload/${product?.id}`, data, {headers: {"Content-Type": "multipart/form-data"}})
             .then((response) => {
                 setProduct(response.data)
                 setSuccess('Product updated successfully!');
@@ -144,8 +143,6 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                 </div>
                 <div>
                     <label htmlFor="image">Product Image:</label>
-                    <input type='text' value={json.name}
-                           onChange={event => setJson(prevState => ({...prevState, name: event.target.value}))}/>
                     <input type='file' onChange={onFileChange}/>
                 </div>
 

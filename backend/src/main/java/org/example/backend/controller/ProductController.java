@@ -7,7 +7,9 @@ import org.example.backend.model.Product;
 import org.example.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -56,5 +58,10 @@ public class ProductController {
     @PutMapping("/shoppingCart/{productId}/{productAmount}")
     public Product reduceProductOnStock(@PathVariable String productId, @PathVariable int productAmount) throws InvalidIdException {
         return productService.reduceProductOnStock(productId, productAmount);
+    }
+
+    @PostMapping("/upload/{productId}")
+    public Product upload(@RequestPart(name = "file", required = false) MultipartFile multipartFile, @PathVariable String productId, @RequestPart("product") ProductDTO productDTO) throws IOException {
+        return productService.uploadImage(multipartFile, productId, productDTO);
     }
 }

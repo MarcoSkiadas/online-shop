@@ -5,7 +5,10 @@ import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.*;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +23,7 @@ class ProductServiceTest {
     private final IdService mockUtils = mock(IdService.class);
     private final CloudinaryService mockCloud = mock(CloudinaryService.class);
     private final ProductService service = new ProductService(mockRepo, mockUtils, mockCloud);
+    private final MultipartFile multipartFile = mock(MultipartFile.class);
 
     @Test
     void getAllProducts_shouldReturnEmptyList_whenCalledInitially() {
@@ -138,5 +142,70 @@ class ProductServiceTest {
         verify(mockRepo).findById("1");
         verify(mockRepo, never()).save(any(Product.class));
     }
+    
+    @Test
+    void uploadImage1_ShouldReturnProduct_WhenCalledWithImage() throws IOException {
+        String productId = "1";
+        String imageUrl = "http://example.com/image.jpg";
+        ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product existingProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "old-image-url");
+        Product updatedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), imageUrl);
 
+        when(multipartFile.isEmpty()).thenReturn(false);
+        when(mockCloud.uploadImage(multipartFile)).thenReturn(imageUrl);
+        when(mockRepo.existsById(productId)).thenReturn(true);
+        when(mockRepo.findById(productId)).thenReturn(Optional.of(existingProduct));
+        when(mockRepo.save(updatedProduct)).thenReturn(updatedProduct);
+
+        Product actualProduct = service.uploadImage(multipartFile, productId, productDTO);
+
+        assertEquals(updatedProduct, actualProduct);
+
+        verify(mockCloud).uploadImage(multipartFile);
+        verify(mockRepo).findById(productId);
+        verify(mockRepo).save(updatedProduct);
+    }
+
+    @Test
+    void uploadImage_ShouldReturnProductWithoutImage_WhenFileIsEmpty() throws IOException {
+        String productId = "1";
+        String imageUrl = "old-image-url";
+        ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product existingProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), imageUrl);
+        Product updatedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), imageUrl);
+
+        when(multipartFile.isEmpty()).thenReturn(true);
+        when(mockRepo.existsById(productId)).thenReturn(true);
+        when(mockRepo.findById(productId)).thenReturn(Optional.of(existingProduct));
+        when(mockRepo.save(any(Product.class))).thenReturn(updatedProduct);
+
+
+        Product actualProduct = service.uploadImage(multipartFile, productId, productDTO);
+
+
+        assertEquals(updatedProduct, actualProduct);
+
+
+        verify(mockCloud).uploadImage(multipartFile);  // Ensure this is not called
+        verify(mockRepo).findById(productId);
+        verify(mockRepo).save(updatedProduct);
+    }
+
+    @Test
+    void uploadImage_ShouldThrowException_WhenProductNotFound() throws IOException {
+        String productId = "1";
+        ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+
+        when(multipartFile.isEmpty()).thenReturn(false);
+        when(mockCloud.uploadImage(multipartFile)).thenReturn("http://example.com/image.jpg");
+        when(mockRepo.existsById(productId)).thenReturn(false);
+
+        assertThrows(InvalidIdException.class, () -> {
+            service.uploadImage(multipartFile, productId, productDTO);
+        });
+
+        verify(mockCloud).uploadImage(multipartFile);
+        verify(mockRepo, never()).findById(productId);
+        verify(mockRepo, never()).save(any(Product.class));
+    }
 }

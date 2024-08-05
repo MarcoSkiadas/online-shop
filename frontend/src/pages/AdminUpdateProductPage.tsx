@@ -81,7 +81,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="text"
                         id="name"
-                        value={product?.name}
+                        value={name}
+                        placeholder={product?.name}
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
@@ -92,7 +93,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="number"
                         id="price"
-                        value={product?.price}
+                        value={price}
+                        placeholder={product?.price.toString()}
                         onChange={(e) => setPrice(e.target.value)}
                         required
                         step="0.01" // Für Dezimalwerte
@@ -104,7 +106,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="number"
                         id="amount"
-                        value={product?.quantity.amount}
+                        value={amount}
+                        placeholder={product?.quantity.amount.toString()}
                         onChange={(e) => setAmount(e.target.value)}
                         required
                         step="1"
@@ -116,7 +119,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <select
                         id="unit"
                         name="unit"
-                        value={props.unitType}
+                        value={unit}
                         onChange={event => setUnit(event.target.value)}
                         required
                     >

@@ -1,6 +1,5 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.OrderDTO;
 import org.example.backend.dto.ProductDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.*;
@@ -19,7 +18,8 @@ class ProductServiceTest {
 
     private final ProductRepo mockRepo = mock(ProductRepo.class);
     private final IdService mockUtils = mock(IdService.class);
-    private final ProductService service = new ProductService(mockRepo, mockUtils);
+    private final CloudinaryService mockCloud = mock(CloudinaryService.class);
+    private final ProductService service = new ProductService(mockRepo, mockUtils, mockCloud);
 
     @Test
     void getAllProducts_shouldReturnEmptyList_whenCalledInitially() {
@@ -36,7 +36,7 @@ class ProductServiceTest {
     @Test
     void getProductById_shouldReturnProduct_whenCalledById() throws InvalidIdException {
         //GIVEN
-        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         //WHEN
         Product actual = service.getProductById("1");
@@ -54,8 +54,8 @@ class ProductServiceTest {
     @Test
     void updateProduct_shouldUpdateProduct_whenCalledById() throws InvalidIdException {
         //GIVEN
-        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
-        Product actual = new Product("1", "Rasenmäher", 44, new Quantity(2, Unit.PIECE));
+        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
+        Product actual = new Product("1", "Rasenmäher", 44, new Quantity(2, Unit.PIECE), "Test");
         when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
         when(mockRepo.save(expected)).thenReturn(expected);
         ProductDTO expectedDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
@@ -89,8 +89,8 @@ class ProductServiceTest {
     }
 
     @Test
-    void addOrder_shouldAddOrder_whenCalledWithOrder() {
-        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+    void addProduct_shouldAddProduct_whenCalledWithOrder() {
+        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
         when(mockUtils.generateUUID()).thenReturn("1");
         when(mockRepo.save(expected)).thenReturn(expected);
         //WHEN
@@ -107,9 +107,9 @@ class ProductServiceTest {
         productIds.add("1");
         productIds.add("2");
         productIds.add("3");
-        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
-        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE));
-        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE));
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
+        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test");
+        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test");
         ArrayList<Product> products = new ArrayList<>();
         products.add(expectedProduct1);
         products.add(expectedProduct2);
@@ -121,8 +121,8 @@ class ProductServiceTest {
 
     @Test
     void reduceProductOnStock_shouldReduceProductOnStock_whenCalledByIdAndAmount() throws InvalidIdException {
-        Product expectedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE));
-        Product actualProduct = new Product("1", "Rasenmäher", 22, new Quantity(4, Unit.PIECE));
+        Product expectedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
+        Product actualProduct = new Product("1", "Rasenmäher", 22, new Quantity(4, Unit.PIECE), "Test");
         when(mockRepo.findById("1")).thenReturn(Optional.of(actualProduct));
         when(mockRepo.save(expectedProduct)).thenReturn(expectedProduct);
         actualProduct = service.reduceProductOnStock("1", 2);

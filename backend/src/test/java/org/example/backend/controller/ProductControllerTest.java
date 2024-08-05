@@ -35,8 +35,8 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
-        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
-        productRepo.save(new Product("2", "Tasse", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test"));
+        productRepo.save(new Product("2", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test"));
     }
 
     @Test

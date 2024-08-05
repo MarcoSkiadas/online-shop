@@ -1,17 +1,13 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.ShoppingCartDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
-import org.example.backend.repository.ShoppingCartRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +23,7 @@ class AppUserServiceTest {
 
     @BeforeEach
     void setUp() {
-        mockProductRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
+        mockProductRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test"));
     }
 
     @Test

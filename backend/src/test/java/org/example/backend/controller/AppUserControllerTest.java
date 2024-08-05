@@ -34,10 +34,10 @@ class AppUserControllerTest {
         OrderedProduct orderedProduct = new OrderedProduct("1", 2);
         appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
         appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
-        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
-        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE)));
-        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE)));
-        productRepo.save(new Product("4", "Teekanne", 22, new Quantity(2, Unit.PIECE)));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test"));
+        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test"));
+        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test"));
+        productRepo.save(new Product("4", "Teekanne", 22, new Quantity(2, Unit.PIECE), "Test"));
     }
 
     @Test

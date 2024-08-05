@@ -53,7 +53,7 @@ public class ProductService {
 
     public Product addProduct(ProductDTO productDTO) {
         String productId = idService.generateUUID();
-        Product product = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "https://res.cloudinary.com/dylxokrcs/image/upload/v1/folder_1/oatv35crxfavtf8gzrzz");
+        Product product = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "Test");
         productRepo.save(product);
         return product;
     }

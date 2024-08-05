@@ -90,15 +90,21 @@ public class ProductService {
         String productId = idService.generateUUID();
         if (multipartFile == null || multipartFile.isEmpty()) {
 
-            Product productWithoutPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg");
+            Product productWithoutPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg", 0, 0);
             productRepo.save(productWithoutPicture);
             return productRepo.save(productWithoutPicture);
         }
         String imageUrl = cloudinaryService.uploadImage(multipartFile);
-        Product productWithPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), imageUrl);
+        Product productWithPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), imageUrl, 0, 0);
         productRepo.save(productWithPicture);
         return productRepo.save(productWithPicture);
 
+    }
+
+    public Product addRating(String productId, float rating) {
+        Product product = productRepo.findById(productId).orElseThrow(() -> new InvalidIdException("Product with " + productId + " not found"));
+        Product updatedProduct = product.addRating(rating);
+        return productRepo.save(updatedProduct);
     }
 
 }

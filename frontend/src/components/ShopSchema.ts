@@ -4,6 +4,8 @@ export interface Product {
     price: number,
     quantity: Quantity,
     imageUrl: string
+    rating: number;
+    ratingCount: number;
 }
 
 export interface ProductDTO {

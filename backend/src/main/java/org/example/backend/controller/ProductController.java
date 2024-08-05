@@ -59,4 +59,9 @@ public class ProductController {
     public Product addProduct(@RequestPart(name = "file", required = false) MultipartFile multipartFile, @RequestPart("product") ProductDTO productDTO) throws IOException {
         return productService.addProduct(multipartFile, productDTO);
     }
+
+    @PostMapping("/{id}/rate")
+    public Product rateProduct(@PathVariable String id, @RequestParam float rating) {
+        return productService.addRating(id, rating);
+    }
 }

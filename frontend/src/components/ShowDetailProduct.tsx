@@ -32,6 +32,7 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
                     <h2>{props.product?.name}</h2>
                     <p>{props.product?.id}</p>
                     <p>Price: {props.product?.price} €</p>
+                    <img th:src={`@{${props.product.imageURL}}`}/>
                     {props.product.quantity.amount < 10 &&
                         <p>Only {props.product.quantity.amount} Products on stock!</p>}
                     <div>

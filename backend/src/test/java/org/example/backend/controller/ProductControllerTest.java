@@ -34,9 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductControllerTest {
 
-    @MockBean
-    Cloudinary cloudinary;
-    Uploader uploader = mock(Uploader.class);
     @Autowired
     private ProductRepo productRepo;
     @Autowired

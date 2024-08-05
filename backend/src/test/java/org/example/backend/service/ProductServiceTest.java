@@ -5,7 +5,6 @@ import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.*;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -142,7 +141,7 @@ class ProductServiceTest {
         verify(mockRepo).findById("1");
         verify(mockRepo, never()).save(any(Product.class));
     }
-    
+
     @Test
     void uploadImage1_ShouldReturnProduct_WhenCalledWithImage() throws IOException {
         String productId = "1";
@@ -186,7 +185,7 @@ class ProductServiceTest {
         assertEquals(updatedProduct, actualProduct);
 
 
-        verify(mockCloud).uploadImage(multipartFile);  // Ensure this is not called
+        verify(mockCloud).uploadImage(multipartFile);
         verify(mockRepo).findById(productId);
         verify(mockRepo).save(updatedProduct);
     }
@@ -194,10 +193,11 @@ class ProductServiceTest {
     @Test
     void uploadImage_ShouldThrowException_WhenProductNotFound() throws IOException {
         String productId = "1";
+        String imageUrl = "http://example.com/image.jpg";
         ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
 
         when(multipartFile.isEmpty()).thenReturn(false);
-        when(mockCloud.uploadImage(multipartFile)).thenReturn("http://example.com/image.jpg");
+        when(mockCloud.uploadImage(multipartFile)).thenReturn(imageUrl);
         when(mockRepo.existsById(productId)).thenReturn(false);
 
         assertThrows(InvalidIdException.class, () -> {

@@ -2,14 +2,14 @@ package org.example.backend.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.dto.ImageModel;
-import org.example.backend.model.Image;
+import org.example.backend.dto.ProductDTO;
+import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Product;
 import org.example.backend.repository.ProductRepo;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -18,42 +18,31 @@ public class ImageService {
     private final CloudinaryService cloudinaryService;
     private final ProductRepo productRepo;
 
-    public ResponseEntity<Map> uploadImage(ImageModel imageModel, String productId) {
-        try {
-            if (imageModel.getName().isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
-            if (imageModel.getFile().isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
-            Image image = new Image();
-            image.setName(imageModel.getName());
-            image.setUrl(cloudinaryService.uploadFile(imageModel.getFile(), "folder_1"));
-            if (image.getUrl() == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            if (!productRepo.existsById(productId)) {
-                return ResponseEntity.badRequest().build();
-            }
-            Optional<Product> product = productRepo.findById(productId);
-            String imageUrl = image.getUrl();
-            if (product.isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
+    public Product uploadImage(MultipartFile multipartFile, String productId, ProductDTO productDTO) throws IOException {
+
+        String imageUrl = cloudinaryService.uploadImage(multipartFile);
+        if (!productRepo.existsById(productId)) {
+            throw new InvalidIdException("product not found");
+        }
+        Optional<Product> product = productRepo.findById(productId);
+        if (product.isEmpty()) {
+            throw new InvalidIdException("product not found");
+        }
+        if (multipartFile.isEmpty()) {
             Product product1 = product.get()
                     .withId(productId)
-                    .withName(product.get().name())
-                    .withPrice(product.get().price())
-                    .withQuantity(product.get().quantity())
-                    .withImageUrl(imageUrl);
-            productRepo.save(product1);
-            return ResponseEntity.ok().body(Map.of("url", image.getUrl()));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+                    .withName(productDTO.name())
+                    .withPrice(productDTO.price())
+                    .withQuantity(productDTO.quantity())
+                    .withImageUrl(product.get().imageUrl());
+            return productRepo.save(product1);
         }
-
-
+        Product product2 = product.get()
+                .withId(productId)
+                .withName(productDTO.name())
+                .withPrice(productDTO.price())
+                .withQuantity(productDTO.quantity())
+                .withImageUrl(imageUrl);
+        return productRepo.save(product2);
     }
 }

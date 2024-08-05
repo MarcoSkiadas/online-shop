@@ -6,6 +6,12 @@ export interface Product {
     imageUrl: string
 }
 
+export interface ProductDTO {
+    name: string,
+    price: number,
+    quantity: Quantity
+}
+
 export interface Order {
     id: string,
     orderedProducts: OrderedProduct[],

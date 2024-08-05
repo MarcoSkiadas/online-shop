@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
-import {Product} from "../components/ShopSchema.ts";
-import React, {useEffect, useState} from "react";
+import {Product, ProductDTO, Unit} from "../components/ShopSchema.ts";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import '../components/styles.css';
 
 type UpdateProductPageProps = {
@@ -17,8 +17,10 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
-    const [unit, setUnit] = useState('');
+    const [unit, setUnit] = useState<Unit>(Unit.PIECE);
     const [amount, setAmount] = useState('');
+    const [json, setJson] = useState<{ name: string }>({name: ""})
+    const [image, setImage] = useState<File | null>(null);
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
@@ -37,27 +39,39 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
+    function onFileChange(event: ChangeEvent<HTMLInputElement>) {
+        if (event.target.files) {
+            setImage(event.target.files[0])
+        }
+    }
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        try {
-            await axios.put(`/api/product/${product?.id}`, {
-                name,
-                price: parseFloat(price),
-                quantity: {
-                    amount,
-                    unit
-                }
-            });
-            await getProduct();
-
-            setSuccess('Product updated successfully!');
-            setError(null);
-        } catch (err) {
-            setError('Failed to update product. Please try again.');
-            setSuccess(null);
+        const updatedProduct: ProductDTO = {
+            name,
+            price: parseFloat(price),
+            quantity: {
+                amount: parseInt(amount),
+                unit
+            }
         }
-    };
+        const data = new FormData();
+        if (image) {
+            data.append("file", image)
+        }
+        data.append("product", new Blob([JSON.stringify(updatedProduct)], {'type': "application/json"}))
+        axios.post(`/api/upload/${product?.id}`, data, {headers: {"Content-Type": "multipart/form-data"}})
+            .then((response) => {
+                setProduct(response.data)
+                setSuccess('Product updated successfully!');
+                setError(null);
+            })
+            .catch(() => {
+                setError('Failed to update product. Please try again.');
+                setSuccess(null);
+            });
+    }
 
     function handleDelete() {
         try {
@@ -120,7 +134,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         id="unit"
                         name="unit"
                         value={unit}
-                        onChange={event => setUnit(event.target.value)}
+                        onChange={event => setUnit(event.target.value as Unit)}
                         required
                     >
                         {props.unitType.map(unit => (
@@ -128,6 +142,13 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         ))}
                     </select>
                 </div>
+                <div>
+                    <label htmlFor="image">Product Image:</label>
+                    <input type='text' value={json.name}
+                           onChange={event => setJson(prevState => ({...prevState, name: event.target.value}))}/>
+                    <input type='file' onChange={onFileChange}/>
+                </div>
+
                 <button type="submit">Update Product</button>
 
                 {error && <p style={{color: 'red'}}>{error}</p>}

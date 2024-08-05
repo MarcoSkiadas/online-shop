@@ -1,28 +1,23 @@
 package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.dto.ImageModel;
+import org.example.backend.dto.ProductDTO;
+import org.example.backend.model.Product;
 import org.example.backend.service.ImageService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class ImageController {
 
     private final ImageService imageService;
 
     @PostMapping("/upload/{productId}")
-    public ResponseEntity<Map> upload(ImageModel imageModel, @PathVariable String productId) {
-        try {
-            return imageService.uploadImage(imageModel, productId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Product upload(@RequestPart(name = "file", required = false) MultipartFile multipartFile, @PathVariable String productId, @RequestPart("product") ProductDTO productDTO) throws IOException {
+        return imageService.uploadImage(multipartFile, productId, productDTO);
     }
 }

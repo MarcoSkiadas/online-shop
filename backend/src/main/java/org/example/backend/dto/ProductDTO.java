@@ -5,7 +5,6 @@ import org.example.backend.model.Quantity;
 public record ProductDTO(
         String name,
         float price,
-        Quantity quantity,
-        String imageUrl
+        Quantity quantity
 ) {
 }

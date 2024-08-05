@@ -55,27 +55,6 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateProduct_shouldUpdateProduct_whenCalledById() throws InvalidIdException {
-        //GIVEN
-        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
-        Product actual = new Product("1", "Rasenmäher", 44, new Quantity(2, Unit.PIECE), "Test");
-        when(mockRepo.findById("1")).thenReturn(Optional.of(expected));
-        when(mockRepo.save(expected)).thenReturn(expected);
-        ProductDTO expectedDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
-        //WHEN
-        actual = service.updateProduct("1", expectedDTO);
-        //THEN
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void updateProduct_shouldThrowException_whenCalledByWrongId() throws InvalidIdException {
-        when(mockRepo.findById("1")).thenReturn(Optional.empty());
-        assertThrows(InvalidIdException.class, () -> service.updateProduct("1", new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE))));
-        verify(mockRepo).findById("1");
-    }
-
-    @Test
     void deleteProduct_shouldDeleteProduct_whenCalledById() throws InvalidIdException {
         String productId = "123";
         when(mockRepo.existsById(productId)).thenReturn(true);
@@ -89,19 +68,6 @@ class ProductServiceTest {
         when(mockRepo.existsById(productId)).thenReturn(false);
         assertThrows(InvalidIdException.class, () -> service.deleteProduct("1"));
         verify(mockRepo).existsById("1");
-    }
-
-    @Test
-    void addProduct_shouldAddProduct_whenCalledWithOrder() {
-        Product expected = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
-        when(mockUtils.generateUUID()).thenReturn("1");
-        when(mockRepo.save(expected)).thenReturn(expected);
-        //WHEN
-        Product actual = service.addProduct(new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE)));
-        //THEN
-        assertEquals(expected, actual);
-        verify(mockRepo).save(expected);
-        verify(mockUtils).generateUUID();
     }
 
     @Test
@@ -143,7 +109,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void uploadImage1_ShouldReturnProduct_WhenCalledWithImage() throws IOException {
+    void updateProduct_ShouldReturnProduct_WhenCalledWithImage() throws IOException {
         String productId = "1";
         String imageUrl = "http://example.com/image.jpg";
         ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
@@ -156,7 +122,7 @@ class ProductServiceTest {
         when(mockRepo.findById(productId)).thenReturn(Optional.of(existingProduct));
         when(mockRepo.save(updatedProduct)).thenReturn(updatedProduct);
 
-        Product actualProduct = service.uploadImage(multipartFile, productId, productDTO);
+        Product actualProduct = service.updateProduct(multipartFile, productId, productDTO);
 
         assertEquals(updatedProduct, actualProduct);
 
@@ -166,7 +132,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void uploadImage_ShouldReturnProductWithoutImage_WhenFileIsEmpty() throws IOException {
+    void updateProduct_WhenFileIsEmpty() throws IOException {
         String productId = "1";
         String imageUrl = "old-image-url";
         ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
@@ -174,26 +140,26 @@ class ProductServiceTest {
         Product updatedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), imageUrl);
 
         when(multipartFile.isEmpty()).thenReturn(true);
+
         when(mockRepo.existsById(productId)).thenReturn(true);
         when(mockRepo.findById(productId)).thenReturn(Optional.of(existingProduct));
         when(mockRepo.save(any(Product.class))).thenReturn(updatedProduct);
 
 
-        Product actualProduct = service.uploadImage(multipartFile, productId, productDTO);
+        Product actualProduct = service.updateProduct(multipartFile, productId, productDTO);
 
 
         assertEquals(updatedProduct, actualProduct);
 
-
-        verify(mockCloud).uploadImage(multipartFile);
+        verify(mockCloud, never()).uploadImage(multipartFile);
         verify(mockRepo).findById(productId);
         verify(mockRepo).save(updatedProduct);
     }
 
     @Test
-    void uploadImage_ShouldThrowException_WhenProductNotFound() throws IOException {
+    void updateProduct_ShouldThrowException_WhenProductNotFound() throws IOException {
         String productId = "1";
-        String imageUrl = "http://example.com/image.jpg";
+        String imageUrl = "https://example.com/image.jpg";
         ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
 
         when(multipartFile.isEmpty()).thenReturn(false);
@@ -201,11 +167,55 @@ class ProductServiceTest {
         when(mockRepo.existsById(productId)).thenReturn(false);
 
         assertThrows(InvalidIdException.class, () -> {
-            service.uploadImage(multipartFile, productId, productDTO);
+            service.updateProduct(multipartFile, productId, productDTO);
         });
 
-        verify(mockCloud).uploadImage(multipartFile);
+        verify(mockCloud, never()).uploadImage(multipartFile);
         verify(mockRepo, never()).findById(productId);
         verify(mockRepo, never()).save(any(Product.class));
+    }
+
+    @Test
+    void testAddProductWithEmptyMultipartFile() throws IOException {
+
+        when(multipartFile.isEmpty()).thenReturn(true);
+        ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        String generatedId = "123-uuid";
+        String defaultImageUrl = "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg";
+        Product expectedProduct = new Product(generatedId, productDTO.name(), productDTO.price(), productDTO.quantity(), defaultImageUrl);
+
+        when(mockUtils.generateUUID()).thenReturn(generatedId);
+        when(mockRepo.save(any(Product.class))).thenReturn(expectedProduct);
+
+        Product actualProduct = service.addProduct(multipartFile, productDTO);
+
+        assertEquals(expectedProduct, actualProduct);
+        verify(mockUtils).generateUUID();
+        verify(mockRepo, times(2)).save(any(Product.class));
+        verify(mockCloud, never()).uploadImage(any());
+    }
+
+    @Test
+    void testAddProductWithValidMultipartFile() throws IOException {
+
+        String imageUrl = "old-image-url";
+        when(multipartFile.isEmpty()).thenReturn(false);
+        byte[] content = "image content".getBytes();
+        ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
+        String generatedId = "123-uuid";
+        String uploadedImageUrl = "http://res.cloudinary.com/somepath/image.jpg";
+        Product expectedProduct = new Product(generatedId, productDTO.name(), productDTO.price(), productDTO.quantity(), uploadedImageUrl);
+
+        when(mockUtils.generateUUID()).thenReturn(generatedId);
+        when(multipartFile.isEmpty()).thenReturn(false);
+        when(mockCloud.uploadImage(multipartFile)).thenReturn(imageUrl);
+        when(mockRepo.save(any(Product.class))).thenReturn(expectedProduct);
+
+        Product actualProduct = service.addProduct(multipartFile, productDTO);
+
+        assertEquals(expectedProduct, actualProduct);
+        verify(mockUtils, times(1)).generateUUID();
+        verify(mockCloud, times(1)).uploadImage(multipartFile);
+        verify(mockRepo, times(2)).save(any(Product.class));
     }
 }

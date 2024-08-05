@@ -60,7 +60,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
             data.append("file", image)
         }
         data.append("product", new Blob([JSON.stringify(updatedProduct)], {'type': "application/json"}))
-        axios.post(`/api/product/upload/${product?.id}`, data, {headers: {"Content-Type": "multipart/form-data"}})
+        axios.put(`/api/product/upload/${product?.id}`, data, {headers: {"Content-Type": "multipart/form-data"}})
             .then((response) => {
                 setProduct(response.data)
                 setSuccess('Product updated successfully!');

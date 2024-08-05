@@ -29,33 +29,12 @@ public class ProductService {
         return product.orElseThrow(() -> new InvalidIdException("Product with " + id + " not found"));
     }
 
-    public Product updateProduct(String id, ProductDTO productDTO) throws InvalidIdException {
-        Optional<Product> product = productRepo.findById(id);
-        if (product.isPresent()) {
-            Product product1 = product.get()
-                    .withId(id)
-                    .withName(productDTO.name())
-                    .withPrice(productDTO.price());
-            productRepo.save(product1);
-            return product1;
-        } else {
-            throw new InvalidIdException("Product with " + id + " not found");
-        }
-    }
-
     public void deleteProduct(String id) throws InvalidIdException {
         if (productRepo.existsById(id)) {
             productRepo.deleteById(id);
         } else {
             throw new InvalidIdException("Product with " + id + " not found");
         }
-    }
-
-    public Product addProduct(ProductDTO productDTO) {
-        String productId = idService.generateUUID();
-        Product product = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "Test");
-        productRepo.save(product);
-        return product;
     }
 
     public List<Product> getAllProductsByIds(List<String> productIds) {
@@ -76,17 +55,17 @@ public class ProductService {
         throw new InvalidIdException("Product with " + productId + " not found");
     }
 
-    public Product uploadImage(MultipartFile multipartFile, String productId, ProductDTO productDTO) throws IOException {
+    public Product updateProduct(MultipartFile multipartFile, String productId, ProductDTO productDTO) throws IOException {
 
-        String imageUrl = cloudinaryService.uploadImage(multipartFile);
+
         if (!productRepo.existsById(productId)) {
             throw new InvalidIdException("product not found");
         }
         Optional<Product> product = productRepo.findById(productId);
         if (product.isEmpty()) {
-            throw new InvalidIdException("product not found");
+            throw new InvalidIdException("product with " + productId + " not found");
         }
-        if (multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
             Product product1 = product.get()
                     .withId(productId)
                     .withName(productDTO.name())
@@ -95,6 +74,7 @@ public class ProductService {
                     .withImageUrl(product.get().imageUrl());
             return productRepo.save(product1);
         }
+        String imageUrl = cloudinaryService.uploadImage(multipartFile);
         Product product2 = product.get()
                 .withId(productId)
                 .withName(productDTO.name())
@@ -102,6 +82,23 @@ public class ProductService {
                 .withQuantity(productDTO.quantity())
                 .withImageUrl(imageUrl);
         return productRepo.save(product2);
+
+    }
+
+    public Product addProduct(MultipartFile multipartFile, ProductDTO productDTO) throws IOException {
+
+        String productId = idService.generateUUID();
+        if (multipartFile == null || multipartFile.isEmpty()) {
+
+            Product productWithoutPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg");
+            productRepo.save(productWithoutPicture);
+            return productRepo.save(productWithoutPicture);
+        }
+        String imageUrl = cloudinaryService.uploadImage(multipartFile);
+        Product productWithPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), imageUrl);
+        productRepo.save(productWithPicture);
+        return productRepo.save(productWithPicture);
+
     }
 
 }

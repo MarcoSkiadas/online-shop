@@ -30,22 +30,10 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) throws InvalidIdException {
-        return productService.updateProduct(id, productDTO);
-    }
-
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable String id) throws InvalidIdException {
         productService.deleteProduct(id);
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping()
-    public Product addProduct(@RequestBody ProductDTO productDTO) {
-        return productService.addProduct(productDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -60,8 +48,15 @@ public class ProductController {
         return productService.reduceProductOnStock(productId, productAmount);
     }
 
-    @PostMapping("/upload/{productId}")
-    public Product upload(@RequestPart(name = "file", required = false) MultipartFile multipartFile, @PathVariable String productId, @RequestPart("product") ProductDTO productDTO) throws IOException {
-        return productService.uploadImage(multipartFile, productId, productDTO);
+    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping("/upload/{productId}")
+    public Product updateProduct(@RequestPart(name = "file", required = false) MultipartFile multipartFile, @PathVariable String productId, @RequestPart("product") ProductDTO productDTO) throws IOException {
+        return productService.updateProduct(multipartFile, productId, productDTO);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/upload")
+    public Product addProduct(@RequestPart(name = "file", required = false) MultipartFile multipartFile, @RequestPart("product") ProductDTO productDTO) throws IOException {
+        return productService.addProduct(multipartFile, productDTO);
     }
 }

@@ -1,8 +1,9 @@
 export interface Product {
-    id: string;
-    name: string;
-    price: number
-    quantity: Quantity
+    id: string,
+    name: string,
+    price: number,
+    quantity: Quantity,
+    imageUrl: string
 }
 
 export interface Order {
@@ -29,7 +30,7 @@ export interface User {
 }
 
 export interface Quantity {
-    amount: number
+    amount: number,
     unit: Unit
 }
 

@@ -5,6 +5,7 @@ import org.example.backend.dto.ImageModel;
 import org.example.backend.repository.ImageRepository;
 import org.example.backend.service.ImageService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,10 +19,10 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<Map> upload(ImageModel imageModel) {
+    @PostMapping("/upload/{productId}")
+    public ResponseEntity<Map> upload(ImageModel imageModel, @PathVariable String productId) {
         try {
-            return imageService.uploadImage(imageModel);
+            return imageService.uploadImage(imageModel, productId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

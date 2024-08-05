@@ -9,7 +9,8 @@ public record Product(
         String id,
         String name,
         float price,
-        Quantity quantity
+        Quantity quantity,
+        String imageUrl
 
 ) {
 }

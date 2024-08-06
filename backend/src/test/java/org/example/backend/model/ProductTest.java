@@ -3,7 +3,6 @@ package org.example.backend.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +31,7 @@ class ProductTest {
 
         ArrayList<Review> expectedReviews = new ArrayList<>(initialReviews);
         expectedReviews.add(new Review(5, "Excellent product"));
-        float expectedRating = (3 + 5) / 2.0f; // Average rating
+        float expectedRating = (3 + 5) / 2.0f;
         Product expectedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", expectedRating, expectedReviews);
 
         Product actualProduct = initialProduct.addRating(5, "Excellent product");

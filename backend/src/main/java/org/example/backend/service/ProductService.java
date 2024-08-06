@@ -5,11 +5,13 @@ import org.example.backend.dto.ProductDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.Product;
 import org.example.backend.model.Quantity;
+import org.example.backend.model.Review;
 import org.example.backend.repository.ProductRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,7 +73,9 @@ public class ProductService {
                     .withName(productDTO.name())
                     .withPrice(productDTO.price())
                     .withQuantity(productDTO.quantity())
-                    .withImageUrl(product.get().imageUrl());
+                    .withImageUrl(product.get().imageUrl())
+                    .withRating(product.get().rating())
+                    .withReviewList(product.get().reviewList());
             return productRepo.save(product1);
         }
         String imageUrl = cloudinaryService.uploadImage(multipartFile);
@@ -80,7 +84,9 @@ public class ProductService {
                 .withName(productDTO.name())
                 .withPrice(productDTO.price())
                 .withQuantity(productDTO.quantity())
-                .withImageUrl(imageUrl);
+                .withImageUrl(imageUrl)
+                .withRating(product.get().rating())
+                .withReviewList(product.get().reviewList());
         return productRepo.save(product2);
 
     }
@@ -89,21 +95,20 @@ public class ProductService {
 
         String productId = idService.generateUUID();
         if (multipartFile == null || multipartFile.isEmpty()) {
-
-            Product productWithoutPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg", 0, 0);
+            Product productWithoutPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg", 0, new ArrayList<>(List.of(new Review[0])));
             productRepo.save(productWithoutPicture);
             return productRepo.save(productWithoutPicture);
         }
         String imageUrl = cloudinaryService.uploadImage(multipartFile);
-        Product productWithPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), imageUrl, 0, 0);
+        Product productWithPicture = new Product(productId, productDTO.name(), productDTO.price(), productDTO.quantity(), imageUrl, 0, new ArrayList<>(List.of(new Review[0])));
         productRepo.save(productWithPicture);
         return productRepo.save(productWithPicture);
 
     }
 
-    public Product addRating(String productId, float rating) {
+    public Product addRating(String productId, float newRating) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new InvalidIdException("Product with " + productId + " not found"));
-        Product updatedProduct = product.addRating(rating);
+        Product updatedProduct = product.addRating(newRating);
         return productRepo.save(updatedProduct);
     }
 

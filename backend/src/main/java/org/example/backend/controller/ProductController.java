@@ -61,7 +61,7 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/rate")
-    public Product rateProduct(@PathVariable String id, @RequestParam float rating) {
-        return productService.addRating(id, rating);
+    public Product rateProduct(@PathVariable String id, @RequestParam float newRating) {
+        return productService.addRating(id, newRating);
     }
 }

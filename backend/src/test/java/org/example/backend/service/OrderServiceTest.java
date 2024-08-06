@@ -92,9 +92,9 @@ class OrderServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct("1", 22);
         OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
         Order expected = new Order("1", orderedProducts, 22, "testuser");
-        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
-        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test");
-        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test");
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
+        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
+        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
         ArrayList<Product> products = new ArrayList<>();
         products.add(expectedProduct1);
         products.add(expectedProduct2);
@@ -114,9 +114,9 @@ class OrderServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct("1", 22);
         OrderedProduct[] orderedProducts = new OrderedProduct[]{orderedProduct};
         Order expected = new Order("1", orderedProducts, 22, "testuser");
-        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test");
-        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test");
-        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test");
+        Product expectedProduct1 = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
+        Product expectedProduct2 = new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
+        Product expectedProduct3 = new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
         ArrayList<Product> products = new ArrayList<>();
         products.add(expectedProduct1);
         products.add(expectedProduct2);

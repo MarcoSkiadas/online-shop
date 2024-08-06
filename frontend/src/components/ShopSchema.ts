@@ -5,13 +5,18 @@ export interface Product {
     quantity: Quantity,
     imageUrl: string
     rating: number;
-    ratingCount: number;
+    reviewList: Review[]
 }
 
 export interface ProductDTO {
     name: string,
     price: number,
     quantity: Quantity
+}
+
+export interface Review {
+    ratingCount: number,
+    commentary: string
 }
 
 export interface Order {

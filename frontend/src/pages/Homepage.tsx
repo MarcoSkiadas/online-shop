@@ -2,6 +2,7 @@ import ProductCard from "../components/ProductCard.tsx";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect} from "react";
 
+
 type HomepageProps = {
     product: Product[]
     login: () => void

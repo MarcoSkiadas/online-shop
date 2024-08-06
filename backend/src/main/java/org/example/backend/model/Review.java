@@ -1,7 +1,7 @@
 package org.example.backend.model;
 
 public record Review(
-        int ratingCount,
+        float ratingCount,
         String commentary
 ) {
 }

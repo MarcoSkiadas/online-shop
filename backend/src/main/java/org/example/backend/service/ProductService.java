@@ -106,9 +106,9 @@ public class ProductService {
 
     }
 
-    public Product addRating(String productId, float newRating) {
+    public Product addRating(String productId, float newRating, String commentary) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new InvalidIdException("Product with " + productId + " not found"));
-        Product updatedProduct = product.addRating(newRating);
+        Product updatedProduct = product.addRating(newRating, commentary);
         return productRepo.save(updatedProduct);
     }
 

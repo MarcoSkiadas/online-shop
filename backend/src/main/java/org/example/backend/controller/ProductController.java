@@ -61,7 +61,7 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/rate")
-    public Product rateProduct(@PathVariable String id, @RequestParam float newRating) {
-        return productService.addRating(id, newRating);
+    public Product rateProduct(@PathVariable String id, @RequestParam float newRating, @RequestParam(required = false) String commentary) throws IOException {
+        return productService.addRating(id, newRating, commentary);
     }
 }

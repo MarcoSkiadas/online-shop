@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -342,5 +343,50 @@ class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
     }
 
+    @Test
+    void rateProduct_shouldReturnProduct_whenAddedNewReview() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/product/1/rate")
+                        .param("newRating", "5")
+                        .param("commentary", "Great!")
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                                                    {
+                                                        "id": "1",
+                                                        "name": "Rasenmäher",
+                                                        "price": 22,
+                                                        "quantity": {
+                                                              "amount": 2,
+                                                              "unit": "PIECE"
+                                                                    },
+                                                                           "imageUrl": "Test",
+                                                                           "rating": 5.0,
+                                                                           "reviewList": [        {
+                                                                                                      "ratingCount": 5.0,
+                                                                                                      "commentary": "Great!"
+                                                                                                  }
+                                                                                          ]
+                                                    }
+                        """));
+    }
+
+    @Test
+    void rateProduct_shouldReturnException_whenAddedWithWrongProductId() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/product/3/rate")
+                        .param("newRating", "5")
+                        .param("commentary", "Great!")
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        {
+                            "apiPath": "uri=/api/product/3/rate",
+                            "errorCode": "NOT_FOUND",
+                            "errorMsg": "Product with 3 not found"
+                        }
+                        """))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
+    }
 
 }

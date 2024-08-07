@@ -176,7 +176,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void testAddProductWithEmptyMultipartFile() throws IOException {
+    void AddProduct_shouldReturnProduct_whenCalledWithEmptyMultipartFile() throws IOException {
 
         when(multipartFile.isEmpty()).thenReturn(true);
         ProductDTO productDTO = new ProductDTO("Rasenmäher", 22, new Quantity(2, Unit.PIECE));
@@ -196,7 +196,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void testAddProductWithValidMultipartFile() throws IOException {
+    void AddProduct_shouldReturnProduct_WhenCalledWithValidMultipartFile() throws IOException {
 
         String imageUrl = "old-image-url";
         when(multipartFile.isEmpty()).thenReturn(false);
@@ -217,5 +217,33 @@ class ProductServiceTest {
         verify(mockUtils, times(1)).generateUUID();
         verify(mockCloud, times(1)).uploadImage(multipartFile);
         verify(mockRepo, times(2)).save(any(Product.class));
+    }
+
+    @Test
+    void addRating_shouldSaveProduct_whenCalledWithRating() {
+
+        Product expectedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review(2, ""))));
+        Product actualProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
+        when(mockRepo.findById("1")).thenReturn(Optional.of(actualProduct));
+        when(mockRepo.save(expectedProduct)).thenReturn(expectedProduct);
+        service.addRating("1", 2, "");
+        assertEquals(expectedProduct, actualProduct);
+        verify(mockRepo, times(1)).findById("1");
+
+    }
+
+    @Test
+    void addRating_shouldSaveProduct_whenCalledWithMultipleRating() {
+
+        Product expectedProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review(2, ""), new Review(4, ""))));
+        Product actualProduct = new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0])));
+        when(mockRepo.findById("1")).thenReturn(Optional.of(actualProduct));
+        when(mockRepo.save(expectedProduct)).thenReturn(expectedProduct);
+        service.addRating("1", 2, "");
+        service.addRating("1", 4, "");
+
+        assertEquals(expectedProduct, actualProduct);
+        verify(mockRepo, times(2)).findById("1");
+
     }
 }

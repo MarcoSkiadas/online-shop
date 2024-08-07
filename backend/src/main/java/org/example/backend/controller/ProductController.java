@@ -60,6 +60,7 @@ public class ProductController {
         return productService.addProduct(multipartFile, productDTO);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id}/rate")
     public Product rateProduct(@PathVariable String id, @RequestParam float newRating, @RequestParam(required = false) String commentary) throws IOException {
         return productService.addRating(id, newRating, commentary);

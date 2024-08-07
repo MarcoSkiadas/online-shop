@@ -29,7 +29,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final String appUrl = System.getenv("PORT");
+    @Value("${app.url}")
+    private String appUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

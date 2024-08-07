@@ -16,11 +16,13 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
     const {id} = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
     const [unit, setUnit] = useState<Unit>(Unit.PIECE);
     const [amount, setAmount] = useState('');
+    const [price, setPrice] = useState('');
     const [image, setImage] = useState<File | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
         getProduct()
@@ -35,8 +37,6 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                 console.error('Error fetching data:', error.message);
             });
 
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
 
     function onFileChange(event: ChangeEvent<HTMLInputElement>) {
         if (event.target.files) {

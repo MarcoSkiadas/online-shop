@@ -1,6 +1,7 @@
 import {Product, User} from "./ShopSchema.ts";
 import axios from "axios";
 import {useState} from "react";
+import Rating from "./Rating.tsx";
 
 type ShowDetailProductProps = {
     product: Product | undefined
@@ -25,6 +26,7 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
         }
     };
 
+
     return (
         <>
             {!props.product ? <p>Product not found</p> :
@@ -32,6 +34,9 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
                     <h2>{props.product?.name}</h2>
                     <p>{props.product?.id}</p>
                     <p>Price: {props.product?.price} €</p>
+                    <img src={props.product.imageUrl} alt={props.product?.name}/>
+
+
                     {props.product.quantity.amount < 10 &&
                         <p>Only {props.product.quantity.amount} Products on stock!</p>}
                     <div>
@@ -40,6 +45,8 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
                         <button onClick={increaseQuantity}>+</button>
                     </div>
                     <button onClick={putProductToShoppingCart}>add to Shopping Cart</button>
+                    <Rating product={props.product}/>
+
                 </div>}
         </>
     )

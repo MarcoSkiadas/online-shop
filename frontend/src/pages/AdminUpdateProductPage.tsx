@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
-import {Product} from "../components/ShopSchema.ts";
-import React, {useEffect, useState} from "react";
+import {Product, ProductDTO, Unit} from "../components/ShopSchema.ts";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import '../components/styles.css';
 
 type UpdateProductPageProps = {
@@ -16,10 +16,13 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
     const {id} = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product>();
     const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
-    const [unit, setUnit] = useState('');
+    const [unit, setUnit] = useState<Unit>(Unit.PIECE);
     const [amount, setAmount] = useState('');
+    const [price, setPrice] = useState('');
+    const [image, setImage] = useState<File | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
         getProduct()
@@ -34,30 +37,40 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                 console.error('Error fetching data:', error.message);
             });
 
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
+
+    function onFileChange(event: ChangeEvent<HTMLInputElement>) {
+        if (event.target.files) {
+            setImage(event.target.files[0])
+        }
+    }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        try {
-            await axios.put(`/api/product/${product?.id}`, {
-                name,
-                price: parseFloat(price),
-                quantity: {
-                    amount,
-                    unit
-                }
-            });
-            await getProduct();
-
-            setSuccess('Product updated successfully!');
-            setError(null);
-        } catch (err) {
-            setError('Failed to update product. Please try again.');
-            setSuccess(null);
+        const updatedProduct: ProductDTO = {
+            name,
+            price: parseFloat(price),
+            quantity: {
+                amount: parseInt(amount),
+                unit
+            }
         }
-    };
+        const data = new FormData();
+        if (image) {
+            data.append("file", image)
+        }
+        data.append("product", new Blob([JSON.stringify(updatedProduct)], {'type': "application/json"}))
+        axios.put(`/api/product/upload/${product?.id}`, data, {headers: {"Content-Type": "multipart/form-data"}})
+            .then((response) => {
+                setProduct(response.data)
+                setSuccess('Product updated successfully!');
+                setError(null);
+            })
+            .catch(() => {
+                setError('Failed to update product. Please try again.');
+                setSuccess(null);
+            });
+    }
 
     function handleDelete() {
         try {
@@ -81,7 +94,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="text"
                         id="name"
-                        value={product?.name}
+                        value={name}
+                        placeholder={product?.name}
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
@@ -92,7 +106,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="number"
                         id="price"
-                        value={product?.price}
+                        value={price}
+                        placeholder={product?.price.toString()}
                         onChange={(e) => setPrice(e.target.value)}
                         required
                         step="0.01" // Für Dezimalwerte
@@ -104,7 +119,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <input
                         type="number"
                         id="amount"
-                        value={product?.quantity.amount}
+                        value={amount}
+                        placeholder={product?.quantity.amount.toString()}
                         onChange={(e) => setAmount(e.target.value)}
                         required
                         step="1"
@@ -116,8 +132,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                     <select
                         id="unit"
                         name="unit"
-                        value={props.unitType}
-                        onChange={event => setUnit(event.target.value)}
+                        value={unit}
+                        onChange={event => setUnit(event.target.value as Unit)}
                         required
                     >
                         {props.unitType.map(unit => (
@@ -125,6 +141,11 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         ))}
                     </select>
                 </div>
+                <div>
+                    <label htmlFor="image">Product Image:</label>
+                    <input type='file' onChange={onFileChange}/>
+                </div>
+
                 <button type="submit">Update Product</button>
 
                 {error && <p style={{color: 'red'}}>{error}</p>}

@@ -55,6 +55,7 @@ public class OrderService {
         List<String> productIds = orderedProducts.stream()
                 .map(OrderedProduct::productId)
                 .collect(Collectors.toList());
-        return productRepo.findAllById(productIds);
+        List<Product> productList = productRepo.findAllById(productIds);
+        return productList;
     }
 }

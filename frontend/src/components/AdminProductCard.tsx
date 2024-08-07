@@ -9,9 +9,10 @@ export default function AdminProductCard(props: Readonly<ProductCardProps>) {
 
     return (
         <div>
-            <Link to={`/admin/product/${props.product.id}`}>{props.product.name}</Link>
+            <Link to={`/admin/product/update/${props.product.id}`}>{props.product.name}</Link>
             <p>Id: {props.product.id}</p>
             <p>Price: {props.product.price} €</p>
+            <img src={props.product.imageUrl} alt={props.product.name}/>
         </div>
     );
 }

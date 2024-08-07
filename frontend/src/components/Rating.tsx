@@ -68,6 +68,7 @@ export default function Rating(props: Readonly<RatingProps>) {
                                 onMouseEnter={() => setTemporaryRating(index + 1)}
                                 onMouseLeave={() => setTemporaryRating(0)}
                                 onClick={() => handleReviewClick(index + 1)}
+                                onKeyDown={() => handleReviewClick(index + 1)}
                             >
                                 {DEFAULT_ICON}
                             </div>

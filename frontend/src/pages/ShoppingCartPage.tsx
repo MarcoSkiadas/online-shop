@@ -100,14 +100,24 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
     }
 
     async function handlePurchase() {
-        if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
-            await addOrder();
-            await reduceProductOnStock();
-        } else {
-            console.log("Order cannot be created without Products")
+        const enoughProductsOnStock =
+            products.map(product => {
+                if (product.quantity.amount < quantities[product.id]) {
+                    alert(`not enough ${product.name} on Stock! only ${product.quantity.amount} on Stock!`)
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        if (!enoughProductsOnStock) {
+            if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
+                await addOrder();
+                await reduceProductOnStock();
+            } else {
+                console.log("Order cannot be created without Products")
+            }
         }
     }
-
 
     return (
         <>

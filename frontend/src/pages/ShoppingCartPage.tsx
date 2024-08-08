@@ -100,16 +100,18 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
     }
 
     async function handlePurchase() {
+
         const enoughProductsOnStock =
             products.map(product => {
                 if (product.quantity.amount < quantities[product.id]) {
                     alert(`not enough ${product.name} on Stock! only ${product.quantity.amount} on Stock!`)
-                    return true;
-                } else {
                     return false;
+                } else {
+                    return true;
                 }
             });
-        if (!enoughProductsOnStock) {
+        console.log(enoughProductsOnStock)
+        if (!enoughProductsOnStock.some(product => !product)) {
             if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
                 await addOrder();
                 await reduceProductOnStock();

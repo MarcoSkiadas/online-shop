@@ -1,5 +1,4 @@
 import {Product} from "../components/ShopSchema.ts";
-import {useEffect} from "react";
 import Search from "../components/Search.tsx";
 
 
@@ -12,9 +11,6 @@ type HomepageProps = {
 }
 export default function Homepage(props: Readonly<HomepageProps>) {
 
-    useEffect(() => {
-        props.me()
-    }, []);
 
     return (
         <>

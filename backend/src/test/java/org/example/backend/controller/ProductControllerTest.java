@@ -2,11 +2,8 @@ package org.example.backend.controller;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
-import org.example.backend.dto.ProductDTO;
-import org.example.backend.model.Product;
-import org.example.backend.model.Quantity;
-import org.example.backend.model.Review;
-import org.example.backend.model.Unit;
+import com.cloudinary.Url;
+import org.example.backend.model.*;
 import org.example.backend.repository.ProductRepo;
 import org.example.backend.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +49,8 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
-        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0]))));
-        productRepo.save(new Product("2", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0]))));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
+        productRepo.save(new Product("2", "Tasse", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
     }
 
     @Test
@@ -187,7 +182,12 @@ class ProductControllerTest {
     void addProduct_shouldReturnProduct_whenAddedWithImage() throws Exception {
 
         when(cloudinary.uploader()).thenReturn(uploader);
-        when(uploader.upload(any(), anyMap())).thenReturn(Map.of("url", "testurl"));
+        when(uploader.upload(any(), anyMap())).thenReturn(Map.of("url", "testurl",
+                "public_id", "smallTestURL"));
+        Url mockURL = mock(Url.class);
+        when(cloudinary.url()).thenReturn(mockURL);
+        when(mockURL.transformation(any())).thenReturn(mockURL);
+        when(mockURL.generate(any())).thenReturn("smallTestURL");
 
         MockMultipartFile mockFile = new MockMultipartFile("file", "content".getBytes(StandardCharsets.UTF_8));
         MockMultipartFile mockJson = new MockMultipartFile("product", "", MediaType.APPLICATION_JSON_VALUE, """
@@ -213,7 +213,10 @@ class ProductControllerTest {
                                                                                "amount": 2,
                                                                                "unit": "PIECE"
                                                                            },
-                                                                           "imageUrl": "testurl",
+                                                                           "images": {
+                                                                                "largeImageURL": "testurl",
+                                                                                "smallImageURL": "smallTestURL"
+                                                                           },
                                                                            "rating": 0.0,
                                                                            "reviewList": []
                                                                        }
@@ -251,7 +254,10 @@ class ProductControllerTest {
                                                                                "amount": 2,
                                                                                "unit": "PIECE"
                                                                            },
-                                                                           "imageUrl": "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg",
+                                                                           "images": {
+                                                                                "largeImageURL": "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg",
+                                                                                "smallImageURL": "http://res.cloudinary.com/dylxokrcs/image/upload/v1722871122/jtc7ycksrhoo5larwkyw.jpg"
+                                                                           },
                                                                            "rating": 0.0,
                                                                            "reviewList": []
                                                                        }
@@ -293,7 +299,10 @@ class ProductControllerTest {
                                                                                "amount": 2,
                                                                                "unit": "PIECE"
                                                                            },
-                                                                           "imageUrl": "Test",
+                                                                           "images": {
+                                                                                "largeImageURL": "largeTest",
+                                                                                "smallImageURL": "smallTest"
+                                                                           },
                                                                            "rating": 0.0,
                                                                            "reviewList": []
                                                                        }
@@ -305,7 +314,12 @@ class ProductControllerTest {
     void UpdateProduct_shouldReturnProduct_whenAddedWithImage() throws Exception {
 
         when(cloudinary.uploader()).thenReturn(uploader);
-        when(uploader.upload(any(), anyMap())).thenReturn(Map.of("url", "testurl"));
+        when(uploader.upload(any(), anyMap())).thenReturn(Map.of("url", "testurl",
+                "public_id", "smallTestURL"));
+        Url mockURL = mock(Url.class);
+        when(cloudinary.url()).thenReturn(mockURL);
+        when(mockURL.transformation(any())).thenReturn(mockURL);
+        when(mockURL.generate(any())).thenReturn("smallTestURL");
 
         MockMultipartFile mockFile = new MockMultipartFile("file", "content".getBytes(StandardCharsets.UTF_8));
         MockMultipartFile mockJson = new MockMultipartFile("product", "", MediaType.APPLICATION_JSON_VALUE, """
@@ -335,7 +349,10 @@ class ProductControllerTest {
                                                                                "amount": 2,
                                                                                "unit": "PIECE"
                                                                            },
-                                                                           "imageUrl": "testurl",
+                                                                           "images": {
+                                                                                "largeImageURL": "testurl",
+                                                                                "smallImageURL": "smallTestURL"
+                                                                           },
                                                                            "rating": 0.0,
                                                                            "reviewList": []
                                                                        }
@@ -360,7 +377,10 @@ class ProductControllerTest {
                                                               "amount": 2,
                                                               "unit": "PIECE"
                                                                     },
-                                                                           "imageUrl": "Test",
+                                                                           "images": {
+                                                                                "largeImageURL": "largeTest",
+                                                                                "smallImageURL": "smallTest"
+                                                                           },
                                                                            "rating": 5.0,
                                                                            "reviewList": [        {
                                                                                                       "ratingCount": 5.0,

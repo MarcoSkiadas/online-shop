@@ -32,9 +32,9 @@ class OrderControllerTest {
     void setUp() {
         orderRepo.save(new Order("1", new OrderedProduct[]{new OrderedProduct("1", 2)}, 22, "testuser"));
         orderRepo.save(new Order("2", new OrderedProduct[]{new OrderedProduct("1", 2)}, 22, "testuser"));
-        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0]))));
-        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0]))));
-        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0]))));
+        productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
+        productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
+        productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
     }
 
     @Test

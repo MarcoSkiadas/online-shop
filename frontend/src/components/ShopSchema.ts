@@ -3,7 +3,7 @@ export interface Product {
     name: string,
     price: number,
     quantity: Quantity,
-    imageUrl: string
+    images: Images
     rating: number;
     reviewList: Review[]
 }
@@ -12,6 +12,11 @@ export interface ProductDTO {
     name: string,
     price: number,
     quantity: Quantity
+}
+
+export interface Images {
+    largeImageURL: string,
+    smallImageURL: string
 }
 
 export interface Review {

@@ -38,7 +38,7 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
                     <h2>{props.product?.name}</h2>
                     <p>{props.product?.id}</p>
                     <p>Price: {props.product?.price} €</p>
-                    <img src={props.product.imageUrl} alt={props.product?.name}/>
+                    <img src={props.product.images.largeImageURL} alt={props.product?.name}/>
 
 
                     {props.product.quantity.amount < 10 &&

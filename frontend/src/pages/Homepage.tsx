@@ -1,6 +1,6 @@
-import ProductCard from "../components/ProductCard.tsx";
 import {Product} from "../components/ShopSchema.ts";
 import {useEffect} from "react";
+import Search from "../components/Search.tsx";
 
 
 type HomepageProps = {
@@ -12,18 +12,14 @@ type HomepageProps = {
 }
 export default function Homepage(props: Readonly<HomepageProps>) {
 
-
-    const product = props.product.map((product) => <ProductCard key={product.id} product={product}/>);
-
     useEffect(() => {
         props.me()
     }, []);
     return (
         <>
-            {product}
+            {<Search product={props.product}/>}
             <button onClick={props.login}>Login</button>
             <button onClick={props.logout}>Logout</button>
-            <button onClick={props.me}>Me</button>
             <p>User: {props.user}</p>
         </>
     )

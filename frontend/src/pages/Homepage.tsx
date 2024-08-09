@@ -15,6 +15,7 @@ export default function Homepage(props: Readonly<HomepageProps>) {
     useEffect(() => {
         props.me()
     }, []);
+
     return (
         <>
             {<Search product={props.product}/>}

@@ -20,16 +20,14 @@ public class AuthController {
 
     @GetMapping("/me")
     public AppUser getMe(@AuthenticationPrincipal OAuth2User user) {
-        return appUserRepository.findById(user.getName())
-                .orElseThrow();
-    }
-
-    @GetMapping
-    public String getMe() {
-        return SecurityContextHolder
+        if (SecurityContextHolder.getContext().getAuthentication().getName().matches("^\\d+$")) {
+            return appUserRepository.findById(user.getName())
+                    .orElseThrow();
+        }
+        return appUserService.getUserByUsername(SecurityContextHolder
                 .getContext()
                 .getAuthentication()
-                .getName();
+                .getName());
     }
 
     @PostMapping("/login")

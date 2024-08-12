@@ -3,7 +3,7 @@ import axios from "axios";
 import {Product, User} from "../components/ShopSchema.ts";
 
 type ShoppingCartPageProps = {
-    user: User
+    user: User | null
     fetchMe: () => void
 }
 export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>) {
@@ -35,11 +35,11 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
 
     useEffect(() => {
         getProducts()
-    }, [props.user.shoppingCart])
+    }, [props.user?.shoppingCart])
 
     function removeProductFromShoppingCart(productId: string) {
         console.log(`Remove product with id: ${productId}`)
-        axios.put(`/api/appuser/shoppingCart/removeProduct/${props.user.id}/${productId}`, {})
+        axios.put(`/api/appuser/shoppingCart/removeProduct/${props.user?.id}/${productId}`, {})
             .then(() => {
                 props.fetchMe()
                 getProducts()
@@ -48,7 +48,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
     }
 
     function getProducts() {
-        axios.get(`/api/product/shoppingCart?productIds=${props.user.shoppingCart.orderedProducts.map(orderedProduct => orderedProduct.productId)}`)
+        axios.get(`/api/product/shoppingCart?productIds=${props.user?.shoppingCart.orderedProducts.map(orderedProduct => orderedProduct.productId)}`)
             .then(response => setProducts(response.data))
             .catch(error => console.log(error.message))
     }
@@ -72,7 +72,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
 
     const addOrder = async () => {
         axios.post(`/api/order`, {
-            orderedProducts: props.user.shoppingCart.orderedProducts.map(product => ({
+            orderedProducts: props.user?.shoppingCart.orderedProducts.map(product => ({
                 productId: product.productId,
                 amount: quantities[product.productId]
             })),
@@ -81,18 +81,18 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
         })
             .then(response => {
                 console.log("Order submitted successfully:", response.data);
-                axios.put(`api/appuser/shoppingCart/removeProduct/${props.user.id}`, {})
+                axios.put(`api/appuser/shoppingCart/removeProduct/${props.user?.id}`, {})
                     .then(() => {
                         props.fetchMe();
                         getProducts()
                     })
                     .catch(error => console.log(error.message))
-                console.log("Updated shoppingCart:", props.user.shoppingCart);
+                console.log("Updated shoppingCart:", props.user?.shoppingCart);
             })
             .catch(error => console.log(error.message))
     }
     const reduceProductOnStock = async () => {
-        props.user.shoppingCart.orderedProducts.map(orderedProduct =>
+        props.user?.shoppingCart.orderedProducts.map(orderedProduct =>
             axios.put(`/api/product/shoppingCart/${orderedProduct.productId}/${quantities[orderedProduct.productId]}`)
                 .then(response => console.log(response.data))
                 .catch(error => console.log(error.message))
@@ -125,7 +125,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
                 <h2>Shopping Cart</h2>
             </header>
             <>
-                <p>Name: {props.user.username}</p>
+                <p>Name: {props.user?.username}</p>
                 <ul>
                     {products?.map(product => {
                         const quantity = quantities[product.id] || 0;

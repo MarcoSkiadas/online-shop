@@ -86,6 +86,11 @@ public class AppUserService implements UserDetailsService {
         return new User(user.username(), user.password(), Collections.emptyList());
     }
 
+    public AppUser getUserByUsername(String username) throws UsernameNotFoundException {
+        return appUserRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User: " + username + " not Found!"));
+    }
+
     public void registerNewUser(AppUserDTO newUser) {
         AppUser user = new AppUser(idService.generateUUID(), newUser.username(), encoder.encode(newUser.password()), "USER", new ShoppingCart(new OrderedProduct[0]));
         appUserRepository.save(user);

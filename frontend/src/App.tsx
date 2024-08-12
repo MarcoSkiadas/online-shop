@@ -28,7 +28,6 @@ function App() {
     const [orderList, setOrderList] = useState<Order[]>();
     const [user, setUser] = useState<User | null | undefined>(undefined)
     const currentRole = user?.role
-    const userid = user?.id
     const unitType = ["PIECE", "KILOGRAM", "LITER", "GRAM", "METER"]
 
     useEffect(() => {
@@ -85,10 +84,6 @@ function App() {
             .catch(() => {
                 setUser(null)
             })
-        axios.get("/api/user")
-            .then((r) => setUser(r.data))
-        console.log(userid);
-
     }
 
     if (user === undefined) {

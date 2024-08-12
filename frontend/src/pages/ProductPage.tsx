@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
 type ProductPageProps = {
-    user: User
+    user: User | null
     fetchMe: () => void
 }
 export default function ProductPage(props: Readonly<ProductPageProps>) {

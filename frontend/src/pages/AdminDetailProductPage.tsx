@@ -5,7 +5,7 @@ import axios from "axios";
 import ShowDetailProduct from "../components/ShowDetailProduct.tsx";
 
 type AdminDetailProductPageProps = {
-    user: User
+    user: User | null
     fetchMe: () => void
 }
 

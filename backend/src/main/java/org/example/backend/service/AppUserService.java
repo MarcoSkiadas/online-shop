@@ -89,7 +89,10 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User: " + username + " not Found!"));
     }
 
-    public void registerNewUser(AppUserDTO newUser) {
+    public void registerNewUser(AppUserDTO newUser) throws InvalidIdException {
+        if (appUserRepository.findByUsername(newUser.username()).isPresent()) {
+            throw new InvalidIdException(newUser.username() + " is already registered");
+        }
         AppUser user = new AppUser(idService.generateUUID(), newUser.username(), encoder.encode(newUser.password()), "USER", new ShoppingCart(new OrderedProduct[0]));
         appUserRepository.save(user);
     }

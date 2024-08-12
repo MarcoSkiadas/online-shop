@@ -13,6 +13,7 @@ export default function RegisterPage() {
         e.preventDefault()
         axios.post("/api/auth/register", {username, password})
             .then(() => nav("/login"))
+            .catch(e => console.log(e.message))
     }
 
     return (

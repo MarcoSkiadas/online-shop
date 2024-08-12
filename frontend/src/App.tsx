@@ -16,7 +16,7 @@ import AdminAddProductPage from "./pages/AdminAddProductPage.tsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute.tsx";
-import RegisterPage from "./pages/RegiserPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 
 

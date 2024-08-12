@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -52,7 +54,8 @@ class OrderControllerTest {
                                   "price": 22,
                                   "userId": "testuser"
                                 }
-                                """))
+                                """)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
@@ -140,13 +143,15 @@ class OrderControllerTest {
     @Test
     void deleteOrderById_shouldDeleteOrder_whenCalledById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/order/1")
+                        .with(csrf())
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void deleteOrderById_shouldReturnException_whenCalledByWrongId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/order/3"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/order/3")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {

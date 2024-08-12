@@ -2,7 +2,6 @@ package org.example.backend.controller;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
-import org.example.backend.dto.ProductDTO;
 import org.example.backend.model.Product;
 import org.example.backend.model.Quantity;
 import org.example.backend.model.Review;
@@ -21,9 +20,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,13 +109,15 @@ class ProductControllerTest {
     @Test
     void deleteProduct_shouldReturnIsOk_whenPerformed() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/product/2")
+                        .with(csrf())
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void deleteProduct_shouldReturnException_whenCalledByWrongId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/product/3"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/product/3")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
@@ -132,7 +132,8 @@ class ProductControllerTest {
     @Test
     void getAllProductsByIds_shouldReturnProducts_whenCalledByOrderId() throws Exception {
         //WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/shoppingCart?productIds=1&productIds=2"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/shoppingCart?productIds=1&productIds=2")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                 [
@@ -153,7 +154,8 @@ class ProductControllerTest {
     @Test
     void reduceProductOnStock_shouldReturnException_whenCalledByWrongId() throws Exception {
         //WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/3/1"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/3/1")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
@@ -168,7 +170,8 @@ class ProductControllerTest {
     @Test
     void reduceProductOnStock_shouldReturnProduct_whenCalledByIdAndAmount() throws Exception {
         //WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/1/1"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/1/1")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                     {
@@ -203,7 +206,8 @@ class ProductControllerTest {
 
         mockMvc.perform(multipart("/api/product/upload")
                         .file(mockFile)
-                        .file(mockJson))
+                        .file(mockJson)
+                        .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                         {
@@ -241,7 +245,8 @@ class ProductControllerTest {
 
         mockMvc.perform(multipart("/api/product/upload")
                         .file(mockFile)
-                        .file(mockJson))
+                        .file(mockJson)
+                        .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                         {
@@ -283,7 +288,8 @@ class ProductControllerTest {
                         .with(request -> {
                             request.setMethod("PUT");
                             return request;
-                        }))
+                        })
+                        .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                         {
@@ -325,7 +331,8 @@ class ProductControllerTest {
                         .with(request -> {
                             request.setMethod("PUT");
                             return request;
-                        }))
+                        })
+                        .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                         {
@@ -349,7 +356,8 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/product/1/rate")
                         .param("newRating", "5")
                         .param("commentary", "Great!")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                     {
@@ -377,7 +385,8 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/product/3/rate")
                         .param("newRating", "5")
                         .param("commentary", "Great!")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {

@@ -19,7 +19,8 @@ class AppUserServiceTest {
 
     private final AppUserRepository mockRepo = mock(AppUserRepository.class);
     private final ProductRepo mockProductRepo = mock(ProductRepo.class);
-    private final AppUserService service = new AppUserService(mockRepo, mockProductRepo);
+    private final IdService mockIdService = mock(IdService.class);
+    private final AppUserService service = new AppUserService(mockRepo, mockProductRepo, mockIdService);
 
 
     @BeforeEach
@@ -31,12 +32,12 @@ class AppUserServiceTest {
     void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledById() throws InvalidIdException {
         String userId = "1";
         String productId = "1";
-        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockProductRepo.existsById(productId)).thenReturn(true);
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
         AppUser actualUser = service.addProductToShoppingCart(userId, productId, 2);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
+        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
         assertEquals(expectedUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockProductRepo).existsById(productId);
@@ -60,11 +61,11 @@ class AppUserServiceTest {
     void removeProductFromShoppingCart_shouldRemoveProductFromShoppingCart_whenCalledById() throws InvalidIdException {
         String userId = "1";
         String productId = "1";
-        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
         AppUser actualUser = service.removeProductFromShoppingCart(userId, productId);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         assertEquals(expectedUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockRepo).save(any(AppUser.class));
@@ -83,11 +84,11 @@ class AppUserServiceTest {
         String userId = "1";
         OrderedProduct orderedProduct1 = new OrderedProduct("1", 22);
         OrderedProduct[] orderedProducts1 = new OrderedProduct[]{orderedProduct1};
-        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(orderedProducts1));
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(orderedProducts1));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
         AppUser actualUser = service.removeAllProductsFromShoppingCart(userId);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         assertEquals(expectedUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockRepo).save(any(AppUser.class));

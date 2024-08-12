@@ -8,7 +8,6 @@ import org.example.backend.model.OrderedProduct;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
-import org.example.backend.repository.ShoppingCartRepo;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

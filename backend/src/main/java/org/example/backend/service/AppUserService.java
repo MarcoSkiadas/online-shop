@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class AppUserService implements UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final ProductRepo productRepo;
     private final IdService idService;
+    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
     public AppUser addProductToShoppingCart(String userId, String productId, int amount) throws InvalidIdException {
         AppUser appUser = appUserRepository.findById(userId)
@@ -85,7 +87,7 @@ public class AppUserService implements UserDetailsService {
     }
 
     public void registerNewUser(AppUserDTO newUser) {
-        AppUser user = new AppUser(idService.generateUUID(), newUser.username(), newUser.password(), "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser user = new AppUser(idService.generateUUID(), newUser.username(), encoder.encode(newUser.password()), "USER", new ShoppingCart(new OrderedProduct[0]));
         appUserRepository.save(user);
     }
 }

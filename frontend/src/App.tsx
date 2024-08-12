@@ -16,6 +16,8 @@ import AdminAddProductPage from "./pages/AdminAddProductPage.tsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute.tsx";
+import RegisterPage from "./pages/RegiserPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 
 function App() {
@@ -70,18 +72,21 @@ function App() {
     const login = () => {
         const host = window.location.host === `localhost:5173` ? `http://localhost:8080` : window.location.origin
         window.open(host + `/oauth2/authorization/github`, `_self`)
+    }
 
+    function logout() {
+        axios.get("/api/auth/logout")
+            .then(() => setUser(null))
     }
-    const logout = () => {
-        const host = window.location.host === `localhost:5173` ? `http://localhost:8080` : window.location.origin
-        window.open(host + `/logout`, `_self`)
-    }
+
     const me = () => {
         axios.get(`/api/auth/me`)
             .then(response => setUser(response.data))
             .catch(() => {
                 setUser(null)
             })
+        axios.get("/api/user")
+            .then((r) => setUser(r.data))
         console.log(userid);
 
     }
@@ -89,20 +94,16 @@ function App() {
     if (user === undefined) {
         return <><p>Loading...</p></>
     }
-    if (user === null) {
-        return <>
-            <h2>OnlineShop created by Marco Skiadas</h2>
-            <p>This Page is still under construction</p>
-            <p>Please press "Login" to get access to the Shop</p>
-            <button onClick={login}>Login</button>
-        </>
-    }
+
+
     return (
         <>
             <header>
                 <Navigation currentRole={currentRole}/>
             </header>
             <Routes>
+                <Route element={<RegisterPage/>} path={"/register"}/>
+                <Route element={<LoginPage setUser={setUser} login={login}/>} path={"/login"}/>
                 <Route path={"/"}
                        element={<Homepage product={product} me={me} login={login} logout={logout}
                                           user={user?.username}/>}/>

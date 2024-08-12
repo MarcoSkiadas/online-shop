@@ -36,5 +36,6 @@ public class AppUserController {
         return appUserService.removeAllProductsFromShoppingCart(userId);
     }
 
+
 }
 

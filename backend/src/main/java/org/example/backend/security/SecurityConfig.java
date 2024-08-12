@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +45,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        CsrfTokenRequestAttributeHandler requestAttributeHandler = new CsrfTokenRequestAttributeHandler();
+        requestAttributeHandler.setCsrfRequestAttributeName(null);
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(requestAttributeHandler))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("api/admin/*").hasRole("ADMIN")
                         .requestMatchers("/api/auth/me").authenticated()
@@ -68,7 +74,7 @@ public class SecurityConfig {
 
             AppUser appUser = appUserRepository.findById(oAuth2User.getName())
                     .orElseGet(() -> {
-                        AppUser newAppUser = new AppUser(oAuth2User.getName(), oAuth2User.getAttributes().get("login").toString(), "USER", new ShoppingCart(new OrderedProduct[]{}));
+                        AppUser newAppUser = new AppUser(oAuth2User.getName(), oAuth2User.getAttributes().get("login").toString(), "", "USER", new ShoppingCart(new OrderedProduct[]{}));
 
                         return appUserRepository.save(newAppUser);
                     });

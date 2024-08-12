@@ -7,15 +7,19 @@ import org.example.backend.model.OrderedProduct;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AppUserService {
+public class AppUserService implements UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final ProductRepo productRepo;
 
@@ -69,4 +73,10 @@ public class AppUserService {
         return appUserRepository.save(NewAppuser);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser user = appUserRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User: " + username + " not Found!"));
+        return new AppUser(user.username(), user.password(), Collections.emptyList());
+    }
 }

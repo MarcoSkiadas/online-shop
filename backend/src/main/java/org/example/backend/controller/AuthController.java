@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.AppUserDTO;
+import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.AppUser;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.service.AppUserService;
@@ -39,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody AppUserDTO newUser) {
+    public void register(@RequestBody AppUserDTO newUser) throws InvalidIdException {
         appUserService.registerNewUser(newUser);
     }
 

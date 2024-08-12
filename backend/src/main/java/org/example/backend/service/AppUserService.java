@@ -91,7 +91,7 @@ public class AppUserService implements UserDetailsService {
 
     public void registerNewUser(AppUserDTO newUser) throws InvalidIdException {
         if (appUserRepository.findByUsername(newUser.username()).isPresent()) {
-            throw new InvalidIdException(newUser.username() + " is already registered");
+            throw new InvalidIdException("Username: " + newUser.username() + " is already registered");
         }
         AppUser user = new AppUser(idService.generateUUID(), newUser.username(), encoder.encode(newUser.password()), "USER", new ShoppingCart(new OrderedProduct[0]));
         appUserRepository.save(user);

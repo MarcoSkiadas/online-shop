@@ -17,3 +17,38 @@
     resize: none;
     overflow: hidden;
 }
+
+.stars {
+    font-size: 1.5rem; /* Größe der Sterne */
+    color: #FFD700; /* Farbe der Sterne */
+}
+
+.star {
+    margin-right: 2px; /* Abstand zwischen den Sternen */
+}
+
+.star.filled {
+    color: #FFD700; /* Farbe für gefüllte Sterne */
+}
+
+.star:not(.filled) {
+    color: #e0e0e0; /* Farbe für leere Sterne */
+}
+
+.toggle-button {
+    background-color: #007bff; /* Hintergrundfarbe des Buttons */
+    border: none; /* Kein Rand */
+    color: white; /* Textfarbe */
+    padding: 10px 20px; /* Innenabstand */
+    text-align: center; /* Text zentrieren */
+    text-decoration: none; /* Keine Unterstreichung */
+    display: inline-block; /* Inline-Block */
+    font-size: 1rem; /* Schriftgröße */
+    margin-top: 10px; /* Abstand oben */
+    cursor: pointer; /* Zeiger bei Hover */
+    border-radius: 5px; /* Abgerundete Ecken */
+}
+
+.toggle-button:hover {
+    background-color: #0056b3; /* Hintergrundfarbe bei Hover */
+}

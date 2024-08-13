@@ -12,6 +12,7 @@ export default function RegisterPage() {
     function submitRegister(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
         axios.post("/api/auth/register", {username, password})
+            .then(() => alert("You have been registered with Username: " + username))
             .then(() => nav("/login"))
             .catch(error => alert(error.response.data.errorMsg))
     }

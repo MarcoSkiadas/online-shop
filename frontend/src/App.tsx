@@ -77,6 +77,7 @@ function App() {
     function logout() {
         axios.get("/api/auth/logout")
             .then(() => setUser(null))
+            .then(() => alert("you have been logged out"))
     }
 
     const me = () => {
@@ -99,7 +100,7 @@ function App() {
             </header>
             <Routes>
                 <Route element={<RegisterPage/>} path={"/register"}/>
-                <Route element={<LoginPage setUser={setUser} login={login}/>} path={"/login"}/>
+                <Route element={<LoginPage setUser={setUser} me={me} login={login}/>} path={"/login"}/>
                 <Route path={"/"}
                        element={<Homepage product={product} login={login} logout={logout}
                                           user={user?.username}

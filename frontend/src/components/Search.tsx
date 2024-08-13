@@ -30,7 +30,7 @@ export default function Search(props: Readonly<SearchProps>) {
         <>
             <input
                 type="text"
-                placeholder="Search by name"
+                placeholder="Search product by name"
                 value={props.searchTerm}
                 onChange={handleChange}
             />

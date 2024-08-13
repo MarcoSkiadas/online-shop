@@ -156,7 +156,7 @@ class ProductControllerTest {
     @Test
     void reduceProductOnStock_shouldReturnException_whenCalledByWrongId() throws Exception {
         //WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/3/1"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/3/1").with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
@@ -171,7 +171,7 @@ class ProductControllerTest {
     @Test
     void reduceProductOnStock_shouldReturnProduct_whenCalledByIdAndAmount() throws Exception {
         //WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/1/1"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/product/shoppingCart/1/1").with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                     {

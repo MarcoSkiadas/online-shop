@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 type LoginPageProps = {
     setUser: (username: string) => void
     login: () => void
+    me: () => void
 }
 export default function LoginPage(props: Readonly<LoginPageProps>) {
 
@@ -17,6 +18,7 @@ export default function LoginPage(props: Readonly<LoginPageProps>) {
         e.preventDefault()
         axios.post("/api/auth/login", undefined, {auth: {username, password}})
             .then(r => props.setUser(r.data))
+            .then(props.me)
             .then(() => nav("/"))
     }
 

@@ -17,7 +17,7 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
             props.product?.quantity?.amount && props.product.quantity.amount >= quantity ?
                 axios.put(`api/appuser/shoppingCart/addProduct/${props.user?.id}/${props.product?.id}/${quantity}`, {})
                     .then(() => props.fetchMe())
-                    .catch(error => console.log(error.message)) : alert(`only ${quantity} ${props.product?.name} on Stock left!`)
+                    .catch(error => console.log(error.message)) : alert(`only ${props.product?.quantity.amount} ${props.product?.name} on Stock left!`)
         }
     }
     const increaseQuantity = () => {
@@ -38,7 +38,7 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
                     <h2>{props.product?.name}</h2>
                     <p>{props.product?.id}</p>
                     <p>Price: {props.product?.price} €</p>
-                    <img src={props.product.imageUrl} alt={props.product?.name}/>
+                    <img src={props.product.images.largeImageURL} alt={props.product?.name}/>
 
 
                     {props.product.quantity.amount < 10 &&

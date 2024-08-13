@@ -12,7 +12,7 @@ public record Product(
         String name,
         float price,
         Quantity quantity,
-        String imageUrl,
+        Images images,
         float rating,
         ArrayList<Review> reviewList
 
@@ -24,6 +24,6 @@ public record Product(
         float newAverageRating = totalRating / newRatingCount;
         Review review = new Review(newRating, commentary);
         this.reviewList.add(review);
-        return new Product(this.id, this.name, this.price, this.quantity, this.imageUrl, newAverageRating, this.reviewList);
+        return new Product(this.id, this.name, this.price, this.quantity, this.images, newAverageRating, this.reviewList);
     }
 }

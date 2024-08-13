@@ -30,7 +30,7 @@ class AppUserServiceTest {
 
     @BeforeEach
     void setUp() {
-        mockProductRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), "Test", 0, new ArrayList<>(List.of(new Review[0]))));
+        mockProductRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
     }
 
     @Test

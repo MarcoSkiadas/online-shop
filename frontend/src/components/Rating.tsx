@@ -10,12 +10,16 @@ const DEFAULT_COLOR = "yellow";
 
 type RatingProps = {
     product: Product
+    getProduct: () => void
 }
 
 export default function Rating(props: Readonly<RatingProps>) {
     const [rating, setRating] = useState<number>(props.product.rating)
     const [temporaryRating, setTemporaryRating] = useState(0);
     const [commentary, setCommentary] = useState(``)
+    const [showAll, setShowAll] = useState(false);
+    const reviews = props.product.reviewList;
+    const visibleReviews = showAll ? reviews : reviews.slice(-5).reverse();
 
     const stars = Array(DEFAULT_COUNT).fill(DEFAULT_ICON);
     const handleReviewClick = (rating: number) => {
@@ -34,10 +38,26 @@ export default function Rating(props: Readonly<RatingProps>) {
                     console.log(response.data)
                     setCommentary(``)
                     setRating(0)
+                    alert(`your review has been submitted`)
                 }
             )
+            .then(props.getProduct)
             .catch(error => console.log(error.message))
     }
+    const getStarElements = (ratingCount: number) => {
+        const stars = [];
+        const maxRating = 5;
+
+        for (let i = 0; i < maxRating; i++) {
+            stars.push(
+                <span key={i} className={`star ${i < ratingCount ? 'filled' : ''}`}>
+                ★
+            </span>
+            );
+        }
+
+        return stars;
+    };
 
     return (
 
@@ -89,6 +109,24 @@ export default function Rating(props: Readonly<RatingProps>) {
                 <button type={"submit"}>Submit review</button>
             </form>
             <p>Total rating: {props.product.rating}</p>
+            <div>
+                {visibleReviews.map((review, index) => (
+                    <div key={index}>
+                        <p>{review.commentary}</p>
+                        <div className="stars">
+                            {getStarElements(review.ratingCount)}
+                        </div>
+                    </div>
+                ))}
+                {reviews.length > 5 && (
+                    <button
+                        className="toggle-button"
+                        onClick={() => setShowAll(!showAll)}
+                    >
+                        {showAll ? 'Show Less' : 'Show More'}
+                    </button>
+                )}
+            </div>
         </>
     )
 }

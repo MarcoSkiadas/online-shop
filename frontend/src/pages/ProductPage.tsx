@@ -13,6 +13,10 @@ export default function ProductPage(props: Readonly<ProductPageProps>) {
     const [product, setProduct] = useState<Product>();
 
     useEffect(() => {
+        getProduct()
+    }, [id]);
+
+    function getProduct() {
         axios.get(`/api/product/${id}`)
             .then(response => {
                 setProduct(response.data);
@@ -20,11 +24,12 @@ export default function ProductPage(props: Readonly<ProductPageProps>) {
             .catch(error => {
                 console.error('Error fetching data:', error.message);
             });
-    }, [id]);
+    }
 
     return (
         <>
-            <ShowDetailProduct product={product} user={props.user} fetchMe={props.fetchMe}/>
+            <ShowDetailProduct product={product} user={props.user} fetchMe={props.fetchMe}
+                               getProduct={getProduct}/>
         </>
     )
 }

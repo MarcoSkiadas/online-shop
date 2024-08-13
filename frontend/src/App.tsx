@@ -77,7 +77,7 @@ function App() {
     function logout() {
         axios.get("/api/auth/logout")
             .then(() => setUser(null))
-            .then(() => alert("you have been logout"))
+            .then(() => alert("you have been logged out"))
     }
 
     const me = () => {

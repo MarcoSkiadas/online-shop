@@ -3,8 +3,6 @@ package org.example.backend.controller;
 import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
-import org.example.backend.repository.ShoppingCartRepo;
-import org.example.backend.service.AppUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +33,8 @@ class AppUserControllerTest {
     @BeforeEach
     void setUp() {
         OrderedProduct orderedProduct = new OrderedProduct("1", 2);
-        appUserRepository.save(new AppUser("1", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
-        appUserRepository.save(new AppUser("2", "testuser", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
+        appUserRepository.save(new AppUser("1", "testuser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
+        appUserRepository.save(new AppUser("2", "testuser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{orderedProduct})));
         productRepo.save(new Product("1", "Rasenmäher", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
         productRepo.save(new Product("2", "Tee", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
         productRepo.save(new Product("3", "Tasse", 22, new Quantity(2, Unit.PIECE), new Images("largeTest", "smallTest"), 0, new ArrayList<>(List.of(new Review[0]))));
@@ -44,6 +44,7 @@ class AppUserControllerTest {
     @Test
     void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/addProduct/1/4/3")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("""
@@ -70,6 +71,7 @@ class AppUserControllerTest {
     @Test
     void addProductToShoppingCart_shouldReturnException_whenCalledByWrongId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/addProduct/3/4/3")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
@@ -86,6 +88,7 @@ class AppUserControllerTest {
     @Test
     void removeProductToShoppingCart_shouldRemoveProductToShoppingCart_whenCalledByShoppingCart() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/removeProduct/1/1")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
@@ -103,6 +106,7 @@ class AppUserControllerTest {
     @Test
     void removeProductToShoppingCart_shouldReturnException_whenCalledByWrongId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/removeProduct/1/4")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""

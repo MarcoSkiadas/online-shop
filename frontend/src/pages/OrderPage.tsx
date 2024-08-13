@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Order, Product, User} from "../components/ShopSchema.ts";
 
 type OrderPageProps = {
-    user: User
+    user: User | null
 }
 export default function OrderPage(props: Readonly<OrderPageProps>) {
     const [orderList, setOrderList] = useState<Order[]>();
@@ -47,7 +47,7 @@ export default function OrderPage(props: Readonly<OrderPageProps>) {
                 <h2>Order List</h2>
 
                 {orderList
-                    .filter((order) => order.userId === props.user.id)
+                    .filter((order) => order.userId === props.user?.id)
                     .map((order) => (
                         <div key={order.id}>
                             <h3>Order ID: {order.id}</h3>

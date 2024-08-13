@@ -1,13 +1,18 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.AppUserDTO;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +24,8 @@ class AppUserServiceTest {
 
     private final AppUserRepository mockRepo = mock(AppUserRepository.class);
     private final ProductRepo mockProductRepo = mock(ProductRepo.class);
-    private final AppUserService service = new AppUserService(mockRepo, mockProductRepo);
+    private final IdService mockIdService = mock(IdService.class);
+    private final AppUserService service = new AppUserService(mockRepo, mockProductRepo, mockIdService);
 
 
     @BeforeEach
@@ -31,12 +37,12 @@ class AppUserServiceTest {
     void addProductToShoppingCart_shouldAddProductToShoppingCart_whenCalledById() throws InvalidIdException {
         String userId = "1";
         String productId = "1";
-        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockProductRepo.existsById(productId)).thenReturn(true);
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
         AppUser actualUser = service.addProductToShoppingCart(userId, productId, 2);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
+        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
         assertEquals(expectedUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockProductRepo).existsById(productId);
@@ -60,11 +66,11 @@ class AppUserServiceTest {
     void removeProductFromShoppingCart_shouldRemoveProductFromShoppingCart_whenCalledById() throws InvalidIdException {
         String userId = "1";
         String productId = "1";
-        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
         AppUser actualUser = service.removeProductFromShoppingCart(userId, productId);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         assertEquals(expectedUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockRepo).save(any(AppUser.class));
@@ -83,11 +89,11 @@ class AppUserServiceTest {
         String userId = "1";
         OrderedProduct orderedProduct1 = new OrderedProduct("1", 22);
         OrderedProduct[] orderedProducts1 = new OrderedProduct[]{orderedProduct1};
-        AppUser testAppUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(orderedProducts1));
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(orderedProducts1));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
         AppUser actualUser = service.removeAllProductsFromShoppingCart(userId);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         assertEquals(expectedUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockRepo).save(any(AppUser.class));
@@ -100,4 +106,60 @@ class AppUserServiceTest {
         verify(mockRepo).findById("1");
         verify(mockRepo, never()).save(any(AppUser.class));
     }
+
+    @Test
+    void loadUserByUsername_shouldReturnUser_whenCalled() throws UsernameNotFoundException {
+        AppUser testAppUser = new AppUser("1", "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
+        mockRepo.save(testAppUser);
+        UserDetails expectedUser = new User(testAppUser.username(), testAppUser.password(), Collections.emptyList());
+        when(mockRepo.findByUsername("TestUser")).thenReturn(Optional.of(testAppUser));
+        UserDetails actualUser = service.loadUserByUsername("TestUser");
+        service.loadUserByUsername("TestUser");
+        assertEquals(expectedUser, actualUser);
+        verify(mockRepo, times(2)).findByUsername("TestUser");
+    }
+
+    @Test
+    void loadUserByUsername_shouldThrowException_whenCalledWithWrongUser() throws UsernameNotFoundException {
+        when(mockRepo.findByUsername("TestUser")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> service.loadUserByUsername("TestUser"));
+        verify(mockRepo).findByUsername("TestUser");
+    }
+
+    @Test
+    void getUserByUsername_shouldReturnUser_whenCalled() throws UsernameNotFoundException {
+        AppUser testAppUser = new AppUser("1", "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
+        mockRepo.save(testAppUser);
+        when(mockRepo.findByUsername("TestUser")).thenReturn(Optional.of(testAppUser));
+        AppUser actualUser = service.getUserByUsername("TestUser");
+        service.loadUserByUsername("TestUser");
+        assertEquals(testAppUser, actualUser);
+        verify(mockRepo, times(2)).findByUsername("TestUser");
+    }
+
+    @Test
+    void getUserByUsername_shouldThrowException_whenCalledWithWrongUser() throws UsernameNotFoundException {
+        when(mockRepo.findByUsername("TestUser")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> service.getUserByUsername("TestUser"));
+        verify(mockRepo).findByUsername("TestUser");
+    }
+
+    @Test
+    void registerNewUser_shouldReturnUser_whenCalled() throws InvalidIdException {
+        AppUser testAppUser = new AppUser("1", "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
+        mockRepo.save(testAppUser);
+        service.registerNewUser(new AppUserDTO("TestUser", "swordfish"));
+        verify(mockRepo).save(testAppUser);
+    }
+
+    @Test
+    void registerNewUser_shouldReturnException_whenCalledWithTakenUsername() throws InvalidIdException {
+        AppUser testAppUser = new AppUser("1", "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
+        mockRepo.save(testAppUser);
+        when(mockRepo.findByUsername("TestUser")).thenReturn(Optional.of(testAppUser));
+        assertThrows(InvalidIdException.class, () -> service.registerNewUser(new AppUserDTO("TestUser", "swordfish")));
+        verify(mockRepo, times(1)).save(testAppUser);
+    }
+
+
 }

@@ -18,7 +18,7 @@ export default function AdminDetailProductPage(props: Readonly<AdminDetailProduc
         navigate(`/admin/product/update/${id}`);
     }
 
-    useEffect(() => {
+    const getProduct = () => {
         axios.get(`/api/product/${id}`)
             .then(response => {
                 setProduct(response.data);
@@ -26,11 +26,14 @@ export default function AdminDetailProductPage(props: Readonly<AdminDetailProduc
             .catch(error => {
                 console.error('Error fetching data:', error.message);
             });
+    }
+    useEffect(() => {
+        getProduct()
     }, [id]);
 
     return (
         <>
-            <ShowDetailProduct product={product} user={props.user} fetchMe={props.fetchMe}/>
+            <ShowDetailProduct product={product} user={props.user} fetchMe={props.fetchMe} getProduct={getProduct}/>
             {product &&
                 <button onClick={handleClick}>Update Product</button>}
         </>

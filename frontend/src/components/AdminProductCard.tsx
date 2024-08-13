@@ -11,8 +11,8 @@ export default function AdminProductCard(props: Readonly<ProductCardProps>) {
         <div>
             <Link to={`/admin/product/update/${props.product.id}`}>{props.product.name}</Link>
             <p>Id: {props.product.id}</p>
-            <p>Price: {props.product.price} €</p>
             <img src={props.product.images.smallImageURL} alt={props.product.name}/>
+            <p>Price: {props.product.price} €</p>
         </div>
     );
 }

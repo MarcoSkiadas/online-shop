@@ -19,7 +19,7 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
             const productAlreadyInShoppingCart: boolean =
                 props.user?.shoppingCart.orderedProducts.every(orderedProduct => {
                     if (orderedProduct.productId === props.product?.id) {
-                        alert(`${props.product.name} is already added in shopping cart`)
+                        alert(`${props.product.name} is already in your shopping cart`)
                         return false
                     }
                     return true
@@ -51,11 +51,8 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
             {!props.product ? <p>Product not found</p> :
                 <div>
                     <h2>{props.product?.name}</h2>
-                    <p>{props.product?.id}</p>
-                    <p>Price: {props.product?.price} €</p>
                     <img src={props.product.images.largeImageURL} alt={props.product?.name}/>
-
-
+                    <p>Price: {props.product?.price} €</p>
                     {props.product.quantity.amount < 10 &&
                         <p>Only {props.product.quantity.amount} Products on stock!</p>}
                     <div>

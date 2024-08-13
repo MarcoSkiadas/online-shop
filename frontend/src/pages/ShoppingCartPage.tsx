@@ -38,11 +38,15 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
     }, [props.user?.shoppingCart])
 
     function removeProductFromShoppingCart(productId: string) {
+        const removedProduct = products.find(product => product.id === productId)
         console.log(`Remove product with id: ${productId}`)
         axios.put(`/api/appuser/shoppingCart/removeProduct/${props.user?.id}/${productId}`, {})
             .then(() => {
                 props.fetchMe()
                 getProducts()
+                if (removedProduct) {
+                    alert(`${removedProduct.name} has been removed from your shopping cart`)
+                }
             })
             .catch(error => console.log(error.message))
     }
@@ -115,8 +119,9 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
                 await addOrder();
                 await reduceProductOnStock();
+                alert(`Order has been created`)
             } else {
-                console.log("Order cannot be created without Products")
+                alert(`Order cannot be created without Products`)
             }
         }
     }
@@ -134,7 +139,8 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
                         return (
                             <li key={product.id}>
                                 <h3>{product.name}</h3>
-                                <p>Price: ${product.price}</p>
+                                <img src={product.images.smallImageURL} alt={product.name}/>
+                                <p>Price: {product.price} €</p>
                                 <div>
                                     <button onClick={() => decreaseQuantity(product.id)}>-</button>
                                     <span>{quantity}</span>

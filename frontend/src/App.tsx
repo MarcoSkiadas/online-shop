@@ -28,6 +28,7 @@ function App() {
     const currentRole = user?.role
     const userid = user?.id
     const unitType = ["PIECE", "KILOGRAM", "LITER", "GRAM", "METER"]
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
         getAllProducts()
@@ -104,8 +105,9 @@ function App() {
             </header>
             <Routes>
                 <Route path={"/"}
-                       element={<Homepage product={product} me={me} login={login} logout={logout}
-                                          user={user?.username}/>}/>
+                       element={<Homepage product={product} login={login} logout={logout}
+                                          user={user?.username}
+                                          searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>}/>
                 <Route path={"/:id"} element={<ProductPage user={user} fetchMe={me}/>}/>
                 <Route element={<ProtectedRoute user={user?.username}/>}>
                     <Route path={"/order"} element={<OrderPage user={user}/>}/>
@@ -114,7 +116,9 @@ function App() {
                     <Route element={<ProtectedAdminRoute user={user}/>}>
                         <Route path={"/admin"} element={<AdminPage handleOrderButton={handleOrderButton}
                                                                    handleProductButton={handleProductButton}/>}/>
-                        <Route path={"/admin/product"} element={<AdminProductPage product={product}/>}/>
+                        <Route path={"/admin/product"} element={<AdminProductPage product={product}
+                                                                                  searchTerm={searchTerm}
+                                                                                  setSearchTerm={setSearchTerm}/>}/>
                         <Route path={"/admin/order"}
                                element={<AdminOrderPage orderList={orderList} productList={product}/>}/>
                         <Route path={"/admin/product/add"}

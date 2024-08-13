@@ -1,20 +1,21 @@
 import {Product} from "../components/ShopSchema.ts";
-import AdminProductCard from "../components/AdminProductCard.tsx";
 import {useNavigate} from "react-router-dom";
+import Search from "../components/Search.tsx";
 
 type AdminProductPageProps = {
-    product:Product[]
+    product: Product[]
+    searchTerm: string
+    setSearchTerm: (x: string) => void
 }
-export default function AdminProductPage(props:Readonly<AdminProductPageProps>) {
+export default function AdminProductPage(props: Readonly<AdminProductPageProps>) {
 
     const navigate = useNavigate();
-    const product = props.product.map((product)=> <AdminProductCard key={product.id} product={product} />)
     const handleClick = () => {
         navigate(`/admin/product/add`);
     }
     return (
         <>
-            {product}
+            {<Search product={props.product} searchTerm={props.searchTerm} setSearchTerm={props.setSearchTerm}/>}
             <button onClick={handleClick}>Add Product</button>
         </>
     )

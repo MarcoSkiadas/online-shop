@@ -63,6 +63,37 @@ class AppUserServiceTest {
     }
 
     @Test
+    void addProductToShoppingCart_shouldThrowException_whenCalledByIdAlreadyExist() throws InvalidIdException {
+        String userId = "1";
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 3), new OrderedProduct("2", 3)}));
+        when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
+        when(mockProductRepo.existsById("1")).thenReturn(true);
+        assertThrows(InvalidIdException.class, () -> service.addProductToShoppingCart("1", "1", 2));
+        verify(mockRepo).findById("1");
+        verify(mockProductRepo).existsById("1");
+    }
+
+    @Test
+    void addProductToShoppingCart_shouldThrowException_whenCalledByIdWhichDoesntExist() throws InvalidIdException {
+        String userId = "1";
+        ArrayList<String> productIds = new ArrayList<>();
+        productIds.add("1");
+        productIds.add("2");
+        productIds.add("3");
+        AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 3), new OrderedProduct("2", 3)}));
+        when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
+        when(mockProductRepo.existsById("1")).thenReturn(false);
+        assertThrows(InvalidIdException.class, () -> service.addProductToShoppingCart("1", "1", 2));
+        verify(mockRepo).findById("1");
+        verify(mockProductRepo).existsById("1");
+    }
+
+
+    @Test
     void removeProductFromShoppingCart_shouldRemoveProductFromShoppingCart_whenCalledById() throws InvalidIdException {
         String userId = "1";
         String productId = "1";

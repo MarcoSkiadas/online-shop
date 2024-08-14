@@ -1,9 +1,10 @@
-import {FormEvent, useState} from "react";
+import React, {FormEvent, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {User} from "../components/ShopSchema.ts";
 
 type LoginPageProps = {
-    setUser: (username: string) => void
+    setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>
     login: () => void
     me: () => void
 }

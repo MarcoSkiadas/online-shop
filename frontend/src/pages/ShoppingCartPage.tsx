@@ -127,38 +127,36 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
     }
 
     return (
-        <>
-            <div className="shopping-cart-page">
-                <header className="shopping-cart-header">
-                    <h2>Shopping Cart</h2>
-                </header>
-                <div className="user-info">
-                    <p>Name: {props.user?.username}</p>
-                </div>
-                <ul className="product-list">
-                    {products?.map(product => {
-                        const quantity = quantities[product.id] || 0;
-                        return (
-                            <li key={product.id} className="product-item">
-                                <h3>{product.name}</h3>
-                                <img src={product.images.smallImageURL} alt={product.name} className="product-image"/>
-                                <p>Price: {product.price} €</p>
-                                <div className="quantity-controls">
-                                    <button onClick={() => decreaseQuantity(product.id)} className="quantity-button">-
-                                    </button>
-                                    <span className="quantity-display">{quantity}</span>
-                                    <button onClick={() => increaseQuantity(product.id)} className="quantity-button">+
-                                    </button>
-                                </div>
-                                <button onClick={() => removeProductFromShoppingCart(product.id)}
-                                        className="remove-button">Remove Button
-                                </button>
-                            </li>
-                        )
-                    })}
-                </ul>
-                <button onClick={handlePurchase} className="purchase-button">Create Order</button>
+        <div className="shopping-cart-page">
+            <header className="shopping-cart-header">
+                <h2>Shopping Cart</h2>
+            </header>
+            <div className="user-info">
+                <p>Name: {props.user?.username}</p>
             </div>
-        </>
+            <ul className="product-list">
+                {products?.map(product => {
+                    const quantity = quantities[product.id] || 0;
+                    return (
+                        <li key={product.id} className="product-item">
+                            <h3>{product.name}</h3>
+                            <img src={product.images.smallImageURL} alt={product.name} className="product-image"/>
+                            <p>Price: {product.price} €</p>
+                            <div className="quantity-controls">
+                                <button onClick={() => decreaseQuantity(product.id)} className="quantity-button">-
+                                </button>
+                                <span className="quantity-display">{quantity}</span>
+                                <button onClick={() => increaseQuantity(product.id)} className="quantity-button">+
+                                </button>
+                            </div>
+                            <button onClick={() => removeProductFromShoppingCart(product.id)}
+                                    className="remove-button">Remove Button
+                            </button>
+                        </li>
+                    )
+                })}
+            </ul>
+            <button onClick={handlePurchase} className="purchase-button">Create Order</button>
+        </div>
     )
 }

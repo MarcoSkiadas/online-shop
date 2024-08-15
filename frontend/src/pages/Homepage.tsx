@@ -22,17 +22,15 @@ export default function Homepage(props: Readonly<HomepageProps>) {
     }
 
     return (
-        <>
-            <div className="container">
-                <button onClick={routeLogin}>Login</button>
-                {props.user != undefined && (
-                    <button onClick={props.logout}>Logout</button>
-                )}
-                <p>User: {props.user}</p>
-                <div className="search-container">
-                    <Search product={props.product} searchTerm={props.searchTerm} setSearchTerm={props.setSearchTerm}/>
-                </div>
+        <div className="container">
+            <button onClick={routeLogin}>Login</button>
+            {props.user != undefined && (
+                <button onClick={props.logout}>Logout</button>
+            )}
+            <p>User: {props.user}</p>
+            <div className="search-container">
+                <Search product={props.product} searchTerm={props.searchTerm} setSearchTerm={props.setSearchTerm}/>
             </div>
-        </>
+        </div>
     )
 }

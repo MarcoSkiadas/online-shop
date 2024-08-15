@@ -18,6 +18,8 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -132,6 +134,7 @@ function App() {
                     </Route>
                 </Route>
             </Routes>
+            <ToastContainer/>
         </>
     )
 }

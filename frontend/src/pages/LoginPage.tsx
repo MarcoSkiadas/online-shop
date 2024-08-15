@@ -2,6 +2,7 @@ import React, {FormEvent, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {User} from "../components/ShopSchema.ts";
+import {toast} from "react-toastify";
 
 type LoginPageProps = {
     setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>
@@ -21,6 +22,7 @@ export default function LoginPage(props: Readonly<LoginPageProps>) {
             .then(r => props.setUser(r.data))
             .then(props.me)
             .then(() => nav("/"))
+            .catch(() => toast.error(`${username} is not registered`))
     }
 
     function register() {

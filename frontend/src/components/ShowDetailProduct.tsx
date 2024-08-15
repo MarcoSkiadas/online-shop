@@ -2,6 +2,7 @@ import {Product, User} from "./ShopSchema.ts";
 import axios from "axios";
 import {useState} from "react";
 import Rating from "./Rating.tsx";
+import '../App.css'
 
 type ShowDetailProductProps = {
     product: Product | undefined
@@ -49,18 +50,22 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
     return (
         <>
             {!props.product ? <p>Product not found</p> :
-                <div>
-                    <h2>{props.product?.name}</h2>
-                    <img src={props.product.images.largeImageURL} alt={props.product?.name}/>
-                    <p>Price: {props.product?.price} €</p>
+                <div className="product-detail-container">
+                    <h2 className="product-name">{props.product?.name}</h2>
+                    <img
+                        src={props.product.images.largeImageURL}
+                        alt={props.product?.name}
+                        className="product-image"/>
+                    <p className="product-price">Price: {props.product?.price} €</p>
                     {props.product.quantity.amount < 10 &&
-                        <p>Only {props.product.quantity.amount} Products on stock!</p>}
-                    <div>
-                        <button onClick={decreaseQuantity}>-</button>
-                        <span>{quantity}</span>
-                        <button onClick={increaseQuantity}>+</button>
+                        <p className="low-stock">Only {props.product.quantity.amount} Products on stock!</p>}
+                    <div className="quantity-controls">
+                        <button onClick={decreaseQuantity} className="quantity-button">-</button>
+                        <span className="quantity-display">{quantity}</span>
+                        <button onClick={increaseQuantity} className="quantity-button">+</button>
                     </div>
-                    <button onClick={putProductToShoppingCart}>add to Shopping Cart</button>
+                    <button onClick={putProductToShoppingCart} className="add-to-cart-button">add to Shopping Cart
+                    </button>
                     <Rating product={props.product} getProduct={props.getProduct}/>
 
                 </div>}

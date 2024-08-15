@@ -215,6 +215,7 @@ img {
 .quantity-display {
     font-size: 1.2rem;
     font-weight: bold;
+    margin: 0 10px;
 }
 
 
@@ -470,33 +471,6 @@ img {
     height: auto;
     border-radius: 5px;
     margin-bottom: 10px;
-}
-
-.quantity-controls {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-}
-
-.quantity-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 0 5px;
-}
-
-.quantity-button:hover {
-    background-color: #0056b3;
-}
-
-.quantity-display {
-    font-size: 1.2rem;
-    margin: 0 10px;
 }
 
 .remove-button {

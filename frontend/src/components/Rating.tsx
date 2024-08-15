@@ -91,7 +91,7 @@ export default function Rating(props: Readonly<RatingProps>) {
                         maxLength={100}
                     />
                 </div>
-                <button type={"submit"}>Submit review</button>
+                <button type={"submit"} className={"toggle-button"}>Submit review</button>
             </form>
             <p>Total rating: {props.product.rating}</p>
             <div>

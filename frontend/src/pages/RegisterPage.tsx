@@ -8,6 +8,9 @@ export default function RegisterPage() {
     const [password, setPassword] = useState<string>("")
 
     const nav = useNavigate();
+    const backToLogin = () => {
+        nav("/Login")
+    }
 
     function submitRegister(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -18,12 +21,18 @@ export default function RegisterPage() {
     }
 
     return (
-        <form onSubmit={submitRegister}>
-            <input value={username} placeholder={"Please enter your Username"} type={"text"}
-                   onChange={e => setUsername(e.target.value)}/>
-            <input value={password} placeholder={"Please enter your Password"} type={"password"}
-                   onChange={e => setPassword(e.target.value)}/>
-            <button>Register</button>
-        </form>
+        <div className="register-page">
+            <div className="register-form-container">
+                <form onSubmit={submitRegister} className="register-form">
+                    <input value={username} placeholder={"Please enter your Username"} type={"text"}
+                           onChange={e => setUsername(e.target.value)} className="register-input"/>
+                    <input value={password} placeholder={"Please enter your Password"} type={"password"}
+                           onChange={e => setPassword(e.target.value)} className="register-input"/>
+                    <button type={"submit"} className="register-button">Register</button>
+                    <button type={"button"} onClick={backToLogin} className="back-to-login-button">Back to Login
+                    </button>
+                </form>
+            </div>
+        </div>
     )
 }

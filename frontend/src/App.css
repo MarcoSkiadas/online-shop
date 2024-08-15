@@ -51,7 +51,7 @@ input[type="text"] {
 
 input[type="password"] {
     padding: 10px;
-    width: calc(100% - 22px); /* Full width minus padding */
+    width: calc(100% - 22px);
     border-radius: 5px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
@@ -59,7 +59,7 @@ input[type="password"] {
 
 img {
     max-width: 100%;
-    max-height: 200px; /* Maximale Höhe für das Bild */
+    max-height: 200px;
     height: auto;
     width: auto;
     border-radius: 5px;
@@ -120,12 +120,12 @@ img {
 .navigation {
     position: sticky;
     top: 0;
-    background-color: #f8f9fa; /* Helle Hintergrundfarbe */
+    background-color: #f8f9fa;
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Schatten für Tiefenwirkung */
-    z-index: 1000; /* Damit die Navigation immer oben bleibt */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 .nav-link {
@@ -133,21 +133,21 @@ img {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: #333; /* Textfarbe */
-    font-size: 0.9rem; /* Schriftgröße */
+    color: #333;
+    font-size: 0.9rem;
     padding: 5px 10px;
     transition: background-color 0.3s ease;
 }
 
 .nav-link img {
-    max-width: 40px; /* Maximale Breite der Icons */
+    max-width: 40px;
     height: auto;
     margin-bottom: 5px;
 }
 
 .nav-link:hover {
-    background-color: #e9ecef; /* Hellere Hintergrundfarbe bei Hover */
-    border-radius: 5px; /* Abgerundete Ecken für den Hover-Effekt */
+    background-color: #e9ecef;
+    border-radius: 5px;
 }
 
 .navigation.sticky {
@@ -164,10 +164,10 @@ img {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 600px;
-    margin: 20px auto; /* Zentriert den Container */
+    margin: 20px auto;
 }
 
-/* Produktname */
+
 .product-name {
     font-size: 2rem;
     color: #333;
@@ -175,7 +175,7 @@ img {
     text-align: center;
 }
 
-/* Produktbild */
+
 .product-image {
     max-width: 100%;
     max-height: 400px;
@@ -184,7 +184,7 @@ img {
     margin-bottom: 20px;
 }
 
-/* Produktpreis */
+
 .product-price {
     font-size: 1.5rem;
     color: #000;
@@ -192,14 +192,14 @@ img {
     margin-bottom: 20px;
 }
 
-/* Niedriger Lagerbestand */
+
 .low-stock {
     font-size: 1rem;
     color: #ff0000;
     margin-bottom: 20px;
 }
 
-/* Steuerung der Menge */
+
 .quantity-controls {
     display: flex;
     align-items: center;
@@ -227,7 +227,7 @@ img {
     font-weight: bold;
 }
 
-/* Button zum Hinzufügen in den Warenkorb */
+
 .add-to-cart-button {
     background-color: #28a745;
     color: #fff;
@@ -242,4 +242,197 @@ img {
 
 .add-to-cart-button:hover {
     background-color: #218838;
+}
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.login-form-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-input {
+    padding: 10px;
+    font-size: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.additional-actions {
+    margin-top: 20px;
+}
+
+.register-button {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.register-button:hover {
+    background-color: #218838;
+}
+
+.github-login-container {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.github-login-button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.github-login-button:hover {
+    background-color: #444;
+}
+
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+
+.register-form-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.register-input {
+    padding: 8px;
+    font-size: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.register-button {
+    background-color: #28a745;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #218838;
+}
+
+
+.back-to-login-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.back-to-login-button:hover {
+    background-color: #0056b3;
+}
+
+.action-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.action-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 0 15px;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.action-button:active {
+    background-color: #003d7a;
+    transform: scale(0.98);
 }

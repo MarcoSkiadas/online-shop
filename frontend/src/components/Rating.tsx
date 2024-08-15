@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import "./Rating.css"
 import axios from "axios";
 import {Product} from "./ShopSchema.ts";
+import {toast} from "react-toastify";
 
 const DEFAULT_COUNT = 5;
 const DEFAULT_ICON = `★`;
@@ -36,7 +37,7 @@ export default function Rating(props: Readonly<RatingProps>) {
                     console.log(response.data)
                     setCommentary(``)
                     setRating(0)
-                    alert(`your review has been submitted`)
+                    toast.success(`your review has been submitted`)
                 }
             )
             .then(props.getProduct)

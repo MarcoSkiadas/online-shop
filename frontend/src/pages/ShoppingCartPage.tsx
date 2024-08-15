@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Product, User} from "../components/ShopSchema.ts";
+import {toast} from "react-toastify";
 
 type ShoppingCartPageProps = {
     user: User | null
@@ -45,7 +46,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
                 props.fetchMe()
                 getProducts()
                 if (removedProduct) {
-                    alert(`${removedProduct.name} has been removed from your shopping cart`)
+                    toast.success(`${removedProduct.name} has been removed from your shopping cart`)
                 }
             })
             .catch(error => console.log(error.message))
@@ -108,7 +109,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
         const enoughProductsOnStock =
             products.map(product => {
                 if (product.quantity.amount < quantities[product.id]) {
-                    alert(`not enough ${product.name} on Stock! only ${product.quantity.amount} on Stock!`)
+                    toast.error(`not enough ${product.name} on Stock! only ${product.quantity.amount} on Stock!`)
                     return false;
                 } else {
                     return true;
@@ -119,9 +120,9 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
                 await addOrder();
                 await reduceProductOnStock();
-                alert(`Order has been created`)
+                toast.success(`Order has been created`)
             } else {
-                alert(`Order cannot be created without Products`)
+                toast.error(`Order cannot be created without Products`)
             }
         }
     }

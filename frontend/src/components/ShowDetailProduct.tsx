@@ -3,6 +3,7 @@ import axios from "axios";
 import {useState} from "react";
 import Rating from "./Rating.tsx";
 import '../App.css'
+import {toast} from "react-toastify";
 
 type ShowDetailProductProps = {
     product: Product | undefined
@@ -15,12 +16,12 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
 
     const putProductToShoppingCart = () => {
         if (props.user === null) {
-            alert(`Please login to add ${props.product?.name} to shopping cart`)
+            toast.error(`Please login to add ${props.product?.name} to shopping cart`)
         } else {
             const productAlreadyInShoppingCart: boolean =
                 props.user?.shoppingCart.orderedProducts.every(orderedProduct => {
                     if (orderedProduct.productId === props.product?.id) {
-                        alert(`${props.product.name} is already in your shopping cart`)
+                        toast.error(`${props.product.name} is already in your shopping cart`)
                         return false
                     }
                     return true
@@ -29,9 +30,9 @@ export default function ShowDetailProduct(props: Readonly<ShowDetailProductProps
             if (productAlreadyInShoppingCart) {
                 props.product?.quantity?.amount && props.product.quantity.amount >= quantity ?
                     axios.put(`api/appuser/shoppingCart/addProduct/${props.user?.id}/${props.product?.id}/${quantity}`, {})
-                        .then(() => alert(`${props.product?.name} has been added to shopping cart`))
+                        .then(() => toast.success(`${props.product?.name} has been added to shopping cart`))
                         .then(() => props.fetchMe())
-                        .catch(error => console.log(error.response.data.errorMsg)) : alert(`only ${props.product?.quantity.amount} ${props.product?.name} on Stock left!`)
+                        .catch(error => console.log(error.response.data.errorMsg)) : toast.error(`only ${props.product?.quantity.amount} ${props.product?.name} on Stock left!`)
             }
         }
     }

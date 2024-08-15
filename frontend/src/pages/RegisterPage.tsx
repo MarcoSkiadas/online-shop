@@ -1,6 +1,7 @@
 import {FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 export default function RegisterPage() {
 
@@ -15,9 +16,9 @@ export default function RegisterPage() {
     function submitRegister(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
         axios.post("/api/auth/register", {username, password})
-            .then(() => alert("You have been registered with Username: " + username))
+            .then(() => toast.success("You have been registered with Username: " + username))
             .then(() => nav("/login"))
-            .catch(error => alert(error.response.data.errorMsg))
+            .catch(error => toast.error(error.response.data.errorMsg))
     }
 
     return (

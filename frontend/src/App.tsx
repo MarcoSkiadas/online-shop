@@ -18,7 +18,7 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
-import {ToastContainer} from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -79,7 +79,7 @@ function App() {
     function logout() {
         axios.get("/api/auth/logout")
             .then(() => setUser(null))
-            .then(() => alert("you have been logged out"))
+            .then(() => toast.success("you have been logged out"))
     }
 
     const me = () => {

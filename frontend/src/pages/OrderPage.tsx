@@ -43,20 +43,20 @@ export default function OrderPage(props: Readonly<OrderPageProps>) {
 
     return (
         <>
-            <div>
-                <h2>Order List</h2>
+            <div className="order-page">
+                <h2 className="order-header">Order List</h2>
 
                 {orderList
                     .filter((order) => order.userId === props.user?.id)
                     .map((order) => (
-                        <div key={order.id}>
+                        <div key={order.id} className="order-item">
                             <h3>Order ID: {order.id}</h3>
                             <p>Order Price: {order.price}€</p>
-                            <ul>
+                            <ul className="ordered-products-list">
                                 {order.orderedProducts.map((orderedProduct) => {
                                     const product = productList.find((product) => product.id === orderedProduct.productId)
                                     if (product) {
-                                        return <li key={product?.id}>
+                                        return <li key={product?.id} className="ordered-product">
                                             <h4>{product?.name}</h4>
                                             <p>Price: {product?.price}€</p>
                                             <p>Amount: {orderedProduct.amount}</p>

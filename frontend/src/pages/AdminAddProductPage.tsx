@@ -54,8 +54,8 @@ export default function AdminAddProductPage(props: Readonly<AdminAddProductPage>
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <form onSubmit={handleSubmit} className="update-form">
+                <div className="form-group">
                     <label htmlFor="name">Product Name:</label>
                     <input
                         type="text"
@@ -65,7 +65,7 @@ export default function AdminAddProductPage(props: Readonly<AdminAddProductPage>
                         required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="price">Product Price:</label>
                     <input
                         type="number"
@@ -76,7 +76,7 @@ export default function AdminAddProductPage(props: Readonly<AdminAddProductPage>
                         step="0.01"
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="amount">Product Amount:</label>
                     <input
                         type="number"
@@ -87,7 +87,7 @@ export default function AdminAddProductPage(props: Readonly<AdminAddProductPage>
                         step="1"
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="unit">Product Unit:</label>
                     <select
                         id="unit"
@@ -101,16 +101,16 @@ export default function AdminAddProductPage(props: Readonly<AdminAddProductPage>
                         ))}
                     </select>
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="image">Product Image:</label>
                     <input type='file' onChange={onFileChange}/>
                 </div>
-                <button type="submit">Add Product</button>
-
+                <button type="submit" className="submit-button">Add Product</button>
                 {error && <p style={{color: 'red'}}>{error}</p>}
                 {success && <p style={{color: 'green'}}>{success}</p>}
             </form>
-            <button onClick={props.handleClickProduct}>Back to Product</button>
+            <button onClick={props.handleClickProduct} className="back-button">Back to Product</button>
+
         </>
     )
 }

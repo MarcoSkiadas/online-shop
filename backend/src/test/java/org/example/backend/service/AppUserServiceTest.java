@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.AppUserDTO;
+import org.example.backend.dto.AppUserResponse;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.*;
 import org.example.backend.repository.AppUserRepository;
@@ -52,10 +53,6 @@ class AppUserServiceTest {
 
     @Test
     void addProductToShoppingCart_shouldThrowException_whenCalledByWrongId() throws InvalidIdException {
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
         when(mockRepo.findById("1")).thenReturn(Optional.empty());
         when(mockRepo.existsById("1")).thenReturn(false);
         assertThrows(InvalidIdException.class, () -> service.addProductToShoppingCart("1", "1", 2));
@@ -65,10 +62,6 @@ class AppUserServiceTest {
     @Test
     void addProductToShoppingCart_shouldThrowException_whenCalledByIdAlreadyExist() throws InvalidIdException {
         String userId = "1";
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
         AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 3), new OrderedProduct("2", 3)}));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockProductRepo.existsById("1")).thenReturn(true);
@@ -80,10 +73,6 @@ class AppUserServiceTest {
     @Test
     void addProductToShoppingCart_shouldThrowException_whenCalledByIdWhichDoesntExist() throws InvalidIdException {
         String userId = "1";
-        ArrayList<String> productIds = new ArrayList<>();
-        productIds.add("1");
-        productIds.add("2");
-        productIds.add("3");
         AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 3), new OrderedProduct("2", 3)}));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockProductRepo.existsById("1")).thenReturn(false);
@@ -161,10 +150,11 @@ class AppUserServiceTest {
     void getUserByUsername_shouldReturnUser_whenCalled() throws UsernameNotFoundException {
         AppUser testAppUser = new AppUser("1", "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
         mockRepo.save(testAppUser);
+        AppUserResponse expectedAppUser = new AppUserResponse("1", "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
         when(mockRepo.findByUsername("TestUser")).thenReturn(Optional.of(testAppUser));
-        AppUser actualUser = service.getUserByUsername("TestUser");
+        AppUserResponse actualUser = service.getUserByUsername("TestUser");
         service.loadUserByUsername("TestUser");
-        assertEquals(testAppUser, actualUser);
+        assertEquals(expectedAppUser, actualUser);
         verify(mockRepo, times(2)).findByUsername("TestUser");
     }
 

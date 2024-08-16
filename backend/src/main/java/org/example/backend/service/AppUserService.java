@@ -2,12 +2,14 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.AppUserDTO;
+import org.example.backend.dto.AppUserResponse;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.AppUser;
 import org.example.backend.model.OrderedProduct;
 import org.example.backend.model.ShoppingCart;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.repository.ProductRepo;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -84,9 +86,10 @@ public class AppUserService implements UserDetailsService {
         return new User(user.username(), user.password(), Collections.emptyList());
     }
 
-    public AppUser getUserByUsername(String username) throws UsernameNotFoundException {
-        return appUserRepository.findByUsername(username)
+    public AppUserResponse getUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser appUser = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User: " + username + " not Found!"));
+        return AppUserResponse.fromAppUser(appUser);
     }
 
     public void registerNewUser(AppUserDTO newUser) throws InvalidIdException {
@@ -95,5 +98,12 @@ public class AppUserService implements UserDetailsService {
         }
         AppUser user = new AppUser(idService.generateUUID(), newUser.username(), encoder.encode(newUser.password()), "USER", new ShoppingCart(new OrderedProduct[0]));
         appUserRepository.save(user);
+    }
+
+    public String login() {
+        return SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
     }
 }

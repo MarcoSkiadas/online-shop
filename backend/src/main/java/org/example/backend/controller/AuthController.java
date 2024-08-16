@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.AppUserDTO;
+import org.example.backend.dto.AppUserResponse;
 import org.example.backend.exceptions.InvalidIdException;
 import org.example.backend.model.AppUser;
 import org.example.backend.repository.AppUserRepository;
@@ -22,10 +23,12 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/me")
-    public AppUser getMe(@AuthenticationPrincipal OAuth2User user) {
+    public AppUserResponse getMe(@AuthenticationPrincipal OAuth2User user) {
         if (SecurityContextHolder.getContext().getAuthentication().getName().matches("^\\d+$")) {
-            return appUserRepository.findById(user.getName())
+            AppUser appUser = appUserRepository.findById(user.getName())
                     .orElseThrow();
+            return AppUserResponse.fromAppUser(appUser);
+
         }
         return appUserService.getUserByUsername(SecurityContextHolder
                 .getContext()
@@ -34,12 +37,9 @@ public class AuthController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = "text/plain")
     public String login() {
-        return SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+        return appUserService.login();
     }
 
     @ResponseStatus(HttpStatus.CREATED)

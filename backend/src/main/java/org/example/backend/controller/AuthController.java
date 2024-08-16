@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = "text/plain")
     public String login() {
         return appUserService.login();
     }

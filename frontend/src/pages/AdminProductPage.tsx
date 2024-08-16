@@ -14,9 +14,12 @@ export default function AdminProductPage(props: Readonly<AdminProductPageProps>)
         navigate(`/admin/product/add`);
     }
     return (
-        <>
-            {<Search product={props.product} searchTerm={props.searchTerm} setSearchTerm={props.setSearchTerm}/>}
+        <div className="container">
+            <div className="search-container">
+                {<Search product={props.product} searchTerm={props.searchTerm}
+                         setSearchTerm={props.setSearchTerm}/>}
+            </div>
             <button onClick={handleClick}>Add Product</button>
-        </>
+        </div>
     )
 }

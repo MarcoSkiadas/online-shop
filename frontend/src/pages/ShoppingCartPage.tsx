@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Product, User} from "../components/ShopSchema.ts";
+import {toast} from "react-toastify";
 
 type ShoppingCartPageProps = {
     user: User | null
@@ -45,7 +46,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
                 props.fetchMe()
                 getProducts()
                 if (removedProduct) {
-                    alert(`${removedProduct.name} has been removed from your shopping cart`)
+                    toast.success(`${removedProduct.name} has been removed from your shopping cart`)
                 }
             })
             .catch(error => console.log(error.message))
@@ -108,7 +109,7 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
         const enoughProductsOnStock =
             products.map(product => {
                 if (product.quantity.amount < quantities[product.id]) {
-                    alert(`not enough ${product.name} on Stock! only ${product.quantity.amount} on Stock!`)
+                    toast.error(`not enough ${product.name} on Stock! only ${product.quantity.amount} on Stock!`)
                     return false;
                 } else {
                     return true;
@@ -119,40 +120,44 @@ export default function ShoppingCartPage(props: Readonly<ShoppingCartPageProps>)
             if (props.user?.shoppingCart && props.user.shoppingCart.orderedProducts.length > 0) {
                 await addOrder();
                 await reduceProductOnStock();
-                alert(`Order has been created`)
+                toast.success(`Order has been created`)
             } else {
-                alert(`Order cannot be created without Products`)
+                toast.error(`Order cannot be created without Products`)
             }
         }
     }
 
     return (
-        <>
-            <header>
+        <div className="shopping-cart-page">
+            <header className="shopping-cart-header">
                 <h2>Shopping Cart</h2>
             </header>
-            <>
+            <div className="user-info">
                 <p>Name: {props.user?.username}</p>
-                <ul>
-                    {products?.map(product => {
-                        const quantity = quantities[product.id] || 0;
-                        return (
-                            <li key={product.id}>
-                                <h3>{product.name}</h3>
-                                <img src={product.images.smallImageURL} alt={product.name}/>
-                                <p>Price: {product.price} €</p>
-                                <div>
-                                    <button onClick={() => decreaseQuantity(product.id)}>-</button>
-                                    <span>{quantity}</span>
-                                    <button onClick={() => increaseQuantity(product.id)}>+</button>
-                                </div>
-                                <button onClick={() => removeProductFromShoppingCart(product.id)}>Remove Button</button>
-                            </li>
-                        )
-                    })}
-                </ul>
-                <button onClick={handlePurchase}>Create Order</button>
-            </>
-        </>
+            </div>
+            <ul className="product-list">
+                {products?.map(product => {
+                    const quantity = quantities[product.id] || 0;
+                    return (
+                        <li key={product.id} className="product-item">
+                            <h3>{product.name}</h3>
+                            <img src={product.images.smallImageURL} alt={product.name} className="product-image"/>
+                            <p>Price: {product.price} €</p>
+                            <div className="quantity-controls">
+                                <button onClick={() => decreaseQuantity(product.id)} className="quantity-button">-
+                                </button>
+                                <span className="quantity-display">{quantity}</span>
+                                <button onClick={() => increaseQuantity(product.id)} className="quantity-button">+
+                                </button>
+                            </div>
+                            <button onClick={() => removeProductFromShoppingCart(product.id)}
+                                    className="remove-button">Remove Button
+                            </button>
+                        </li>
+                    )
+                })}
+            </ul>
+            <button onClick={handlePurchase} className="purchase-button">Create Order</button>
+        </div>
     )
 }

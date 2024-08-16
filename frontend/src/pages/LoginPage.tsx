@@ -2,6 +2,7 @@ import React, {FormEvent, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {User} from "../components/ShopSchema.ts";
+import {toast} from "react-toastify";
 
 type LoginPageProps = {
     setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>
@@ -21,6 +22,7 @@ export default function LoginPage(props: Readonly<LoginPageProps>) {
             .then(r => props.setUser(r.data))
             .then(props.me)
             .then(() => nav("/"))
+            .catch(() => toast.error(`${username} is not registered`))
     }
 
     function register() {
@@ -28,16 +30,24 @@ export default function LoginPage(props: Readonly<LoginPageProps>) {
     }
 
     return (
-        <>
-            <form onSubmit={submitLogin}>
-                <input value={username} placeholder={"Please enter your Username"} type={"text"}
-                       onChange={e => setUsername(e.target.value)}/>
-                <input value={password} placeholder={"Please enter your Password"} type={"password"}
-                       onChange={e => setPassword(e.target.value)}/>
-                <button>Login</button>
-            </form>
-            <button onClick={register}>Register</button>
-            <button onClick={props.login}>GitHub Login</button>
-        </>
+        <div className="login-page">
+            <div className="login-form-container">
+                <form onSubmit={submitLogin} className="login-form">
+                    <input value={username} placeholder={"Please enter your Username"} type={"text"}
+                           onChange={e => setUsername(e.target.value)}
+                           className="login-input"/>
+                    <input value={password} placeholder={"Please enter your Password"} type={"password"}
+                           onChange={e => setPassword(e.target.value)}
+                           className="login-input"/>
+                    <button className="login-button">Login</button>
+                </form>
+                <div className="additional-actions">
+                    <button onClick={register} className="register-button">Register</button>
+                    <div className="github-login-container">
+                        <button onClick={props.login} className="github-login-button">GitHub Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }

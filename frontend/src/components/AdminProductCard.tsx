@@ -8,7 +8,7 @@ type ProductCardProps = {
 export default function AdminProductCard(props: Readonly<ProductCardProps>) {
 
     return (
-        <div>
+        <div className="product-card">
             <Link to={`/admin/product/update/${props.product.id}`}>{props.product.name}</Link>
             <p>Id: {props.product.id}</p>
             <img src={props.product.images.smallImageURL} alt={props.product.name}/>

@@ -2,7 +2,7 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import {Product, ProductDTO, Unit} from "../components/ShopSchema.ts";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import '../components/styles.css';
+import '../App.css';
 
 type UpdateProductPageProps = {
     handleCloseSuccess: () => void
@@ -87,8 +87,8 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <form onSubmit={handleSubmit} className="update-form">
+                <div className="form-group">
                     <p>{product?.name}</p>
                     <label htmlFor="name">Product Name:</label>
                     <input
@@ -100,7 +100,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <p>{product?.price}</p>
                     <label htmlFor="price">Product Price:</label>
                     <input
@@ -113,7 +113,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         step="0.01" // Für Dezimalwerte
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <p>{product?.quantity.amount}</p>
                     <label htmlFor="amount">Product Amount:</label>
                     <input
@@ -126,7 +126,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         step="1"
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <p>{product?.quantity.unit}</p>
                     <label htmlFor="unit">Product Unit:</label>
                     <select
@@ -141,19 +141,19 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         ))}
                     </select>
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="image">Product Image:</label>
                     <input type='file' onChange={onFileChange}/>
                 </div>
 
-                <button type="submit">Update Product</button>
-
-                {error && <p style={{color: 'red'}}>{error}</p>}
-                {success && <p style={{color: 'green'}}>{success}</p>}
+                <button type="submit" className="submit-button">Update Product</button>
+                <button onClick={() => setShowModal(true)} className={"delete-button"}>
+                    Delete Product
+                </button>
+                {error && <p className="error-message">{error}</p>}
+                {success && <p className="success-message">{success}</p>}
             </form>
-            <button onClick={() => setShowModal(true)}>
-                Delete Product
-            </button>
+
 
             {showModal && (
                 <div className="modal">
@@ -162,7 +162,7 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         <h2>Confirm Delete</h2>
                         <p>Are you sure you want to delete this product?</p>
                         <button onClick={() => setShowModal(false)}>Cancel</button>
-                        <button onClick={handleDelete}>Delete</button>
+                        <button onClick={handleDelete} className="delete-confirm-button">Delete</button>
                     </div>
                 </div>
             )}
@@ -173,13 +173,13 @@ export default function AdminUpdateProductPage(props: Readonly<UpdateProductPage
                         <span className="close" onClick={() => props.setShowSuccess(false)}>&times;</span>
                         <h2>Product Deleted</h2>
                         <p>The product was successfully deleted.</p>
-                        <button onClick={props.handleCloseSuccess}>OK</button>
+                        <button onClick={props.handleCloseSuccess} className="ok-button">OK</button>
                     </div>
                 </div>
             )}
 
-            {error && <p style={{color: 'red'}}>{error}</p>}
-            <button onClick={props.handleClickProduct}>Back to Product</button>
+            {error && <p className="error-message">{error}</p>}
+            <button onClick={props.handleClickProduct} className="back-button">Back to Product</button>
 
         </>
     )

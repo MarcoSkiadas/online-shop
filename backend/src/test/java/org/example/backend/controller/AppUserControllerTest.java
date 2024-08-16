@@ -119,5 +119,22 @@ class AppUserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errorTime").isNotEmpty());
     }
 
+    @Test
+    void removeAllProductsFromShoppingCart_shouldRemoveAllProducts_whenCalled() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/appuser/shoppingCart/removeProduct/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                                                {
+                                                    "id": "1",
+                                                    "username": "testuser",
+                                                    "role": "USER",
+                                                    "shoppingCart": {
+                                                        "orderedProducts": []
+                                                    }
+                                                }
+                        """));
+    }
 
 }

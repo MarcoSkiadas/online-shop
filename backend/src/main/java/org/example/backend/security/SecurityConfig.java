@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .oauth2Login(o -> o.defaultSuccessUrl(appUrl))
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(c -> c.authenticationEntryPoint(((request, response, authException) -> response.sendError(HttpStatus.UNAUTHORIZED.value()))))
                 .formLogin(Customizer.withDefaults())
                 .logout(l -> l.logoutSuccessUrl(appUrl))
                 .build();

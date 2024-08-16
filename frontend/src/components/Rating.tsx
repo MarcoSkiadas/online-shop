@@ -2,11 +2,10 @@ import React, {useState} from "react";
 import "./Rating.css"
 import axios from "axios";
 import {Product} from "./ShopSchema.ts";
+import {toast} from "react-toastify";
 
 const DEFAULT_COUNT = 5;
-const DEFAULT_ICON = `☆`;
-const DEFAULT_UNSELECTED_COLOR = "grey";
-const DEFAULT_COLOR = "yellow";
+const DEFAULT_ICON = `★`;
 
 type RatingProps = {
     product: Product
@@ -38,7 +37,7 @@ export default function Rating(props: Readonly<RatingProps>) {
                     console.log(response.data)
                     setCommentary(``)
                     setRating(0)
-                    alert(`your review has been submitted`)
+                    toast.success(`your review has been submitted`)
                 }
             )
             .then(props.getProduct)
@@ -67,24 +66,10 @@ export default function Rating(props: Readonly<RatingProps>) {
                     {stars.map((_item, index) => {
                         const isActiveColor = (rating || temporaryRating) &&
                             (index < rating || index < temporaryRating);
-
-                        let elementColor = "";
-
-                        if (isActiveColor) {
-                            elementColor = DEFAULT_COLOR;
-                        } else {
-                            elementColor = DEFAULT_UNSELECTED_COLOR
-                        }
                         return (
-
                             <div
-                                className={"star"}
+                                className={`star ${isActiveColor ? 'filled' : ''}`}
                                 key={index}
-                                style={{
-                                    fontSize: "28px",
-                                    color: elementColor,
-                                    filter: `${isActiveColor ? "grayscale(0%)" : "grayscale(100%)"}`
-                                }}
                                 onMouseEnter={() => setTemporaryRating(index + 1)}
                                 onMouseLeave={() => setTemporaryRating(0)}
                                 onClick={() => handleReviewClick(index + 1)}
@@ -101,12 +86,13 @@ export default function Rating(props: Readonly<RatingProps>) {
                         className={"commentary"}
                         id="commentary"
                         value={commentary}
+                        placeholder={"Write your review"}
                         onChange={(e) => setCommentary(e.target.value)}
                         rows={1}
                         maxLength={100}
                     />
                 </div>
-                <button type={"submit"}>Submit review</button>
+                <button type={"submit"} className={"toggle-button"}>Submit review</button>
             </form>
             <p>Total rating: {props.product.rating}</p>
             <div>

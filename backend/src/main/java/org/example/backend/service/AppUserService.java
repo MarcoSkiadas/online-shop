@@ -29,7 +29,7 @@ public class AppUserService implements UserDetailsService {
     private final IdService idService;
     private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
-    public AppUser addProductToShoppingCart(String userId, String productId, int amount) throws InvalidIdException {
+    public AppUserResponse addProductToShoppingCart(String userId, String productId, int amount) throws InvalidIdException {
         AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new InvalidIdException("User with " + userId + " not found"));
 
@@ -47,13 +47,14 @@ public class AppUserService implements UserDetailsService {
             ShoppingCart updatedShoppingCart = new ShoppingCart(orderedProducts.toArray(new OrderedProduct[0]));
             AppUser updatedAppUser = new AppUser(appUser.id(), appUser.username(), appUser.password(), appUser.role(), updatedShoppingCart);
 
-            return appUserRepository.save(updatedAppUser);
+            appUserRepository.save(updatedAppUser);
+            return AppUserResponse.fromAppUser(updatedAppUser);
         }
         throw new InvalidIdException("Product with " + productId + " not found");
     }
 
 
-    public AppUser removeProductFromShoppingCart(String userId, String productId) throws InvalidIdException {
+    public AppUserResponse removeProductFromShoppingCart(String userId, String productId) throws InvalidIdException {
         AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new InvalidIdException("User with " + userId + " not found"));
 
@@ -66,17 +67,19 @@ public class AppUserService implements UserDetailsService {
         if (productRemoved) {
             ShoppingCart updatedShoppingCart = new ShoppingCart(orderedProducts.toArray(new OrderedProduct[0]));
             AppUser updatedAppUser = new AppUser(appUser.id(), appUser.username(), appUser.password(), appUser.role(), updatedShoppingCart);
-            return appUserRepository.save(updatedAppUser);
+            appUserRepository.save(updatedAppUser);
+            return AppUserResponse.fromAppUser(updatedAppUser);
         }
 
         throw new InvalidIdException("Product with " + productId + " not found in Shopping Cart");
     }
 
-    public AppUser removeAllProductsFromShoppingCart(String userId) throws InvalidIdException {
+    public AppUserResponse removeAllProductsFromShoppingCart(String userId) throws InvalidIdException {
         AppUser appuser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new InvalidIdException("User with " + userId + " not found"));
         AppUser NewAppuser = new AppUser(appuser.id(), appuser.username(), appuser.password(), appuser.role(), new ShoppingCart(new OrderedProduct[0]));
-        return appUserRepository.save(NewAppuser);
+        appUserRepository.save(NewAppuser);
+        return AppUserResponse.fromAppUser(NewAppuser);
     }
 
     @Override

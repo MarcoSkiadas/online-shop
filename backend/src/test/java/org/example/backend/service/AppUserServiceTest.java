@@ -39,12 +39,13 @@ class AppUserServiceTest {
         String userId = "1";
         String productId = "1";
         AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
+        AppUserResponse expectedAppUser = new AppUserResponse(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
+
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockProductRepo.existsById(productId)).thenReturn(true);
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        AppUser actualUser = service.addProductToShoppingCart(userId, productId, 2);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
-        assertEquals(expectedUser, actualUser);
+        AppUserResponse actualUser = service.addProductToShoppingCart(userId, productId, 2);
+        assertEquals(expectedAppUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockProductRepo).existsById(productId);
         verify(mockRepo).save(any(AppUser.class));
@@ -89,9 +90,9 @@ class AppUserServiceTest {
         AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[]{new OrderedProduct("1", 2)}));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        AppUser actualUser = service.removeProductFromShoppingCart(userId, productId);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
-        assertEquals(expectedUser, actualUser);
+        AppUserResponse actualUser = service.removeProductFromShoppingCart(userId, productId);
+        AppUserResponse expectedAppUser = new AppUserResponse(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        assertEquals(expectedAppUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockRepo).save(any(AppUser.class));
     }
@@ -112,9 +113,9 @@ class AppUserServiceTest {
         AppUser testAppUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(orderedProducts1));
         when(mockRepo.findById(userId)).thenReturn(Optional.of(testAppUser));
         when(mockRepo.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        AppUser actualUser = service.removeAllProductsFromShoppingCart(userId);
-        AppUser expectedUser = new AppUser(userId, "TestUser", "swordfish", "USER", new ShoppingCart(new OrderedProduct[0]));
-        assertEquals(expectedUser, actualUser);
+        AppUserResponse actualUser = service.removeAllProductsFromShoppingCart(userId);
+        AppUserResponse expectedAppUser = new AppUserResponse(userId, "TestUser", "USER", new ShoppingCart(new OrderedProduct[0]));
+        assertEquals(expectedAppUser, actualUser);
         verify(mockRepo).findById(userId);
         verify(mockRepo).save(any(AppUser.class));
     }
